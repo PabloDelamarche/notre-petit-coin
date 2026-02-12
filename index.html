@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.7">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times; color: #ffffff; color: rgba(255, 255, 255, 0.9); -webkit-text-stroke: rgba(255, 255, 255, 0.9)}
+    span.s1 {font: 12.0px Helvetica; color: #000000; -webkit-text-stroke: 0px #000000}
+    span.s2 {font: 14.0px Times; font-kerning: none; background-color: #191919}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="fr"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Notre Moment ❤️&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"&gt;&lt;/script&gt;</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>body { font-family: 'Poppins', sans-serif; background: #fff0f3; color: #444; text-align: center; padding: 20px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.card { background: white; max-width: 500px; margin: 0 auto; padding: 30px; border-radius: 30px; box-shadow: 0 10px 30px rgba(255,182,193,0.3); }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>h1 { color: #ff4d6d; font-size: 1.5rem; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.question-block { background: #fff5f6; margin: 15px 0; padding: 15px; border-radius: 15px; border-left: 5px solid #ff4d6d; text-align: left; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>textarea { width: 100%; border: 1px solid #ddd; border-radius: 10px; padding: 10px; box-sizing: border-box; margin-top: 10px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>button { background: #ff4d6d; color: white; border: none; padding: 12px 25px; border-radius: 50px; cursor: pointer; font-weight: bold; margin-top: 20px; transition: 0.3s; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>button:hover { background: #c9184a; transform: scale(1.05); }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.display-responses { margin-top: 30px; border-top: 2px dashed #ffb3c1; padding-top: 20px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.res { font-style: italic; color: #ff4d6d; margin-bottom: 10px; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;h1&gt;✨ Questions du &lt;span id="current-date"&gt;&lt;/span&gt;&lt;/h1&gt;</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="questions-list"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;input type="text" id="mon-prenom" placeholder="Ton prénom (ex: Thomas)" style="margin-bottom: 10px; padding: 5px; border-radius: 5px; border: 1px solid #ddd;"&gt;&lt;br&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button onclick="envoyer()"&gt;Envoyer nos réponses&lt;/button&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="display-responses"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h3&gt;Dernières réponses partagées :&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="reponses-flux"&gt;Chargement des souvenirs...&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>// --- 1. CONFIGURATION FIREBASE (À REMPLACER PAR TES INFOS) ---</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const firebaseConfig = {</p>
+<p class="p3"><span class="s1"><span class="Apple-converted-space">        </span>databaseURL: "<a href="https://console.firebase.google.com/u/0/project/notre-petit-coin/database/notre-petit-coin-default-rtdb/data/~2F?fb_gclid=CjwKCAiAkbbMBhB2EiwANbxtbdljvNIFXoc82ButRD_kg7WMPWY35e3h6sXNn2U9-LUh0TSvFlrJYhoC6cYQAvD_BwE&amp;fb_utm_campaign=Cloud-SS-DR-Firebase-FY26-global-gsem-1713590&amp;fb_utm_content=text-ad&amp;fb_utm_medium=cpc&amp;fb_utm_source=google&amp;fb_utm_term=KW_firebase"><span class="s2">https://notre-petit-coin-default-rtdb.europe-west1.firebasedatabase.app</span></a>"<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>};</p>
+<p class="p1"><span class="Apple-converted-space">    </span>firebase.initializeApp(firebaseConfig);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const database = firebase.database();</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// --- 2. TA BASE DE DONNÉES DE QUESTIONS ---</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const toutesLesQuestions = [</p>
+<p class="p1"><span class="Apple-converted-space">        </span>["Quel est ton plus beau souvenir de nous ?", "De quoi as-tu envie là tout de suite ?", "Une chanson qui te fait penser à moi ?"], // Jour 1</p>
+<p class="p1"><span class="Apple-converted-space">        </span>["Quel est ton rêve le plus fou ?", "Quelle qualité préfères-tu chez moi ?", "Où aimerais-tu être dans 5 ans ?"], // Jour 2</p>
+<p class="p1"><span class="Apple-converted-space">        </span>["Ton plat préféré que je cuisine (ou ferais) ?", "Un mot pour décrire ta journée ?", "Quel film on regarde au prochain call ?"]<span class="Apple-converted-space">  </span>// Jour 3</p>
+<p class="p1"><span class="Apple-converted-space">    </span>];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// Calcul du jour actuel (index)</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const dateAujourdhui = new Date();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const debut = new Date(dateAujourdhui.getFullYear(), 0, 0);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const diff = dateAujourdhui - debut;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const jourDeLannee = Math.floor(diff / (1000 * 60 * 60 * 24));</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const indexQuestion = jourDeLannee % toutesLesQuestions.length;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const questionsDuJour = toutesLesQuestions[indexQuestion];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('current-date').innerText = dateAujourdhui.toLocaleDateString();</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// Affichage des questions</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const qList = document.getElementById('questions-list');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>questionsDuJour.forEach((q, i) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>qList.innerHTML += `&lt;div class="question-block"&gt;&lt;strong&gt;Q${i+1}:&lt;/strong&gt; ${q} &lt;textarea id="q${i}"&gt;&lt;/textarea&gt;&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// --- 3. LOGIQUE D'ENVOI ---</p>
+<p class="p1"><span class="Apple-converted-space">    </span>function envoyer() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const prenom = document.getElementById('mon-prenom').value;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if(!prenom) return alert("Indique ton prénom !");</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const reponses = {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>auteur: prenom,</p>
+<p class="p1"><span class="Apple-converted-space">            </span>date: dateAujourdhui.toLocaleDateString(),</p>
+<p class="p1"><span class="Apple-converted-space">            </span>r1: document.getElementById('q0').value,</p>
+<p class="p1"><span class="Apple-converted-space">            </span>r2: document.getElementById('q1').value,</p>
+<p class="p1"><span class="Apple-converted-space">            </span>r3: document.getElementById('q2').value</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>database.ref('reponses').push(reponses);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>alert("Réponses envoyées !");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// --- 4. RÉCUPÉRATION EN TEMPS RÉEL ---</p>
+<p class="p1"><span class="Apple-converted-space">    </span>database.ref('reponses').limitToLast(5).on('value', (snapshot) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const data = snapshot.val();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let html = "";</p>
+<p class="p1"><span class="Apple-converted-space">        </span>for (let id in data) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>html = `&lt;div class="res"&gt;&lt;strong&gt;${data[id].auteur} :&lt;/strong&gt;&lt;br&gt;1: ${data[id].r1}&lt;br&gt;2: ${data[id].r2}&lt;br&gt;3: ${data[id].r3}&lt;/div&gt;&lt;hr&gt;` + html;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('reponses-flux').innerHTML = html;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p1">&lt;/script&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
