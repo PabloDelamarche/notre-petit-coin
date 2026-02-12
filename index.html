@@ -3,96 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notre Moment ❤️</title>
+    <title>Notre Rituel ❤️</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        body { font-family: sans-serif; background: #fff0f3; color: #444; text-align: center; padding: 20px; }
-        .card { background: white; max-width: 500px; margin: 0 auto; padding: 25px; border-radius: 30px; box-shadow: 0 10px 30px rgba(255,182,193,0.3); }
-        h1 { color: #ff4d6d; font-size: 1.4rem; margin-bottom: 5px; }
-        #current-date { display: block; margin-bottom: 20px; font-size: 0.9rem; color: #888; }
-        .question-block { background: #fff5f6; margin: 15px 0; padding: 15px; border-radius: 15px; border-left: 5px solid #ff4d6d; text-align: left; }
-        .locked { opacity: 0.5; border-left-color: #ccc; background: #f9f9f9; }
-        textarea { width: 100%; border: 1px solid #ddd; border-radius: 10px; padding: 10px; box-sizing: border-box; margin-top: 8px; resize: none; }
-        input#mon-prenom { width: 80%; padding: 10px; border-radius: 10px; border: 1px solid #ddd; margin: 15px 0; }
-        button { background: #ff4d6d; color: white; border: none; padding: 12px 30px; border-radius: 50px; cursor: pointer; font-weight: bold; width: 80%; }
-        .res { font-size: 0.9rem; color: #444; margin-bottom: 15px; text-align: left; background: #fefefe; padding: 12px; border-radius: 15px; border: 1px solid #eee; }
-        .res strong { color: #ff4d6d; }
-        .res small { color: #aaa; float: right; }
-        hr { border: 0; border-top: 1px dashed #ffd1d1; margin: 20px 0; }
+        body { font-family: sans-serif; background: #fff0f3; text-align: center; padding: 20px; }
+        .card { background: white; max-width: 500px; margin: 0 auto; padding: 20px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .question-block { background: #fff5f6; margin: 10px 0; padding: 15px; border-radius: 10px; border-left: 5px solid #ff4d6d; text-align: left; }
+        textarea { width: 100%; margin-top: 10px; border: 1px solid #ddd; border-radius: 5px; padding: 8px; box-sizing: border-box; }
+        input { width: 80%; padding: 10px; margin: 10px 0; border-radius: 10px; border: 1px solid #ddd; }
+        button { background: #ff4d6d; color: white; border: none; padding: 15px; border-radius: 50px; cursor: pointer; width: 80%; font-weight: bold; }
+        .res { background: #f9f9f9; padding: 10px; margin-top: 10px; border-radius: 10px; text-align: left; border: 1px solid #eee; }
     </style>
 </head>
 <body>
 
 <div class="card">
     <h1>✨ Notre Rituel</h1>
-    <span id="current-date"></span>
-    
-    <div id="questions-list"></div>
-
+    <div id="questions-list">Chargement des questions...</div>
     <input type="text" id="mon-prenom" placeholder="Ton prénom">
-    <button onclick="envoyer()">Envoyer nos réponses ❤️</button>
-
+    <button onclick="envoyer()">Envoyer ❤️</button>
     <hr>
-    <h3>Souvenirs récents</h3>
-    <div id="reponses-flux">Chargement...</div>
+    <div id="reponses-flux">En attente de messages...</div>
 </div>
 
 <script>
-    // 1. CONFIGURATION
+    // 1. CONFIGURATION (VERIFIE BIEN CETTE URL)
     const firebaseConfig = {
-        databaseURL: "https://notre-petit-coin-default-rtdb.europe-west1.firebasedatabase.app" 
+        databaseURL: "https://notre-petit-coin-default-rtdb.europe-west1.firebasedatabase.app"
     };
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-
-    // 2. QUESTIONS (Tu peux en ajouter autant que tu veux)
-    const questionsMatin = ["Quelle est ta plus grande envie aujourd'hui ?", "Comment t'es-tu réveillé(e) ce matin ?", "Un petit mot doux pour commencer ?"];
-    const questionsSoir = ["Quel a été ton moment préféré aujourd'hui ?", "De quoi es-tu fier/fière ce soir ?", "Qu'est-ce qu'on se dit avant de dormir ?"];
-
-    const maintenant = new Date();
-    const heure = maintenant.getHours();
-    const jour = maintenant.getDate();
-    document.getElementById('current-date').innerText = maintenant.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-
-    // 3. AFFICHAGE DES BLOCS
-    const qList = document.getElementById('questions-list');
-    const q1 = questionsMatin[jour % questionsMatin.length];
-    const q2 = questionsSoir[jour % questionsSoir.length];
-
-    // Bloc Matin (Toujours visible dès 6h)
-    let html = `<div class="question-block">
-        <small>☀️ Question du Matin (6h)</small><br>
-        <strong>${q1}</strong>
-        <textarea id="rep1" rows="2" placeholder="Répondre..."></textarea>
-    </div>`;
-
-    // Bloc Soir (Débloqué à 19h)
-    if (heure >= 19 || heure < 6) {
-        html += `<div class="question-block" style="border-left-color: #7209b7;">
-            <small>🌙 Question du Soir (19h)</small><br>
-            <strong>${q2}</strong>
-            <textarea id="rep2" rows="2" placeholder="Répondre..."></textarea>
-        </div>`;
-    } else {
-        html += `<div class="question-block locked">
-            <small>🌙 Question du Soir</small><br>
-            <strong>Arrive à 19h00...</strong>
-        </div>`;
+    
+    try {
+        firebase.initializeApp(firebaseConfig);
+        var database = firebase.database();
+    } catch (e) {
+        document.getElementById('questions-list').innerHTML = "Erreur Firebase : " + e.message;
     }
-    qList.innerHTML = html;
 
-    // 4. FONCTION ENVOYER
+    const qMatin = "Comment te sens-tu en cette fin de soirée ?";
+    const qSoir = "Qu'est-ce qu'on se dit avant de dormir ?";
+
+    // Affichage forcé pour le test
+    document.getElementById('questions-list').innerHTML = `
+        <div class="question-block">
+            <strong>☀️ Question 1 :</strong><br>${qMatin}
+            <textarea id="rep1"></textarea>
+        </div>
+        <div class="question-block">
+            <strong>🌙 Question 2 :</strong><br>${qSoir}
+            <textarea id="rep2"></textarea>
+        </div>
+    `;
+
     function envoyer() {
-        const prenom = document.getElementById('mon-prenom').value;
-        const r1 = document.getElementById('rep1') ? document.getElementById('rep1').value : "";
-        const r2 = document.getElementById('rep2') ? document.getElementById('rep2').value : "";
+        const p = document.getElementById('mon-prenom').value;
+        const r1 = document.getElementById('rep1').value;
+        const r2 = document.getElementById('rep2').value;
 
-        if (!prenom) return alert("N'oublie pas ton prénom !");
-        if (!r1 && !r2) return alert("Écris au moins une réponse.");
+        if (!p) return alert("Prénom oublié !");
 
         database.ref('reponses').push({
-            auteur: prenom,
-            date: maintenant.toLocaleDateString('fr-FR'),
-            heure: maintenant.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'}),
-            matin: r1
+            auteur: p,
+            matin: r1,
+            soir: r2,
+            date: new Date().toLocaleString()
+        }).then(() => {
+            alert("Envoyé !");
+            document.getElementById('rep1').value = "";
+            document.getElementById('rep2').value = "";
+        }).catch(err => alert("Erreur : " + err.message));
+    }
+
+    database.ref('reponses').limitToLast(5).on('value', (snap) => {
+        const data = snap.val();
+        let html = "";
+        for (let id in data) {
+            html = `<div class="res"><strong>${data[id].auteur}</strong> : ${data[id].matin} | ${data[id].soir}</div>` + html;
+        }
+        document.getElementById('reponses-flux').innerHTML = html;
+    });
+</script>
+</body>
+</html>
