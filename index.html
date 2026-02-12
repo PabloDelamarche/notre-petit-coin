@@ -1,82 +1,82 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notre Moment ❤️</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <style>
-        body { font-family: sans-serif; background: #fff0f3; color: #444; text-align: center; padding: 20px; }
-        .card { background: white; max-width: 500px; margin: 0 auto; padding: 30px; border-radius: 30px; box-shadow: 0 10px 30px rgba(255,182,193,0.3); }
-        h1 { color: #ff4d6d; font-size: 1.5rem; }
-        .question-block { background: #fff5f6; margin: 15px 0; padding: 15px; border-radius: 15px; border-left: 5px solid #ff4d6d; text-align: left; }
-        textarea { width: 100%; border: 1px solid #ddd; border-radius: 10px; padding: 10px; box-sizing: border-box; margin-top: 10px; }
-        button { background: #ff4d6d; color: white; border: none; padding: 12px 25px; border-radius: 50px; cursor: pointer; font-weight: bold; margin-top: 20px; }
-        .display-responses { margin-top: 30px; border-top: 2px dashed #ffb3c1; padding-top: 20px; }
-        .res { font-style: italic; color: #ff4d6d; margin-bottom: 10px; text-align: left; background: #fefefe; padding: 10px; border-radius: 10px; }
-    </style>
-</head>
-<body>
-<div class="card">
-    <h1>✨ Questions du <span id="current-date"></span></h1>
-    <div id="questions-list"></div>
-    <input type="text" id="mon-prenom" placeholder="Ton prénom" style="padding: 10px; border-radius: 10px; border: 1px solid #ddd; width: 80%;"><br>
-    <button onclick="envoyer()">Envoyer nos réponses</button>
-    <div class="display-responses">
-        <h3>Dernières réponses :</h3>
-        <div id="reponses-flux">Chargement...</div>
-    </div>
-</div>
-<script>
-    const firebaseConfig = {
+const firebaseConfig = {
         databaseURL: "https://notre-petit-coin-default-rtdb.europe-west1.firebasedatabase.app" 
     };
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    const toutesLesQuestions = [
-        ["Quel est ton plus beau souvenir de nous ?", "De quoi as-tu envie là tout de suite ?", "Une chanson qui te fait penser à moi ?"],
-        ["Quel est ton rêve le plus fou ?", "Quelle qualité préfères-tu chez moi ?", "Où aimerais-tu être dans 5 ans ?"],
-        ["Ton plat préféré que je cuisine ?", "Un mot pour décrire ta journée ?", "Quel film on regarde au prochain call ?"]
-    ];
+    // Tes listes de questions (le site choisira selon le jour du mois)
+    const questionsMatin = ["Quelle est ta plus grande envie aujourd'hui ?", "Comment t'es-tu réveillé(e) ce matin ?", "Un petit mot doux pour commencer la journée ?"];
+    const questionsSoir = ["Quel a été ton moment préféré aujourd'hui ?", "De quoi es-tu fier/fière ce soir ?", "Qu'est-ce qu'on se dit avant de dormir ?"];
 
-    const dateAujourdhui = new Date();
-    const debut = new Date(dateAujourdhui.getFullYear(), 0, 0);
-    const diff = dateAujourdhui - debut;
-    const jourDeLannee = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const indexQuestion = jourDeLannee % toutesLesQuestions.length;
-    const questionsDuJour = toutesLesQuestions[indexQuestion];
-
-    document.getElementById('current-date').innerText = dateAujourdhui.toLocaleDateString();
+    const maintenant = new Date();
+    const heure = maintenant.getHours();
+    const jour = maintenant.getDate();
+    
+    // Sélection des questions selon le jour
+    const q1 = questionsMatin[jour % questionsMatin.length];
+    const q2 = questionsSoir[jour % questionsSoir.length];
 
     const qList = document.getElementById('questions-list');
-    questionsDuJour.forEach((q, i) => {
-        qList.innerHTML += `<div class="question-block"><strong>Q${i+1}:</strong> ${q} <textarea id="q${i}"></textarea></div>`;
-    });
+    document.getElementById('current-date').innerText = maintenant.toLocaleDateString();
+
+    // AFFICHAGE DE LA QUESTION 1 (Visible dès 6h)
+    if (heure >= 6) {
+        qList.innerHTML += `
+            <div class="question-block">
+                <small>☀️ Question du Matin</small><br>
+                <strong>${q1}</strong>
+                <textarea id="rep1" placeholder="Ta réponse..."></textarea>
+            </div>`;
+    } else {
+        qList.innerHTML += `<p style="color:#aaa; font-style:italic;">La première question arrive à 6h... 💤</p>`;
+    }
+
+    // AFFICHAGE DE LA QUESTION 2 (Visible dès 19h)
+    if (heure >= 19 || heure < 6) { 
+        qList.innerHTML += `
+            <div class="question-block" style="border-left-color: #7209b7;">
+                <small>🌙 Question du Soir</small><br>
+                <strong>${q2}</strong>
+                <textarea id="rep2" placeholder="Ta réponse..."></textarea>
+            </div>`;
+    } else {
+        qList.innerHTML += `
+            <div class="question-block" style="opacity: 0.5; border-left-color: #ccc;">
+                <small>🌙 Question du Soir</small><br>
+                <p>Arrive à 19h00...</p>
+            </div>`;
+    }
 
     function envoyer() {
         const prenom = document.getElementById('mon-prenom').value;
         if(!prenom) return alert("Indique ton prénom !");
-        const reponses = {
+        
+        const r1 = document.getElementById('rep1') ? document.getElementById('rep1').value : "";
+        const r2 = document.getElementById('rep2') ? document.getElementById('rep2').value : "";
+
+        if(!r1 && !r2) return alert("Écris au moins une réponse !");
+
+        database.ref('reponses').push({
             auteur: prenom,
-            date: dateAujourdhui.toLocaleDateString(),
-            r1: document.getElementById('q0').value,
-            r2: document.getElementById('q1').value,
-            r3: document.getElementById('q2').value
-        };
-        database.ref('reponses').push(reponses);
-        alert("Réponses envoyées !");
+            date: maintenant.toLocaleString(),
+            reponseMatin: r1,
+            reponseSoir: r2
+        });
+        alert("Enregistré ❤️");
     }
 
-    database.ref('reponses').limitToLast(5).on('value', (snapshot) => {
+    database.ref('reponses').limitToLast(8).on('value', (snapshot) => {
         const data = snapshot.val();
         let html = "";
         for (let id in data) {
-            html = `<div class="res"><strong>${data[id].auteur} (${data[id].date}) :</strong><br>1: ${data[id].r1}<br>2: ${data[id].r2}<br>3: ${data[id].r3}</div>` + html;
+            let contenu = "";
+            if(data[id].reponseMatin) contenu += `☀️ ${data[id].reponseMatin}<br>`;
+            if(data[id].reponseSoir) contenu += `🌙 ${data[id].reponseSoir}`;
+            
+            html = `<div class="res">
+                        <strong>${data[id].auteur}</strong> <small>${data[id].date}</small><br>
+                        ${contenu}
+                    </div>` + html;
         }
         document.getElementById('reponses-flux').innerHTML = html;
     });
-</script>
-</body>
-</html>
