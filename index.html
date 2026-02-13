@@ -7,118 +7,78 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
-        body { font-family: 'Poppins', sans-serif; background: #fff0f3; color: #444; text-align: center; padding: 20px; margin: 0; }
-        .card { background: white; max-width: 500px; margin: 20px auto; padding: 30px; border-radius: 30px; box-shadow: 0 10px 30px rgba(255,182,193,0.3); }
-        h1 { color: #ff4d6d; font-size: 1.6rem; margin: 0; }
-        #current-date { display: block; margin-bottom: 20px; font-size: 0.85rem; color: #888; }
-        .question-block { background: #fff5f6; margin: 15px 0; padding: 20px; border-radius: 20px; border-left: 6px solid #ff4d6d; text-align: left; }
-        .locked { opacity: 0.5; border-left-color: #ccc; background: #f9f9f9; }
-        textarea { width: 100%; border: 1px solid #ddd; border-radius: 12px; padding: 12px; box-sizing: border-box; margin-top: 10px; resize: none; font-family: inherit; }
-        input#mon-prenom { width: 100%; max-width: 300px; padding: 12px; border-radius: 15px; border: 1px solid #ddd; margin: 20px 0; text-align: center; }
-        button { background: #ff4d6d; color: white; border: none; padding: 15px 40px; border-radius: 50px; cursor: pointer; font-weight: 600; width: 100%; max-width: 300px; }
-        .res { font-size: 0.9rem; margin-bottom: 20px; text-align: left; background: #fff; padding: 15px; border-radius: 20px; border: 1px solid #ffe5ec; }
-        .res strong { color: #ff4d6d; }
-        hr { border: 0; border-top: 1px dashed #ffd1d1; margin: 30px 0; }
+        body { font-family: sans-serif; background: #fff0f3; text-align: center; padding: 20px; color: #444; }
+        .card { background: white; max-width: 500px; margin: auto; padding: 20px; border-radius: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .question-block { background: #fff5f6; margin: 15px 0; padding: 15px; border-radius: 15px; border-left: 5px solid #ff4d6d; text-align: left; }
+        textarea { width: 100%; border: 1px solid #ddd; border-radius: 10px; padding: 10px; box-sizing: border-box; margin-top: 10px; }
+        input { width: 80%; padding: 10px; margin: 15px 0; border-radius: 10px; border: 1px solid #ddd; }
+        button { background: #ff4d6d; color: white; border: none; padding: 15px 30px; border-radius: 50px; cursor: pointer; font-weight: bold; width: 80%; }
+        .res { font-size: 0.9rem; margin-top: 15px; text-align: left; background: #fefefe; padding: 10px; border-radius: 10px; border: 1px solid #eee; }
     </style>
 </head>
 <body>
 
 <div class="card">
     <h1>✨ Notre Rituel</h1>
-    <span id="current-date"></span>
-    <div id="questions-list">Chargement...</div>
-    <input type="text" id="mon-prenom" placeholder="Ton petit nom...">
-    <button onclick="envoyer()">Envoyer nos réponses ❤️</button>
-    <hr>
-    <div id="reponses-flux">En attente de vos mots...</div>
+    <p id="date-du-jour"></p>
+    <div id="questions-zone">Affichage des questions...</div>
+    <input type="text" id="mon-prenom" placeholder="Ton prénom">
+    <button onclick="envoyer()">Envoyer ❤️</button>
+    <div id="reponses-flux" style="margin-top:20px;"></div>
 </div>
 
 <script>
-    const firebaseConfig = {
-        databaseURL: "https://notre-petit-coin-default-rtdb.europe-west1.firebasedatabase.app"
+    // --- CONFIGURATION ---
+    const CONFIG = {
+        databaseURL: "COLLE_ICI_TON_URL_FIREBASE"
     };
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
 
+    // --- TES QUESTIONS (LISTES COMPLÈTES) ---
     const qMatin = [
-        "C’est quoi ton moment préféré la dernière fois qu’on s’est vu ?",
-        "Quelle est la petite chose que je fais et qui te fait craquer sans que je le sache ?",
-        "Quel est le plus beau compliment que je t’ai fait ?",
-        "C'est quoi le 'petit truc' qui te rend fier/fière d'être avec moi ?",
-        "C'est quoi la connerie qu'on a faite ensemble qui te fait marrer en y repensant ?",
-        "Je ressemble à quoi comme créature moche, faut développer sinon ça va goumer ;)",
-        "Quelle est ma manie la plus bizarre que tu as découverte ?",
-        "Si on était des animaux, on serait quoi ?",
-        "Est-ce que y’a un message que je t’ai envoyé où tu t’es dit « aah c’est pas le couteau le plus aiguisé du tiroir »",
-        "Si je devais devenir une star, je serais célèbre pour quoi ?",
-        "Quelle est la chose la plus courageuse que tu as faite cette année ?",
-        "Qu'est-ce qui te rend le plus fier/fière dans ta vie en ce moment ?",
-        "Si tu pouvais changer une seule chose dans ton quotidien, ce serait quoi ?",
-        "Budget illimité, qu’est-ce que tu m’achèterais et t’achèterais aussi",
-        "Si je t’envoie un message j’ai merdé, tu penses ce serait sur quoi",
-        "Si tu devais te vanter de moi devant un inconnu tu dirais quoi",
-        "Pour toi qu’elle est ma passion",
-        "Si je finis en prison ce serait pour quel motif",
-        "Une chose que je fais mieux que tt le monde",
-        "Quel est mon plus gros défaut",
-        "Donne 3 mots pour décrire notre relation",
-        "Si tu devais disparaître un temps pour n’importe qu’elle raison, se serait où ?"
+        "C’est quoi ton moment préféré la dernière fois qu’on s’est vu ?", "Quelle est la petite chose que je fais et qui te fait craquer ?", "Quel est le plus beau compliment que je t’ai fait ?", "Je ressemble à quoi comme créature moche, faut développer sinon ça va goumer ;)", "Quelle est ma manie la plus bizarre que tu as découverte ?", "Si on était des animaux, on serait quoi ?", "Est-ce que y’a un message que je t’ai envoyé où tu t’es dit « aah c’est pas le couteau le plus aiguisé »", "Si je devais devenir une star, je serais célèbre pour quoi ?", "Si je t’envoie un message j’ai merdé, tu penses ce serait sur quoi", "Si je finis en prison ce serait pour quel motif", "Quel est mon plus gros défaut", "Donne 3 mots pour décrire notre relation"
     ];
-
     const qSoir = [
-        "Si tu ne devais garder qu’un souvenir de moi ce serait lequel ?",
-        "Si on était ensemble là tout de suite, on ferait quoi ?",
-        "Quelle est la photo de nous deux que tu aimerais faire ?",
-        "Qu’est-ce qui te manque le plus chez moi quand on raccroche le soir ?",
-        "Si tu devais me décrire en un seul mot, ce serait lequel ?",
-        "Quel est ton souvenir le plus doux de nous deux sous la couette ?",
-        "Quelle est la première chose que tu as envie de me dire quand on se reverra à la gare/aéroport ?",
-        "Qu'est-ce que tu préfères : mes bisous, mes câlins ou nos discussions ou autre chose encore ?",
-        "Si on devait participer à une émission de télé-réalité, laquelle choisirais-tu ?",
-        "Si on échangeait nos corps pendant 24h, c'est quoi la première chose que tu ferais ?",
-        "Quel est ton pire 'tue-l'amour' que je possède (même si tu m'aimes quand même) ?",
-        "C’est peut-être encore tôt mais qu'est-ce que notre relation t'a appris sur toi-même ?",
-        "C'est quoi ta plus grande peur par rapport à notre futur ?",
-        "Si on pouvait effacer un seul moment de notre passé, ce serait lequel ?",
-        "De quoi as-tu le plus besoin pour te sentir en sécurité avec moi ?",
-        "Quel est le rêve que tu n'as encore dit à personne (sauf peut-être à moi) ?",
-        "Comment imagines-tu notre vie dans 10 ans pile ?",
-        "Quelle est la blessure du passé que j'ai réussi à apaiser chez toi ? s’il y en a une, maybe t’es parfaite et c’est ok",
-        "Qu'est-ce qui te fait dire que 'c'est moi et personne d'autre' ?",
-        "Si tu devais me confier une mission pour ton bonheur, ce serait quoi ?",
-        "Quel est le rituel à distance que tu préfères entre nous ?",
-        "Quel est le prochain voyage (même fou) qu'on doit absolument organiser ?",
-        "Si tu pouvais m'envoyer un colis là tout de suite, il y aurait quoi dedans ?",
-        "Quelle est ta zone la plus sensible que je n'ai pas encore assez explorée à ton goût ?",
-        "Quelle partie de mon corps te fait le plus d'effet quand je m'approche de toi ?",
-        "C'est quoi le truc le plus bizarre qui t'excite un peu alors que ça ne devrait pas ?",
-        "Si on devait vivre nus dans une forêt pendant une semaine, qui craquerait en premier ?",
-        "Quelle est la recherche la plus étrange que tu as faite sur Google récemment ?",
-        "C'est quoi le secret que tu ne m'as pas dit parce que tu as peur que je te trouve trop bizarre ?",
-        "Si tu pouvais m'ajouter une option 'télécommandée', quel bouton tu utiliserais le plus ?",
-        "Quelle est la pire chose que tu aies faite par jalousie ?",
-        "Quel est le moment ou je t’ai fait le plus rire",
-        "Quel est ton plus beau souvenirs avec moi",
-        "Quel souvenir intime avec moi t’a le plus marqué",
-        "Si je devais te surprendre ce soir, je devrais faire quoi"
+        "Si tu ne devais garder qu’un souvenir de moi ce serait lequel ?", "Si on était ensemble là tout de suite, on ferait quoi ?", "Quelle est la photo de nous deux que tu aimerais faire ?", "Qu’est-ce qui te manque le plus le soir ?", "Quel est ton souvenir le plus doux sous la couette ?", "Quelle est la blessure du passé que j'ai réussi à apaiser ? maybe t’es parfaite", "C'est quoi le truc le plus bizarre qui t'excite un peu ?", "Si on devait vivre nus dans une forêt, qui craquerait en premier ?", "Quelle est la recherche la plus étrange que tu as faite sur Google récemment ?", "C'est quoi le secret que tu ne m'as pas dit par peur que je te trouve bizarre ?", "Quelle est la pire chose que tu aies faite par jalousie ?", "Si je devais te surprendre ce soir, je devrais faire quoi"
     ];
 
+    // --- LOGIQUE D'AFFICHAGE ---
     const maintenant = new Date();
     const heure = maintenant.getHours();
     const jour = maintenant.getDate();
-    document.getElementById('current-date').innerText = maintenant.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+    
+    document.getElementById('date-du-jour').innerText = maintenant.toLocaleDateString();
 
-    const qList = document.getElementById('questions-list');
-    const q1 = qMatin[jour % qMatin.length];
-    const q2 = qSoir[jour % qSoir.length];
+    const quest1 = qMatin[jour % qMatin.length];
+    const quest2 = qSoir[jour % qSoir.length];
 
-    let html = `<div class="question-block">☀️ <strong>${q1}</strong><textarea id="rep1" rows="2"></textarea></div>`;
+    let zone = document.getElementById('questions-zone');
+    let html = `<div class="question-block">☀️ <b>Question 1 :</b><br>${quest1}<textarea id="r1"></textarea></div>`;
+
     if (heure >= 19 || heure < 6) {
-        html += `<div class="question-block" style="border-left-color:#7209b7">🌙 <strong>${q2}</strong><textarea id="rep2" rows="2"></textarea></div>`;
+        html += `<div class="question-block" style="border-left-color:purple;">🌙 <b>Question 2 :</b><br>${quest2}<textarea id="r2"></textarea></div>`;
     } else {
-        html += `<div class="question-block locked">🌙 Question du soir à 19h00...</div>`;
+        html += `<div class="question-block" style="opacity:0.5;">🌙 Question du soir à 19h...</div>`;
     }
-    qList.innerHTML = html;
+    zone.innerHTML = html;
 
-    function
+    // --- FIREBASE ---
+    let db;
+    try {
+        firebase.initializeApp(CONFIG);
+        db = firebase.database();
+        
+        // Charger les messages
+        db.ref('reponses').limitToLast(5).on('value', (snap) => {
+            const data = snap.val();
+            let flux = "";
+            for (let id in data) {
+                flux = `<div class="res"><b>${data[id].nom}</b> : ${data[id].msg1} ${data[id].msg2}</div>` + flux;
+            }
+            document.getElementById('reponses-flux').innerHTML = flux;
+        });
+    } catch(e) { console.log("Erreur de connexion"); }
+
+    function envoyer() {
+        const nom = document.getElementById('mon-prenom').value;
+        const msg1 = document.getElementById('r1') ? document.getElementById('r1').value : "";
+        const msg
