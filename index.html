@@ -6,23 +6,33 @@
     <title>Notre Rituel ❤️</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        
         body { font-family: 'Poppins', sans-serif; background: #fff0f3; color: #444; text-align: center; padding: 20px; margin: 0; }
-        .card { background: white; max-width: 500px; margin: 20px auto; padding: 30px; border-radius: 30px; box-shadow: 0 10px 30px rgba(255,182,193,0.3); position: relative; overflow: hidden; }
+        .card { background: white; max-width: 500px; margin: 20px auto; padding: 30px; border-radius: 30px; box-shadow: 0 10px 30px rgba(255,182,193,0.3); }
+        
         h1 { color: #ff4d6d; font-size: 1.6rem; margin-bottom: 5px; }
         #current-date { display: block; margin-bottom: 20px; font-size: 0.85rem; color: #888; text-transform: capitalize; }
-        .question-block { background: #fff5f6; margin: 15px 0; padding: 20px; border-radius: 20px; border-left: 6px solid #ff4d6d; text-align: left; transition: 0.3s; }
+        
+        .question-block { background: #fff5f6; margin: 15px 0; padding: 20px; border-radius: 20px; border-left: 6px solid #ff4d6d; text-align: left; }
         .locked { opacity: 0.5; border-left-color: #ccc; background: #f9f9f9; }
+        
         textarea { width: 100%; border: 1px solid #ddd; border-radius: 12px; padding: 12px; box-sizing: border-box; margin-top: 10px; resize: none; font-family: inherit; }
         input#mon-prenom { width: 100%; max-width: 300px; padding: 12px; border-radius: 15px; border: 1px solid #ddd; margin: 20px 0; text-align: center; font-size: 1rem; }
+        
         button { background: #ff4d6d; color: white; border: none; padding: 15px 40px; border-radius: 50px; cursor: pointer; font-weight: 600; font-size: 1rem; width: 100%; max-width: 300px; transition: 0.3s; }
         button:hover { background: #ff758c; transform: translateY(-2px); }
-        .res { font-size: 0.9rem; margin-bottom: 20px; text-align: left; background: #fff; padding: 15px; border-radius: 20px; border: 1px solid #ffe5ec; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        .res strong { color: #ff4d6d; font-weight: 600; }
+        
+        .res { font-size: 0.9rem; margin-bottom: 20px; text-align: left; background: #fff; padding: 15px; border-radius: 20px; border: 1px solid #ffe5ec; }
+        .res strong { color: #ff4d6d; }
         .res small { color: #bbb; display: block; margin-bottom: 5px; }
+        
+        /* Animation Coeurs */
         .heart { position: fixed; font-size: 20px; z-index: 999; pointer-events: none; animation: fall linear forwards; }
         @keyframes fall { to { transform: translateY(100vh) rotate(360deg); opacity: 0; } }
+        
         hr { border: 0; border-top: 1px dashed #ffd1d1; margin: 30px 0; }
     </style>
 </head>
@@ -32,25 +42,25 @@
     <h1>✨ Notre Rituel</h1>
     <span id="current-date"></span>
     
-    <div id="questions-list"></div>
+    <div id="questions-list">Chargement des questions...</div>
 
     <input type="text" id="mon-prenom" placeholder="Ton petit nom...">
     <button onclick="envoyer()">Envoyer nos réponses ❤️</button>
 
     <hr>
     <h3 style="color: #ff4d6d;">Nos souvenirs récents</h3>
-    <div id="reponses-flux">Chargement des mots doux...</div>
+    <div id="reponses-flux">En attente de mots doux...</div>
 </div>
 
 <script>
-    // 1. CONFIGURATION (Remplacer si nécessaire)
+    // 1. CONFIGURATION FIREBASE
     const firebaseConfig = {
         databaseURL: "https://notre-petit-coin-default-rtdb.europe-west1.firebasedatabase.app"
     };
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    // 2. TES QUESTIONS MÉLANGÉES
+    // 2. BANQUE DE QUESTIONS
     const questionsMatin = [
         "C'est quoi la connerie qu'on a faite ensemble qui te fait marrer en y repensant ?",
         "Si tu ne devais garder qu’un souvenir de moi ce serait lequel ?",
@@ -71,19 +81,18 @@
         "Si tu pouvais changer une seule chose dans ton quotidien, ce serait quoi ?",
         "Quelle est la petite chose que je fais et qui te fait craquer sans que je le sache ?",
         "Si on devait partir en voyage, tu partirais où ?",
-        "Est-ce qu’il y a un message que je t’ai envoyé où tu t’es dit : 'aaah c’est pas le couteau le plus aiguisé du tiroir' ?",
         "Une chose que je fais mieux que tout le monde ?",
         "Quel est mon plus gros défaut ?",
         "Si tu devais disparaître un temps pour n’importe quelle raison, ce serait où ?",
         "Quelle est la recherche la plus étrange que tu as faite sur Google récemment ?",
         "Quel est le rituel à distance que tu préfères entre nous ?",
-        "Je ressemble à quoi comme créature moche ? (faut développer !)"
+        "Je ressemble à quoi comme créature moche ? (faut développer !)",
+        "Qu’est-ce qui te manque le plus chez moi quand on raccroche le soir ?"
     ];
 
     const questionsSoir = [
         "Quel souvenir intime avec moi t’a le plus marqué ?",
         "Si on devait vivre nus dans une forêt pendant une semaine, qui craquerait en premier ?",
-        "Qu’est-ce qui te manque le plus chez moi quand on raccroche le soir ?",
         "Quel est l'endroit le plus insolite où tu aimerais qu'on le fasse ?",
         "Comment imagines-tu notre vie dans 10 ans pile ?",
         "Qu'est-ce qui te fait dire que 'c'est moi et personne d'autre' ?",
@@ -113,73 +122,15 @@
         "Si c'était à refaire, qu'est-ce que tu changerais ?"
     ];
 
+    // 3. LOGIQUE D'AFFICHAGE
     const maintenant = new Date();
     const heure = maintenant.getHours();
     const jour = maintenant.getDate();
+    
     document.getElementById('current-date').innerText = maintenant.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
 
-    // 3. AFFICHAGE DYNAMIQUE
-    const qList = document.getElementById('questions-list');
     const q1 = questionsMatin[jour % questionsMatin.length];
     const q2 = questionsSoir[jour % questionsSoir.length];
 
-    let html = `<div class="question-block">
-        <small>☀️ Ce matin...</small><br>
-        <strong>${q1}</strong>
-        <textarea id="rep1" rows="2" placeholder="Écris ici..."></textarea>
-    </div>`;
-
-    if (heure >= 19 || heure < 6) {
-        html += `<div class="question-block" style="border-left-color: #7209b7;">
-            <small>🌙 Ce soir...</small><br>
-            <strong>${q2}</strong>
-            <textarea id="rep2" rows="2" placeholder="Écris ici..."></textarea>
-        </div>`;
-    } else {
-        html += `<div class="question-block locked">
-            <small>🌙 Ce soir...</small><br>
-            <strong>La question arrive à 19h00...</strong>
-        </div>`;
-    }
-    qList.innerHTML = html;
-
-    // 4. LOGIQUE D'ENVOI
-    function envoyer() {
-        const prenom = document.getElementById('mon-prenom').value;
-        const r1 = document.getElementById('rep1') ? document.getElementById('rep1').value : "";
-        const r2 = document.getElementById('rep2') ? document.getElementById('rep2').value : "";
-
-        if (!prenom) return alert("Indique ton prénom !");
-        if (!r1 && !r2) return alert("Écris au moins une petite réponse ❤️");
-
-        database.ref('reponses').push({
-            auteur: prenom,
-            date: maintenant.toLocaleDateString('fr-FR'),
-            h: maintenant.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'}),
-            m: r1,
-            s: r2
-        });
-
-        if(document.getElementById('rep1')) document.getElementById('rep1').value = "";
-        if(document.getElementById('rep2')) document.getElementById('rep2').value = "";
-        
-        createHearts(); // Petite animation
-        alert("C'est envoyé ! ❤️");
-    }
-
-    // 5. ANIMATION COEURS
-    function createHearts() {
-        for(let i=0; i<15; i++) {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.innerText = '❤️';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
-            document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 5000);
-        }
-    }
-
-    // 6. RECUPERATION DES MESSAGES
-    database.ref('reponses').limitToLast(10).on('value', (snapshot) => {
-        const data = snapshot.val();
+    const qList = document.getElementById('questions-list');
+    let html =
