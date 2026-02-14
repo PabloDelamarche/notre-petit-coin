@@ -7,134 +7,119 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
-        body { font-family: 'Poppins', sans-serif; background: #fff0f3; color: #444; text-align: center; padding: 20px; margin: 0; }
-        .card { background: white; max-width: 500px; margin: 20px auto; padding: 30px; border-radius: 30px; box-shadow: 0 10px 30px rgba(255,182,193,0.3); }
-        h1 { color: #ff4d6d; font-size: 1.6rem; margin: 0; }
-        #current-date { display: block; margin-bottom: 20px; font-size: 0.85rem; color: #888; }
-        .question-block { background: #fff5f6; margin: 15px 0; padding: 20px; border-radius: 20px; border-left: 6px solid #ff4d6d; text-align: left; }
-        .locked { opacity: 0.5; border-left-color: #ccc; background: #f9f9f9; }
-        textarea { width: 100%; border: 1px solid #ddd; border-radius: 12px; padding: 12px; box-sizing: border-box; margin-top: 10px; resize: none; font-family: inherit; }
-        input#mon-prenom { width: 100%; max-width: 300px; padding: 12px; border-radius: 15px; border: 1px solid #ddd; margin: 20px 0; text-align: center; }
-        button { background: #ff4d6d; color: white; border: none; padding: 15px 40px; border-radius: 50px; cursor: pointer; font-weight: 600; width: 100%; max-width: 300px; }
-        .res { font-size: 0.9rem; margin-bottom: 20px; text-align: left; background: #fff; padding: 15px; border-radius: 20px; border: 1px solid #ffe5ec; }
-        .res strong { color: #ff4d6d; }
-        .heart { position: fixed; font-size: 20px; z-index: 999; pointer-events: none; animation: fall linear forwards; }
-        @keyframes fall { to { transform: translateY(100vh) rotate(360deg); opacity: 0; } }
-        hr { border: 0; border-top: 1px dashed #ffd1d1; margin: 30px 0; }
+        body { font-family: sans-serif; background: #fff0f3; text-align: center; padding: 20px; color: #444; }
+        .card { background: white; max-width: 500px; margin: auto; padding: 20px; border-radius: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        
+        /* Style de la barre de progression */
+        .progress-container { background: #eee; border-radius: 20px; margin: 20px 0; height: 25px; position: relative; overflow: hidden; border: 1px solid #ffd1d1; }
+        .progress-bar { background: linear-gradient(90deg, #ff758c, #ff4d6d); height: 100%; width: 0%; transition: width 1s ease-in-out; border-radius: 20px; }
+        .progress-text { position: absolute; width: 100%; top: 50%; left: 0; transform: translateY(-50%); font-size: 0.8rem; font-weight: bold; color: #444; }
+
+        .question-block { background: #fff5f6; margin: 15px 0; padding: 15px; border-radius: 15px; border-left: 5px solid #ff4d6d; text-align: left; }
+        textarea { width: 100%; border: 1px solid #ddd; border-radius: 10px; padding: 10px; box-sizing: border-box; margin-top: 10px; font-family: inherit; }
+        input { width: 80%; padding: 10px; margin: 15px 0; border-radius: 10px; border: 1px solid #ddd; text-align: center; }
+        button { background: #ff4d6d; color: white; border: none; padding: 15px 30px; border-radius: 50px; cursor: pointer; font-weight: bold; width: 80%; }
+        .res { font-size: 0.85rem; margin-top: 15px; text-align: left; background: #fefefe; padding: 10px; border-radius: 10px; border: 1px solid #eee; }
+        .res b { color: #ff4d6d; }
     </style>
 </head>
 <body>
 
 <div class="card">
     <h1>✨ Notre Rituel</h1>
-    <span id="current-date"></span>
-    <div id="questions-list">Chargement des questions...</div>
-    <input type="text" id="mon-prenom" placeholder="Ton petit nom...">
+    
+    <div id="countdown-text" style="font-size: 0.9rem; margin-top: 10px;">Calcul des retrouvailles...</div>
+    <div class="progress-container">
+        <div id="myBar" class="progress-bar"></div>
+        <div id="percent-text" class="progress-text">0%</div>
+    </div>
+
+    <div id="questions-zone">Chargement des questions...</div>
+    
+    <input type="text" id="mon-prenom" placeholder="Ton prénom">
     <button onclick="envoyer()">Envoyer nos réponses ❤️</button>
-    <hr>
-    <h3 style="color: #ff4d6d;">Nos souvenirs récents</h3>
-    <div id="reponses-flux">En attente de mots doux...</div>
+    
+    <div id="reponses-flux" style="margin-top:20px;"></div>
 </div>
 
 <script>
-    // 1. CONFIGURATION
-    const firebaseConfig = {
+    // --- 1. CONFIGURATION ---
+    const CONFIG = {
         databaseURL: "https://notre-petit-coin-default-rtdb.europe-west1.firebasedatabase.app"
     };
 
-    // Initialisation sécurisée
-    let database;
-    try {
-        firebase.initializeApp(firebaseConfig);
-        database = firebase.database();
-    } catch (e) {
-        console.error("Firebase init error", e);
-    }
+    // --- 2. CONFIGURATION DES DATES ---
+    const dateRetrouvailles = new Date("2026-03-12"); // DATE DE VOS RETROUVAILLES
+    const dateDepart = new Date("2026-01-31");        // DATE DE VOTRE DÉPART
 
-    // 2. QUESTIONS
+    // --- 3. QUESTIONS (LISTES COMPLÈTES) ---
     const qMatin = [
-        "C'est quoi la connerie qu'on a faite ensemble qui te fait marrer ?", "Si tu ne devais garder qu’un souvenir de moi ce serait lequel ?",
-        "Quelle est ma manie la plus bizarre que tu as découverte ?", "Budget illimité : qu’est-ce que tu m’achèterais ?",
-        "Si je devais devenir une star, je serais célèbre pour quoi ?", "Quel est le plus beau compliment que je t’ai fait ?",
-        "Si je t’envoie un message 'j’ai merdé', tu penses que ce serait sur quoi ?", "Si on était des animaux, on serait quoi ?",
-        "Quelle est la photo de nous deux que tu aimerais faire ?", "Quelle est la chose la plus courageuse que tu as faite cette année ?",
-        "Pour toi, quelle est ma passion ?", "Si je finis en prison, ce serait pour quel motif ?",
-        "Si on échangeait nos corps pendant 24h, c'est quoi la première chose que tu ferais ?", "C’est quoi ton moment préféré la dernière fois qu’on s’est vu ?",
-        "Donne 3 mots pour décrire notre relation.", "Si tu devais te vanter de moi devant un inconnu, tu dirais quoi ?",
-        "Si tu pouvais changer une seule chose dans ton quotidien, ce serait quoi ?", "Quelle est la petite chose que je fais et qui te fait craquer ?",
-        "Si on devait partir en voyage, tu partirais où ?", "Une chose que je fais mieux que tout le monde ?",
-        "Quel est mon plus gros défaut ?", "Si tu devais disparaître un temps, ce serait où ?",
-        "Quelle est la recherche la plus étrange sur Google récemment ?", "Quel est le rituel à distance que tu préfères ?",
-        "Je ressemble à quoi comme créature moche ?", "Qu’est-ce qui te manque le plus le soir ?"
+        "C’est quoi ton moment préféré la dernière fois qu’on s’est vu ?", "Quelle est la petite chose que je fais et qui te fait craquer ?", "Quel est le plus beau compliment que je t’ai fait ?", "Je ressemble à quoi comme créature moche, faut développer sinon ça va goumer ;)", "Quelle est ma manie la plus bizarre que tu as découverte ?", "Si on était des animaux, on serait quoi ?", "Est-ce que y’a un message que je t’ai envoyé où tu t’es dit « aah c’est pas le couteau le plus aiguisé »", "Si je devais devenir une star, je serais célèbre pour quoi ?", "Si je t’envoie un message j’ai merdé, tu penses ce serait sur quoi", "Si je finis en prison ce serait pour quel motif", "Quel est mon plus gros défaut", "Donne 3 mots pour décrire notre relation"
     ];
-
     const qSoir = [
-        "Quel souvenir intime avec moi t’a le plus marqué ?", "Si on vivait nus dans une forêt, qui craquerait en premier ?",
-        "Quel est l'endroit le plus insolite où tu aimerais qu'on le fasse ?", "Comment imagines-tu notre vie dans 10 ans ?",
-        "Qu'est-ce qui te fait dire que 'c'est moi et personne d'autre' ?", "Quelle partie de mon corps te fait le plus d'effet ?",
-        "Si tu avais une option 'télécommandée' sur moi, quel bouton ?", "Quelle est la blessure du passé que j'ai apaisée ?",
-        "Le truc le plus bizarre qui t'excite ?", "Ton souvenir le plus doux sous la couette ?",
-        "Quelle est la pire chose que tu aies faite par jalousie ?", "Si on effaçait un moment du passé ?",
-        "Quel est ton pire 'tue-l'amour' chez moi ?", "C'est quoi ta plus grande peur pour notre futur ?",
-        "Si tu devais me confier une mission bonheur ?", "Le moment où je t’ai fait le plus rire ?",
-        "Ta zone la plus sensible pas assez explorée ?", "Si je devais te surprendre ce soir ?",
-        "Quel est ton plus beau souvenir avec moi ?", "De quoi as-tu besoin pour te sentir en sécurité ?",
-        "Ton rêve jamais dit à personne ?", "Ta partie préférée de mon corps (pas les yeux) ?",
-        "Si on faisait une télé-réalité ?", "Ton secret le plus bizarre ?",
-        "Qu'est-ce que notre relation t'a appris ?", "Un 'bon pour tout' d'une heure ?",
-        "Ta plus grande peur en amour ?", "Si c'était à refaire ?"
+        "Si tu ne devais garder qu’un souvenir de moi ce serait lequel ?", "Si on était ensemble là tout de suite, on ferait quoi ?", "Quelle est la photo de nous deux que tu aimerais faire ?", "Qu’est-ce qui te manque le plus le soir ?", "Quel est ton souvenir le plus doux sous la couette ?", "Quelle est la blessure du passé que j'ai réussi à apaiser ? maybe t’es parfaite", "C'est quoi le truc le plus bizarre qui t'excite un peu ?", "Si on devait vivre nus dans une forêt, qui craquerait en premier ?", "Quelle est la recherche la plus étrange que tu as faite sur Google récemment ?", "C'est quoi le secret que tu ne m'as pas dit par peur que je te trouve bizarre ?", "Quelle est la pire chose que tu aies faite par jalousie ?", "Si je devais te surprendre ce soir, je devrais faire quoi"
     ];
 
-    // 3. AFFICHAGE
+    // --- 4. LOGIQUE BARRE DE PROGRESSION & QUESTIONS ---
     const maintenant = new Date();
     const heure = maintenant.getHours();
-    const jour = maintenant.getDate();
-    document.getElementById('current-date').innerText = maintenant.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+    const jourDuMois = maintenant.getDate();
 
-    const qList = document.getElementById('questions-list');
-    const question1 = qMatin[jour % qMatin.length];
-    const question2 = qSoir[jour % qSoir.length];
+    // Calcul Barre
+    const totalDuree = dateRetrouvailles - dateDepart;
+    const ecoule = maintenant - dateDepart;
+    let pourcent = Math.floor((ecoule / totalDuree) * 100);
+    if(pourcent > 100) pourcent = 100;
+    if(pourcent < 0) pourcent = 0;
 
-    let htmlContenu = `<div class="question-block">☀️ <strong>${question1}</strong><textarea id="rep1" rows="2"></textarea></div>`;
+    const joursRestants = Math.ceil((dateRetrouvailles - maintenant) / (1000 * 60 * 60 * 24));
+
+    // Mise à jour visuelle immédiate
+    document.getElementById('myBar').style.width = pourcent + "%";
+    document.getElementById('percent-text').innerText = pourcent + "%";
+    document.getElementById('countdown-text').innerText = "Plus que " + joursRestants + " jours avant de se voir ! 😍";
+
+    // Affichage Questions
+    const quest1 = qMatin[jourDuMois % qMatin.length];
+    const quest2 = qSoir[jourDuMois % qSoir.length];
+    let html = `<div class="question-block">☀️ <b>Matin :</b><br>${quest1}<textarea id="r1"></textarea></div>`;
 
     if (heure >= 19 || heure < 6) {
-        htmlContenu += `<div class="question-block" style="border-left-color:#7209b7">🌙 <strong>${question2}</strong><textarea id="rep2" rows="2"></textarea></div>`;
+        html += `<div class="question-block" style="border-left-color:purple;">🌙 <b>Soir :</b><br>${quest2}<textarea id="r2"></textarea></div>`;
     } else {
-        htmlContenu += `<div class="question-block locked">🌙 Question du soir à 19h00...</div>`;
+        html += `<div class="question-block" style="opacity:0.5;">🌙 Question du soir à 19h...</div>`;
     }
-    qList.innerHTML = htmlContenu;
+    document.getElementById('questions-zone').innerHTML = html;
 
-    // 4. FONCTIONS
-    function envoyer() {
-        const prenom = document.getElementById('mon-prenom').value;
-        const r1 = document.getElementById('rep1') ? document.getElementById('rep1').value : "";
-        const r2 = document.getElementById('rep2') ? document.getElementById('rep2').value : "";
-
-        if (!prenom || (!r1 && !r2)) return alert("Remplis ton nom et une réponse ! ❤️");
-
-        if(database) {
-            database.ref('reponses').push({
-                auteur: prenom,
-                date: maintenant.toLocaleDateString('fr-FR'),
-                h: maintenant.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'}),
-                m: r1, s: r2
-            });
-            alert("Envoyé ! ❤️");
-            if(document.getElementById('rep1')) document.getElementById('rep1').value = "";
-            if(document.getElementById('rep2')) document.getElementById('rep2').value = "";
-        }
-    }
-
-    if(database) {
-        database.ref('reponses').limitToLast(10).on('value', (snap) => {
+    // --- 5. FIREBASE ---
+    let db;
+    try {
+        firebase.initializeApp(CONFIG);
+        db = firebase.database();
+        db.ref('reponses').limitToLast(5).on('value', (snap) => {
             const data = snap.val();
-            let c = "";
+            let flux = "";
             for (let id in data) {
-                c = `<div class="res"><strong>${data[id].auteur}</strong> <small>${data[id].h}</small><br>${data[id].m ? '☀️ '+data[id].m : ''}<br>${data[id].s ? '🌙 '+data[id].s : ''}</div>` + c;
+                flux = `<div class="res"><b>${data[id].nom}</b> : ${data[id].msg1} ${data[id].msg2}</div>` + flux;
             }
-            document.getElementById('reponses-flux').innerHTML = c || "Aucun souvenir...";
+            document.getElementById('reponses-flux').innerHTML = flux;
         });
+    } catch(e) { console.log("Erreur Firebase"); }
+
+    function envoyer() {
+        const nom = document.getElementById('mon-prenom').value;
+        if(!nom) return alert("Ton prénom !");
+        const m1 = document.getElementById('r1') ? document.getElementById('r1').value : "";
+        const m2 = document.getElementById('r2') ? document.getElementById('r2').value : "";
+
+        db.ref('reponses').push({
+            nom: nom,
+            msg1: m1 ? "☀️ "+m1 : "",
+            msg2: m2 ? "🌙 "+m2 : ""
+        });
+        alert("Envoyé ! ❤️");
+        if(document.getElementById('r1')) document.getElementById('r1').value = "";
+        if(document.getElementById('r2')) document.getElementById('r2').value = "";
     }
 </script>
 </body>
