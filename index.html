@@ -14,28 +14,26 @@
         /* Barre de progression */
         .progress-container { background: #eee; border-radius: 20px; margin: 15px 0; height: 20px; position: relative; overflow: hidden; border: 1px solid #ffd1d1; }
         .progress-bar { background: linear-gradient(90deg, #ff758c, #ff4d6d); height: 100%; width: 0%; transition: width 1s ease-in-out; }
-        .progress-text { position: absolute; width: 100%; top: 50%; left: 0; transform: translateY(-50%); font-size: 0.7rem; font-weight: bold; color: #444; }
+        .progress-text { position: absolute; width: 100%; top: 50%; left: 0; transform: translateY(-50%); font-size: 0.7rem; font-weight: bold; }
+
+        /* JOURNAL DES RÊVES */
+        .dream-zone { background: #f0f4ff; padding: 20px; border-radius: 25px; margin-bottom: 20px; border: 2px solid #d0dbff; }
+        .dream-zone h3 { margin-top: 0; font-size: 1rem; color: #5a7dff; }
+        .dream-bubble { background: white; padding: 10px; border-radius: 15px; margin: 10px 0; font-size: 0.85rem; border-left: 4px solid #5a7dff; text-align: left; }
 
         /* Jeu des Bisous */
         .kiss-zone { background: #ffe5ec; padding: 15px; border-radius: 20px; margin-bottom: 20px; border: 2px dashed #ff4d6d; }
-        #kiss-count { font-size: 1.5rem; font-weight: bold; color: #ff4d6d; display: block; margin-bottom: 10px; }
-        .kiss-btn { background: #ff4d6d; color: white; border: none; padding: 10px 20px; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 0.9rem; transition: 0.3s; }
-        .kiss-btn:active { transform: scale(0.9); }
+        #kiss-count { font-size: 1.2rem; font-weight: bold; color: #ff4d6d; display: block; margin-bottom: 5px; }
+        .btn-small { background: #ff4d6d; color: white; border: none; padding: 8px 15px; border-radius: 50px; cursor: pointer; font-size: 0.8rem; }
 
         .question-block { background: #fff5f6; margin: 15px 0; padding: 20px; border-radius: 20px; border-left: 6px solid #ff4d6d; text-align: left; }
-        textarea { width: 100%; border: 1px solid #ddd; border-radius: 12px; padding: 12px; box-sizing: border-box; margin-top: 10px; font-family: inherit; resize: none; }
-        input { width: 100%; max-width: 300px; padding: 12px; border-radius: 15px; border: 1px solid #ddd; margin: 15px 0; text-align: center; font-size: 1rem; }
-        .main-btn { background: #ff4d6d; color: white; border: none; padding: 15px; border-radius: 50px; cursor: pointer; font-weight: bold; width: 100%; max-width: 300px; font-size: 1rem; }
+        textarea { width: 100%; border: 1px solid #ddd; border-radius: 12px; padding: 10px; box-sizing: border-box; margin-top: 5px; font-family: inherit; resize: none; }
+        input { width: 100%; max-width: 300px; padding: 10px; border-radius: 15px; border: 1px solid #ddd; margin: 10px 0; text-align: center; }
+        .main-btn { background: #ff4d6d; color: white; border: none; padding: 15px; border-radius: 50px; cursor: pointer; font-weight: bold; width: 100%; max-width: 300px; }
         
-        .res { font-size: 0.85rem; margin-top: 15px; text-align: left; background: #fff; padding: 12px; border-radius: 15px; border: 1px solid #ffe5ec; }
-        
-        /* Animation Coeurs */
+        .res { font-size: 0.85rem; margin-top: 10px; text-align: left; background: #fff; padding: 10px; border-radius: 15px; border: 1px solid #ffe5ec; }
         .heart { position: fixed; font-size: 25px; z-index: 1; pointer-events: none; animation: floatUp 3s linear forwards; top: 100%; }
-        @keyframes floatUp {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
-        }
-        hr { border: 0; border-top: 1px dashed #ffd1d1; margin: 25px 0; }
+        @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-100vh); opacity: 0; } }
     </style>
 </head>
 <body>
@@ -49,9 +47,16 @@
         <div id="percent-text" class="progress-text">0%</div>
     </div>
 
+    <div class="dream-zone">
+        <h3>☁️ Nos Rêves de la nuit</h3>
+        <div id="dream-list"></div>
+        <textarea id="my-dream" placeholder="J'ai rêvé de..."></textarea>
+        <button class="btn-small" style="background:#5a7dff;" onclick="partagerReve()">Partager mon rêve ✨</button>
+    </div>
+
     <div class="kiss-zone">
-        <span id="kiss-count">💋 1000 bisous envoyés</span>
-        <button class="kiss-btn" onclick="envoyerBisou()">M'envoyer un bisou 💋</button>
+        <span id="kiss-count">💋 0 bisous</span>
+        <button class="btn-small" onclick="envoyerBisou()">Envoyer un bisou 💋</button>
     </div>
 
     <div id="questions-zone">Chargement...</div>
@@ -59,38 +64,32 @@
     <input type="text" id="mon-prenom" placeholder="Ton petit nom...">
     <button class="main-btn" onclick="envoyerReponse()">Répondre ❤️</button>
     
-    <hr>
-    <div id="reponses-flux">Derniers messages...</div>
+    <div id="reponses-flux" style="margin-top:20px;"></div>
 </div>
 
 <script>
     // --- 1. CONFIG FIREBASE ---
-    const CONFIG = {
-        databaseURL: "https://notre-petit-coin-default-rtdb.europe-west1.firebasedatabase.app"
-    };
+    const CONFIG = { databaseURL: "https://notre-petit-coin-default-rtdb.europe-west1.firebasedatabase.app" };
     firebase.initializeApp(CONFIG);
     const db = firebase.database();
 
     // --- 2. DATES ---
     const dateRetrouvailles = new Date("2026-03-12"); 
-    const dateDepart = new Date("2026-01-20");        
+    const dateDepart = new Date("2026-01-15");        
 
-    // --- 3. TES QUESTIONS ---
-    const qMatin = ["Quelle est la première chose que tu ferais si tu te réveillais dans ma peau ?", "Si on était dans un film d'horreur, qui mourrait en premier ?", "Si je devais me transformer en un objet de ta chambre, ce serait quoi ?", "Saveur de glace : classique ou bizarre ?", "La rumeur la plus drôle sur notre couple ?", "Inventer une nouvelle fête ?", "Dernière bêtise dont tu as eu envie ?", "Ton trait de caractère préféré chez moi ?", "Couple de célébrités ?"];
-    const qSoir = ["Figer le temps sur quel moment ?", "Un 'bon pour...' valable dès nos retrouvailles ?", "Partie de ton corps que j'ai hâte que je touche ?", "Action ou Vérité ?", "Accès illimité à mon corps 30min ?", "Lié les mains : peur ou excitation ?", "Déshabiller lentement ou arracher ?", "Très lent ou rapide et sauvage ?"];
+    // --- 3. QUESTIONS ---
+    const qMatin = ["Quelle est la première chose que tu ferais si tu te réveillais dans ma peau ?", "Si on était dans un film d'horreur, qui mourrait en premier ?", "Si je devais me transformer en un objet de ta chambre, ce serait quoi ?", "Saveur de glace : classique ou bizarre ?", "La rumeur la plus drôle sur notre couple ?", "Inventer une nouvelle fête ?", "Dernière bêtise dont tu as eu envie ?", "Trait de caractère préféré ?", "Couple de célébrités ?"];
+    const qSoir = ["Figer le temps sur quel moment ?", "Un 'bon pour...' ?", "Partie de ton corps que j'ai hâte que je touche ?", "Action ou Vérité ?", "Accès illimité 30min ?", "Lié les mains : peur ou excitation ?", "Déshabiller lentement ou arracher ?", "Lent ou sauvage ?"];
 
     // --- 4. LOGIQUE BARRE & QUESTIONS ---
     const maintenant = new Date();
     const indexJour = Math.floor(maintenant / (1000 * 60 * 60 * 24));
-    
-    // Calcul Barre
     const pourcent = Math.min(100, Math.max(0, Math.floor(((maintenant - dateDepart) / (dateRetrouvailles - dateDepart)) * 100)));
     const reste = Math.ceil((dateRetrouvailles - maintenant) / (1000 * 60 * 60 * 24));
     document.getElementById('myBar').style.width = pourcent + "%";
     document.getElementById('percent-text').innerText = pourcent + "%";
-    document.getElementById('countdown-text').innerText = "Encore " + reste + " jours avant le bonheur ! 😍";
+    document.getElementById('countdown-text').innerText = "Plus que " + reste + " jours ! 😍";
 
-    // Affichage Questions
     const q1 = qMatin[indexJour % qMatin.length];
     const q2 = qSoir[indexJour % qSoir.length];
     let html = `<div class="question-block">☀️ <b>Matin :</b><br>${q1}<textarea id="r1"></textarea></div>`;
@@ -101,46 +100,46 @@
     }
     document.getElementById('questions-zone').innerHTML = html;
 
-    // --- 5. JEU DES BISOUS (TEMPS RÉEL) ---
-    function envoyerBisou() {
-        db.ref('bisous').transaction((current) => (current || 0) + 1);
+    // --- 5. JOURNAL DES RÊVES ---
+    function partagerReve() {
+        const nom = document.getElementById('mon-prenom').value;
+        const reve = document.getElementById('my-dream').value;
+        if(!nom || !reve) return alert("Nom + Ton rêve ! ✨");
+        db.ref('reves/' + indexJour).push({ auteur: nom, texte: reve });
+        document.getElementById('my-dream').value = "";
     }
 
-    db.ref('bisous').on('value', (snap) => {
-        const count = snap.val() || 0;
-        document.getElementById('kiss-count').innerText = `💋 ${count} bisous envoyés`;
-        createHeart(); // Pluie de coeurs quand le chiffre change
+    db.ref('reves/' + indexJour).on('value', (snap) => {
+        const data = snap.val();
+        let listHtml = "";
+        for(let id in data) {
+            listHtml += `<div class="dream-bubble"><b>${data[id].auteur} :</b> ${data[id].texte}</div>`;
+        }
+        document.getElementById('dream-list').innerHTML = listHtml || "<p style='font-size:0.7rem;'>Aucun rêve partagé ce matin...</p>";
     });
 
-    function createHeart() {
-        const heart = document.createElement('div');
-        heart.classList.add('heart');
-        heart.innerText = ['❤️','💖','💋','✨'][Math.floor(Math.random()*4)];
-        heart.style.left = Math.random() * 100 + "vw";
-        heart.style.fontSize = (Math.random() * 20 + 20) + "px";
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 3000);
-    }
+    // --- 6. BISOU & RÉPONSES ---
+    function envoyerBisou() { db.ref('bisous').transaction(c => (c || 0) + 1); }
+    db.ref('bisous').on('value', snap => {
+        document.getElementById('kiss-count').innerText = `💋 ${snap.val() || 0} bisous`;
+        const h = document.createElement('div'); h.classList.add('heart'); h.innerText = '💋';
+        h.style.left = Math.random()*100+"vw"; document.body.appendChild(h);
+        setTimeout(() => h.remove(), 3000);
+    });
 
-    // --- 6. RÉPONSES ---
     function envoyerReponse() {
         const nom = document.getElementById('mon-prenom').value;
-        const res1 = document.getElementById('r1') ? document.getElementById('r1').value : "";
-        const res2 = document.getElementById('r2') ? document.getElementById('r2').value : "";
-        if(!nom || (!res1 && !res2)) return alert("Ton prénom + une réponse ! ❤️");
-        db.ref('reponses').push({ auteur: nom, matin: res1, soir: res2, time: maintenant.toLocaleString() });
-        alert("Envoyé ! ❤️");
-        location.reload();
+        const r1 = document.getElementById('r1') ? document.getElementById('r1').value : "";
+        const r2 = document.getElementById('r2') ? document.getElementById('r2').value : "";
+        if(!nom || (!r1 && !r2)) return alert("Nom + Réponse !");
+        db.ref('reponses').push({ auteur: nom, matin: r1, soir: r2 });
+        alert("Envoyé ! ❤️"); location.reload();
     }
 
-    db.ref('reponses').limitToLast(5).on('value', (snap) => {
-        const data = snap.val();
-        let htmlFlux = "";
-        for (let id in data) {
-            let m = data[id];
-            htmlFlux = `<div class="res"><b>${m.auteur}</b> :<br>${m.matin ? '☀️ '+m.matin : ''}<br>${m.soir ? '🌙 '+m.soir : ''}</div>` + htmlFlux;
-        }
-        document.getElementById('reponses-flux').innerHTML = htmlFlux;
+    db.ref('reponses').limitToLast(3).on('value', snap => {
+        const data = snap.val(); let flux = "";
+        for(let id in data) { flux = `<div class="res"><b>${data[id].auteur}</b> :<br>${data[id].matin ? '☀️ '+data[id].matin : ''}<br>${data[id].soir ? '🌙 '+data[id].soir : ''}</div>` + flux; }
+        document.getElementById('reponses-flux').innerHTML = flux;
     });
 </script>
 </body>
