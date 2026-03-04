@@ -16,7 +16,7 @@
         .progress-bar { background: linear-gradient(90deg, #ff758c, #ff4d6d); height: 100%; width: 0%; transition: width 1s ease-in-out; }
         .progress-text { position: absolute; width: 100%; top: 50%; left: 0; transform: translateY(-50%); font-size: 0.7rem; font-weight: bold; }
 
-        /* JOURNAL DES RÊVES */
+        /* Journal des rêves */
         .dream-zone { background: #f0f4ff; padding: 20px; border-radius: 25px; margin-bottom: 20px; border: 2px solid #d0dbff; }
         .dream-zone h3 { margin-top: 0; font-size: 1rem; color: #5a7dff; }
         .dream-bubble { background: white; padding: 10px; border-radius: 15px; margin: 10px 0; font-size: 0.85rem; border-left: 4px solid #5a7dff; text-align: left; }
@@ -26,7 +26,9 @@
         #kiss-count { font-size: 1.2rem; font-weight: bold; color: #ff4d6d; display: block; margin-bottom: 5px; }
         .btn-small { background: #ff4d6d; color: white; border: none; padding: 8px 15px; border-radius: 50px; cursor: pointer; font-size: 0.8rem; }
 
+        /* Questions */
         .question-block { background: #fff5f6; margin: 15px 0; padding: 20px; border-radius: 20px; border-left: 6px solid #ff4d6d; text-align: left; }
+        .block-soir { border-left-color: #7209b7; background: #f9f0ff; }
         textarea { width: 100%; border: 1px solid #ddd; border-radius: 12px; padding: 10px; box-sizing: border-box; margin-top: 5px; font-family: inherit; resize: none; }
         input { width: 100%; max-width: 300px; padding: 10px; border-radius: 15px; border: 1px solid #ddd; margin: 10px 0; text-align: center; }
         .main-btn { background: #ff4d6d; color: white; border: none; padding: 15px; border-radius: 50px; cursor: pointer; font-weight: bold; width: 100%; max-width: 300px; }
@@ -34,6 +36,7 @@
         .res { font-size: 0.85rem; margin-top: 10px; text-align: left; background: #fff; padding: 10px; border-radius: 15px; border: 1px solid #ffe5ec; }
         .heart { position: fixed; font-size: 25px; z-index: 1; pointer-events: none; animation: floatUp 3s linear forwards; top: 100%; }
         @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-100vh); opacity: 0; } }
+        .waiting-msg { padding: 20px; font-style: italic; color: #999; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -59,7 +62,7 @@
         <button class="btn-small" onclick="envoyerBisou()">Envoyer un bisou 💋</button>
     </div>
 
-    <div id="questions-zone">Chargement...</div>
+    <div id="questions-zone">Chargement des questions...</div>
     
     <input type="text" id="mon-prenom" placeholder="Ton petit nom...">
     <button class="main-btn" onclick="envoyerReponse()">Répondre ❤️</button>
@@ -75,30 +78,37 @@
 
     // --- 2. DATES ---
     const dateRetrouvailles = new Date("2026-03-12"); 
-    const dateDepart = new Date("2026-01-15");        
+    const dateDepart = new Date("2026-01-01");        
 
     // --- 3. QUESTIONS ---
-    const qMatin = ["Quelle est la première chose que tu ferais si tu te réveillais dans ma peau ?", "Si on était dans un film d'horreur, qui mourrait en premier ?", "Si je devais me transformer en un objet de ta chambre, ce serait quoi ?", "Saveur de glace : classique ou bizarre ?", "La rumeur la plus drôle sur notre couple ?", "Inventer une nouvelle fête ?", "Dernière bêtise dont tu as eu envie ?", "Trait de caractère préféré ?", "Couple de célébrités ?"];
-    const qSoir = ["Figer le temps sur quel moment ?", "Un 'bon pour...' ?", "Partie de ton corps que j'ai hâte que je touche ?", "Action ou Vérité ?", "Accès illimité 30min ?", "Lié les mains : peur ou excitation ?", "Déshabiller lentement ou arracher ?", "Lent ou sauvage ?"];
+    const qMatin = ["Quelle est la première chose que tu ferais si tu te réveillais dans ma peau ?", "Si on était dans un film d'horreur, qui mourrait en premier ?", "Si je devais me transformer en un objet de ta chambre, ce serait quoi ?", "Si on devait inventer une nouvelle fête, on fêterait quoi ensemble ?", "Dernière bêtise dont tu as eu envie de faire avec moi ?", "Si on jouait à 'Action ou Vérité' ce soir, tu choisirais quoi et ce serait quoi ?", " Quel est le trait de caractère que j'ai et qui te fait dire : 'C'est vraiment mon/ma partenaire ça' ?", "Si on était un couple de célébrités, on serait qui ?"];
+    const qSoir = ["Si tu pouvais figer le temps sur un seul moment qu'on a vécu ensemble, ce serait lequel ?", "Si tu devais me donner un bon pour... valable dès nos retrouvailles, ce serait pour quoi ?", "Quelle est la partie de ton corps que tu as le plus hâte que je touche ?", "Si tu avais un accès illimité à mon corps pendant 30 minutes, par où commencerais-tu ?", "Si je te liais les mains, quelle serait ta première réaction : peur ou excitation ?", "Si tu devais choisir entre très lent et romantique ou rapide et sauvage pour nos prochaines retrouvailles, tu choisirais quoi ?", "Quelle est la première chose que tu ferais si tu te réveillais dans ma peau demain matin ?", ];
 
     // --- 4. LOGIQUE BARRE & QUESTIONS ---
     const maintenant = new Date();
+    const heureActuelle = maintenant.getHours();
     const indexJour = Math.floor(maintenant / (1000 * 60 * 60 * 24));
+    
+    // Calcul Barre
     const pourcent = Math.min(100, Math.max(0, Math.floor(((maintenant - dateDepart) / (dateRetrouvailles - dateDepart)) * 100)));
     const reste = Math.ceil((dateRetrouvailles - maintenant) / (1000 * 60 * 60 * 24));
     document.getElementById('myBar').style.width = pourcent + "%";
     document.getElementById('percent-text').innerText = pourcent + "%";
-    document.getElementById('countdown-text').innerText = "Plus que " + reste + " jours ! 😍";
+    document.getElementById('countdown-text').innerText = "Encore " + reste + " jours avant le bonheur ! 😍";
 
-    const q1 = qMatin[indexJour % qMatin.length];
-    const q2 = qSoir[indexJour % qSoir.length];
-    let html = `<div class="question-block">☀️ <b>Matin :</b><br>${q1}<textarea id="r1"></textarea></div>`;
-    if (maintenant.getHours() >= 19 || maintenant.getHours() < 6) {
-        html += `<div class="question-block" style="border-left-color:#7209b7">🌙 <b>Soir :</b><br>${q2}<textarea id="r2"></textarea></div>`;
+    // AFFICHAGE DES QUESTIONS À 8H
+    let htmlQuestions = "";
+    if (heureActuelle >= 8 || heureActuelle < 1) { // À partir de 8h (et jusqu'à 1h du mat pour les couche-tard)
+        const q1 = qMatin[indexJour % qMatin.length];
+        const q2 = qSoir[indexJour % qSoir.length];
+        htmlQuestions = `
+            <div class="question-block">☀️ <b>Question du Matin :</b><br>${q1}<textarea id="r1" placeholder="Ta réponse..."></textarea></div>
+            <div class="question-block block-soir">🌙 <b>Question du Soir :</b><br>${q2}<textarea id="r2" placeholder="Ta réponse..."></textarea></div>
+        `;
     } else {
-        html += `<div class="question-block" style="opacity:0.5;">🌙 Question du soir à 19h...</div>`;
+        htmlQuestions = `<div class="waiting-msg">✨ Les questions du jour arrivent à 8h00... Patience ❤️</div>`;
     }
-    document.getElementById('questions-zone').innerHTML = html;
+    document.getElementById('questions-zone').innerHTML = htmlQuestions;
 
     // --- 5. JOURNAL DES RÊVES ---
     function partagerReve() {
@@ -108,14 +118,11 @@
         db.ref('reves/' + indexJour).push({ auteur: nom, texte: reve });
         document.getElementById('my-dream').value = "";
     }
-
     db.ref('reves/' + indexJour).on('value', (snap) => {
         const data = snap.val();
         let listHtml = "";
-        for(let id in data) {
-            listHtml += `<div class="dream-bubble"><b>${data[id].auteur} :</b> ${data[id].texte}</div>`;
-        }
-        document.getElementById('dream-list').innerHTML = listHtml || "<p style='font-size:0.7rem;'>Aucun rêve partagé ce matin...</p>";
+        for(let id in data) { listHtml += `<div class="dream-bubble"><b>${data[id].auteur} :</b> ${data[id].texte}</div>`; }
+        document.getElementById('dream-list').innerHTML = listHtml || "<p style='font-size:0.7rem;'>Raconte-moi ton rêve de cette nuit...</p>";
     });
 
     // --- 6. BISOU & RÉPONSES ---
@@ -131,9 +138,11 @@
         const nom = document.getElementById('mon-prenom').value;
         const r1 = document.getElementById('r1') ? document.getElementById('r1').value : "";
         const r2 = document.getElementById('r2') ? document.getElementById('r2').value : "";
-        if(!nom || (!r1 && !r2)) return alert("Nom + Réponse !");
-        db.ref('reponses').push({ auteur: nom, matin: r1, soir: r2 });
-        alert("Envoyé ! ❤️"); location.reload();
+        if(!nom) return alert("N'oublie pas ton prénom !");
+        if(!r1 && !r2) return alert("Réponds au moins à une question ❤️");
+        db.ref('reponses').push({ auteur: nom, matin: r1, soir: r2, date: maintenant.toLocaleString() });
+        alert("Réponses envoyées ! ❤️");
+        location.reload();
     }
 
     db.ref('reponses').limitToLast(3).on('value', snap => {
