@@ -3,27 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dernière Ligne Droite ❤️</title>
+    <title>Compte à Rebours ❤️</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fff0f3; text-align: center; padding: 15px; color: #444; margin: 0; }
+        body { font-family: 'Poppins', sans-serif; background: #fff0f3; text-align: center; padding: 15px; color: #444; }
         .card { background: white; max-width: 450px; margin: 10px auto; padding: 20px; border-radius: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        
-        /* Minuteur */
-        .timer-zone { background: #ff4d6d; color: white; padding: 15px; border-radius: 20px; margin-bottom: 20px; }
-        #countdown { font-size: 2rem; font-weight: bold; }
-
-        /* Quiz */
+        .timer-zone { background: #ff4d6d; color: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; }
+        #countdown { font-size: 2.5rem; font-weight: bold; font-family: monospace; }
         .quiz-zone { background: #fff5f6; border: 1px solid #ffccd5; padding: 15px; border-radius: 20px; margin: 15px 0; }
-        .quiz-option { display: block; width: 90%; padding: 10px; margin: 8px auto; border: 1px solid #ffccd5; border-radius: 12px; cursor: pointer; background: white; transition: 0.2s; }
+        .quiz-option { display: block; width: 90%; padding: 10px; margin: 8px auto; border: 1px solid #ffccd5; border-radius: 12px; cursor: pointer; background: white; }
         .quiz-option:hover { background: #ff4d6d; color: white; }
-        
-        /* Questions */
         .question-block { background: #fdf2f4; margin: 10px 0; padding: 15px; border-radius: 15px; border-left: 5px solid #ff4d6d; text-align: left; }
-        textarea { width: 100%; border: 1px solid #ddd; border-radius: 10px; padding: 8px; box-sizing: border-box; resize: none; margin-top: 5px; }
+        textarea { width: 100%; border: 1px solid #ddd; border-radius: 10px; padding: 8px; box-sizing: border-box; resize: none; }
         input { width: 80%; padding: 10px; border-radius: 10px; border: 1px solid #ddd; margin: 10px 0; text-align: center; }
-        .main-btn { background: #ff4d6d; color: white; border: none; padding: 15px; border-radius: 50px; cursor: pointer; font-weight: bold; width: 80%; margin-top: 10px; }
+        .main-btn { background: #ff4d6d; color: white; border: none; padding: 15px; border-radius: 50px; cursor: pointer; font-weight: bold; width: 80%; }
         .res { font-size: 0.85rem; margin-top: 10px; text-align: left; background: #fff; padding: 10px; border-radius: 10px; border: 1px solid #ffe5ec; }
     </style>
 </head>
@@ -31,10 +25,102 @@
 
 <div class="card">
     <div class="timer-zone">
-        <div style="font-size: 0.9rem;">🌴 Retrouvailles dans :</div>
-        <div id="countdown">--h --m --s</div>
-        <div style="font-size: 0.7rem;">Jeudi 12 Mars - 18h00 (Guadeloupe)</div>
+        <div style="font-size: 1rem; margin-bottom: 5px;">🌴 On se voit dans :</div>
+        <div id="countdown">33:20:00</div>
     </div>
 
     <div class="quiz-zone" id="quiz-box">
-        <h3 style="margin-top:
+        <h3 style="margin-top:0; color:#ff4d6d;">🎯 Quiz Retrouvailles</h3>
+        <div id="q-text" style="font-weight:bold; margin-bottom:10px;">Chargement...</div>
+        <div id="q-options"></div>
+    </div>
+
+    <div class="question-block">☀️ <b>Question 1 :</b><br>Quel est le premier truc qu'on mange ensemble ?<textarea id="r1"></textarea></div>
+    <div class="question-block" style="border-left-color:purple;">🌙 <b>Question 2 :</b><br>Ton niveau d'excitation de 1 à 100 ?<textarea id="r2"></textarea></div>
+    
+    <input type="text" id="mon-prenom" placeholder="Ton petit nom...">
+    <button class="main-btn" onclick="envoyer()">Envoyer tout ❤️</button>
+    
+    <div id="reponses-flux" style="margin-top:20px;"></div>
+</div>
+
+<script>
+    // --- 1. CONFIGURATION ---
+    const CONFIG = { databaseURL: "https://notre-petit-coin-default-rtdb.europe-west1.firebasedatabase.app" };
+    firebase.initializeApp(CONFIG);
+    const db = firebase.database();
+
+    // --- 2. MINUTEUR FIXE (33h 20m) ---
+    // On utilise une date de fin fixe calculée : Temps actuel + 33h20
+    // Pour que vous ayez le même, on pourrait le fixer sur le 12 Mars à 18h
+    const cible = new Date("March 12, 2026 18:00:00").getTime();
+
+    function updateTimer() {
+        const maintenant = new Date().getTime();
+        const diff = cible - maintenant;
+
+        if (diff <= 0) {
+            document.getElementById('countdown').innerText = "00:00:00";
+            return;
+        }
+
+        const h = Math.floor(diff / (1000 * 60 * 60));
+        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById('countdown').innerText = 
+            (h < 10 ? "0" + h : h) + ":" + (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
+    }
+    setInterval(updateTimer, 1000);
+    updateTimer();
+
+    // --- 3. QUIZ ---
+    const quizData = [
+        { q: "Qui va pleurer en premier ?", a: ["Moi", "Toi", "Les deux", "Personne"], c: 2 },
+        { q: "Quelle tenue je porterai demain ?", a: ["Robe", "Short", "Jean", "Surprise"], c: 3 },
+        { q: "Le plus hâte de quoi ?", a: ["Dormir", "T'embrasser", "Parler", "Manger"], c: 1 }
+    ];
+    let currentQ = 0; let score = 0;
+    function loadQuiz() {
+        if (currentQ >= quizData.length) {
+            document.getElementById('quiz-box').innerHTML = `<b style="color:#ff4d6d">Quiz fini ! Score : ${score}/3 ❤️</b>`;
+            return;
+        }
+        document.getElementById('q-text').innerText = quizData[currentQ].q;
+        const opts = document.getElementById('q-options');
+        opts.innerHTML = "";
+        quizData[currentQ].a.forEach((opt, i) => {
+            const b = document.createElement('div');
+            b.className = 'quiz-option'; b.innerText = opt;
+            b.onclick = () => { if(i === quizData[currentQ].c) score++; currentQ++; loadQuiz(); };
+            opts.appendChild(b);
+        });
+    }
+    loadQuiz();
+
+    // --- 4. ENVOI ---
+    function envoyer() {
+        const nom = document.getElementById('mon-prenom').value;
+        const r1 = document.getElementById('r1').value;
+        const r2 = document.getElementById('r2').value;
+        if(!nom) return alert("Ton prénom !");
+        
+        db.ref('reponses').push({
+            auteur: nom, matin: r1, soir: r2, 
+            quiz: currentQ >= quizData.length ? score + "/3" : "Non fini",
+            heure: new Date().toLocaleTimeString()
+        });
+        alert("Envoyé ! ❤️");
+        location.reload();
+    }
+
+    db.ref('reponses').limitToLast(3).on('value', snap => {
+        const data = snap.val(); let flux = "";
+        for(let id in data) {
+            flux = `<div class="res"><b>${data[id].auteur}</b> (Quiz: ${data[id].quiz})<br>1: ${data[id].matin}<br>2: ${data[id].soir}</div>` + flux;
+        }
+        document.getElementById('reponses-flux').innerHTML = flux;
+    });
+</script>
+</body>
+</html>
