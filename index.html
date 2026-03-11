@@ -10,17 +10,13 @@
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
         body { font-family: 'Poppins', sans-serif; background: #fff0f3; text-align: center; padding: 15px; color: #444; margin: 0; }
         .card { background: white; max-width: 450px; margin: 10px auto; padding: 25px; border-radius: 30px; box-shadow: 0 10px 25px rgba(255,182,193,0.4); }
-        
-        /* Minuteur Style Paris */
         .timer-zone { background: linear-gradient(135deg, #ff4d6d, #ff758c); color: white; padding: 20px; border-radius: 25px; margin-bottom: 20px; }
         #countdown { font-size: 2.8rem; font-weight: bold; font-family: 'Courier New', Courier, monospace; letter-spacing: 2px; }
-        
-        /* Questions */
         .question-block { background: #fdf2f4; margin: 15px 0; padding: 15px; border-radius: 20px; border-left: 6px solid #ff4d6d; text-align: left; }
         textarea { width: 100%; border: 1px solid #ddd; border-radius: 12px; padding: 10px; box-sizing: border-box; resize: none; margin-top: 8px; font-family: inherit; }
         input { width: 100%; max-width: 280px; padding: 12px; border-radius: 50px; border: 1px solid #ddd; margin: 15px 0; text-align: center; font-size: 1rem; }
         .main-btn { background: #ff4d6d; color: white; border: none; padding: 15px 30px; border-radius: 50px; cursor: pointer; font-weight: bold; width: 100%; max-width: 280px; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(255,77,109,0.3); }
-        .res { font-size: 0.9rem; margin-top: 10px; text-align: left; background: #fff; padding: 15px; border-radius: 15px; border: 1px solid #ffe5ec; margin-bottom: 10px; }
+        .res { font-size: 0.9rem; margin-top: 10px; text-align: left; background: #fff; padding: 15px; border-radius: 15px; border-left: 4px solid #ffccd5; margin-bottom: 10px; }
         .label-q { font-weight: 600; color: #ff4d6d; font-size: 0.95rem; }
     </style>
 </head>
@@ -28,9 +24,9 @@
 
 <div class="card">
     <div class="timer-zone">
-        <div style="font-size: 1rem; margin-bottom: 8px; font-weight: 300;">❤️ Retrouvailles prévues à 23h :</div>
+        <div style="font-size: 1rem; margin-bottom: 8px; font-weight: 300;">❤️ Retrouvailles dans :</div>
         <div id="countdown">00:00:00</div>
-        <div style="font-size: 0.75rem; margin-top: 8px; opacity: 0.9;">Heure de Paris 🇫🇷</div>
+        <div style="font-size: 0.75rem; margin-top: 8px; opacity: 0.9;">Je vais enfin revoir ta bouille 😁</div>
     </div>
 
     <div id="questions-box">
@@ -38,12 +34,10 @@
             <span class="label-q">🥞 Ton stress sur une échelle de nombre de pancakes ?</span>
             <textarea id="r1" placeholder="Ex: Une montagne de 50 pancakes !"></textarea>
         </div>
-        
         <div class="question-block" style="border-left-color: #7209b7;">
             <span class="label-q">😴 La durée de notre sommeil de demain ?</span>
             <textarea id="r2" placeholder="Ex: 2h max, on a trop à se dire..."></textarea>
         </div>
-
         <div class="question-block" style="border-left-color: #ff9f1c;">
             <span class="label-q">😈 C'est quoi déjà les gages si on perd... ?</span>
             <textarea id="r3" placeholder="Rappelle-moi les règles !"></textarea>
@@ -63,17 +57,19 @@
     firebase.initializeApp(CONFIG);
     const db = firebase.database();
 
-    // --- 2. LOGIQUE MINUTEUR (23H PARIS) ---
+    // --- 2. LOGIQUE MINUTEUR (DEMAIN 23H PARIS) ---
     function updateTimer() {
         const maintenant = new Date();
-        let cible = new Date();
-        cible.setHours(23, 0, 0, 0);
+        // Cible fixe : 12 Mars 2026 à 23:00 (Heure de Paris)
+        const cible = new Date("March 12, 2026 23:00:00");
+        
+        const diff = cible - maintenant;
 
-        if (maintenant > cible) {
-            cible.setDate(cible.getDate() + 1);
+        if (diff <= 0) {
+            document.getElementById('countdown').innerText = "C'EST L'HEURE ! ❤️";
+            return;
         }
 
-        const diff = cible - maintenant;
         const h = Math.floor(diff / (1000 * 60 * 60));
         const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const s = Math.floor((diff % (1000 * 60)) / 1000);
@@ -84,39 +80,36 @@
     setInterval(updateTimer, 1000);
     updateTimer();
 
-    // --- 3. ENVOI DES DONNÉES ---
+    // --- 3. ENVOI ET AFFICHAGE ---
     function envoyer() {
         const nom = document.getElementById('mon-prenom').value;
         const res1 = document.getElementById('r1').value;
         const res2 = document.getElementById('r2').value;
         const res3 = document.getElementById('r3').value;
         
-        if(!nom) return alert("N'oublie pas de mettre ton prénom ! ❤️");
-        if(!res1 && !res2 && !res3) return alert("Réponds à au moins une question ! 😊");
+        if(!nom) return alert("Ton prénom ! ❤️");
         
         db.ref('reponses').push({
             auteur: nom, 
             pancakes: res1, 
             sommeil: res2, 
             gages: res3,
-            date: new Date().toLocaleTimeString()
+            heure: new Date().toLocaleTimeString()
         });
         
-        alert("C'est envoyé ! Hâte de lire ça... 😍");
-        // On vide les champs après l'envoi
+        alert("C'est envoyé ! ❤️");
         document.getElementById('r1').value = "";
         document.getElementById('r2').value = "";
         document.getElementById('r3').value = "";
     }
 
-    // --- 4. AFFICHAGE DU FLUX ---
     db.ref('reponses').limitToLast(5).on('value', snap => {
         const data = snap.val(); 
         let flux = "";
         for(let id in data) {
             flux = `
                 <div class="res">
-                    <b>✨ ${data[id].auteur}</b> <small style="color:#bbb">(${data[id].date})</small><br>
+                    <b>✨ ${data[id].auteur}</b> <small style="color:#bbb">(${data[id].heure})</small><br>
                     ${data[id].pancakes ? '🥞 : ' + data[id].pancakes + '<br>' : ''}
                     ${data[id].sommeil ? '😴 : ' + data[id].sommeil + '<br>' : ''}
                     ${data[id].gages ? '😈 : ' + data[id].gages : ''}
