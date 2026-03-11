@@ -3,153 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notre Rituel ❤️</title>
+    <title>Dernière Ligne Droite ❤️</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
-        body { font-family: 'Poppins', sans-serif; background: #fff0f3; text-align: center; padding: 20px; color: #444; margin: 0; overflow-x: hidden; }
-        .card { background: white; max-width: 500px; margin: 20px auto; padding: 25px; border-radius: 30px; box-shadow: 0 10px 25px rgba(255,182,193,0.4); position: relative; z-index: 2; }
+        body { font-family: 'Poppins', sans-serif; background: #fff0f3; text-align: center; padding: 15px; color: #444; margin: 0; overflow-x: hidden; }
+        .card { background: white; max-width: 500px; margin: 10px auto; padding: 25px; border-radius: 30px; box-shadow: 0 10px 25px rgba(255,182,193,0.4); position: relative; z-index: 2; }
         
-        /* Barre de progression */
-        .progress-container { background: #eee; border-radius: 20px; margin: 15px 0; height: 20px; position: relative; overflow: hidden; border: 1px solid #ffd1d1; }
-        .progress-bar { background: linear-gradient(90deg, #ff758c, #ff4d6d); height: 100%; width: 0%; transition: width 1s ease-in-out; }
-        .progress-text { position: absolute; width: 100%; top: 50%; left: 0; transform: translateY(-50%); font-size: 0.7rem; font-weight: bold; }
+        /* Minuteur Final */
+        .timer-zone { background: #ff4d6d; color: white; padding: 20px; border-radius: 25px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3); }
+        #countdown { font-size: 2.2rem; font-weight: bold; font-family: monospace; }
 
-        /* Journal des rêves */
-        .dream-zone { background: #f0f4ff; padding: 20px; border-radius: 25px; margin-bottom: 20px; border: 2px solid #d0dbff; }
-        .dream-zone h3 { margin-top: 0; font-size: 1rem; color: #5a7dff; }
-        .dream-bubble { background: white; padding: 10px; border-radius: 15px; margin: 10px 0; font-size: 0.85rem; border-left: 4px solid #5a7dff; text-align: left; }
-
-        /* Jeu des Bisous */
-        .kiss-zone { background: #ffe5ec; padding: 15px; border-radius: 20px; margin-bottom: 20px; border: 2px dashed #ff4d6d; }
-        #kiss-count { font-size: 1.2rem; font-weight: bold; color: #ff4d6d; display: block; margin-bottom: 5px; }
-        .btn-small { background: #ff4d6d; color: white; border: none; padding: 8px 15px; border-radius: 50px; cursor: pointer; font-size: 0.8rem; }
-
-        /* Questions */
+        /* Quiz UI */
+        .quiz-zone { background: #fff; border: 2px solid #ffccd5; padding: 20px; border-radius: 25px; margin: 20px 0; }
+        .quiz-question { font-weight: 600; margin-bottom: 15px; min-height: 50px; }
+        .quiz-option { display: block; width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ffccd5; border-radius: 15px; cursor: pointer; transition: 0.3s; background: #fff5f6; }
+        .quiz-option:hover { background: #ff4d6d; color: white; }
+        
+        /* Elements existants */
+        .dream-zone { background: #f0f4ff; padding: 15px; border-radius: 25px; margin-bottom: 20px; border: 1px solid #d0dbff; }
         .question-block { background: #fff5f6; margin: 15px 0; padding: 20px; border-radius: 20px; border-left: 6px solid #ff4d6d; text-align: left; }
-        .block-soir { border-left-color: #7209b7; background: #f9f0ff; }
-        textarea { width: 100%; border: 1px solid #ddd; border-radius: 12px; padding: 10px; box-sizing: border-box; margin-top: 5px; font-family: inherit; resize: none; }
-        input { width: 100%; max-width: 300px; padding: 10px; border-radius: 15px; border: 1px solid #ddd; margin: 10px 0; text-align: center; }
-        .main-btn { background: #ff4d6d; color: white; border: none; padding: 15px; border-radius: 50px; cursor: pointer; font-weight: bold; width: 100%; max-width: 300px; }
-        
-        .res { font-size: 0.85rem; margin-top: 10px; text-align: left; background: #fff; padding: 10px; border-radius: 15px; border: 1px solid #ffe5ec; }
-        .heart { position: fixed; font-size: 25px; z-index: 1; pointer-events: none; animation: floatUp 3s linear forwards; top: 100%; }
-        @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-100vh); opacity: 0; } }
-        .waiting-msg { padding: 20px; font-style: italic; color: #999; font-size: 0.9rem; }
+        textarea { width: 100%; border: 1px solid #ddd; border-radius: 12px; padding: 10px; box-sizing: border-box; font-family: inherit; resize: none; margin-top: 5px; }
+        input { width: 100%; max-width: 300px; padding: 12px; border-radius: 15px; border: 1px solid #ddd; margin: 10px 0; text-align: center; }
+        .main-btn { background: #ff4d6d; color: white; border: none; padding: 15px; border-radius: 50px; cursor: pointer; font-weight: bold; width: 100%; max-width: 300px; margin-top: 10px; }
+        .res { font-size: 0.85rem; margin-top: 10px; text-align: left; background: #fff; padding: 12px; border-radius: 15px; border: 1px solid #ffe5ec; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h1>✨ Notre Rituel</h1>
-    
-    <div id="countdown-text" style="font-size: 0.8rem; font-weight: 600;">Calcul...</div>
-    <div class="progress-container">
-        <div id="myBar" class="progress-bar"></div>
-        <div id="percent-text" class="progress-text">0%</div>
-    </div>
-
-    <div class="dream-zone">
-        <h3>☁️ Nos Rêves de la nuit</h3>
-        <div id="dream-list"></div>
-        <textarea id="my-dream" placeholder="J'ai rêvé de..."></textarea>
-        <button class="btn-small" style="background:#5a7dff;" onclick="partagerReve()">Partager mon rêve ✨</button>
-    </div>
-
-    <div class="kiss-zone">
-        <span id="kiss-count">💋 0 bisous</span>
-        <button class="btn-small" onclick="envoyerBisou()">Envoyer un bisou 💋</button>
-    </div>
-
-    <div id="questions-zone">Chargement des questions...</div>
-    
-    <input type="text" id="mon-prenom" placeholder="Ton petit nom...">
-    <button class="main-btn" onclick="envoyerReponse()">Répondre ❤️</button>
-    
-    <div id="reponses-flux" style="margin-top:20px;"></div>
-</div>
-
-<script>
-    // --- 1. CONFIG FIREBASE ---
-    const CONFIG = { databaseURL: "https://notre-petit-coin-default-rtdb.europe-west1.firebasedatabase.app" };
-    firebase.initializeApp(CONFIG);
-    const db = firebase.database();
-
-    // --- 2. DATES ---
-    const dateRetrouvailles = new Date("2026-03-12"); 
-    const dateDepart = new Date("2026-01-01");        
-
-    // --- 3. QUESTIONS ---
-    const qMatin = ["Quelle est la première chose que tu ferais si tu te réveillais dans ma peau ?", "Si on était dans un film d'horreur, qui mourrait en premier ?", "Si je devais me transformer en un objet de ta chambre, ce serait quoi ?", "Si on devait inventer une nouvelle fête, on fêterait quoi ensemble ?", "Dernière bêtise dont tu as eu envie de faire avec moi ?", "Si on jouait à 'Action ou Vérité' ce soir, tu choisirais quoi et ce serait quoi ?", " Quel est le trait de caractère que j'ai et qui te fait dire : 'C'est vraiment mon/ma partenaire ça' ?", "Si on était un couple de célébrités, on serait qui ?"];
-    const qSoir = ["Si tu pouvais figer le temps sur un seul moment qu'on a vécu ensemble, ce serait lequel ?", "Si tu devais me donner un bon pour... valable dès nos retrouvailles, ce serait pour quoi ?", "Quelle est la partie de ton corps que tu as le plus hâte que je touche ?", "Si tu avais un accès illimité à mon corps pendant 30 minutes, par où commencerais-tu ?", "Si je te liais les mains, quelle serait ta première réaction : peur ou excitation ?", "Si tu devais choisir entre très lent et romantique ou rapide et sauvage pour nos prochaines retrouvailles, tu choisirais quoi ?", "Quelle est la première chose que tu ferais si tu te réveillais dans ma peau demain matin ?", ];
-
-    // --- 4. LOGIQUE BARRE & QUESTIONS ---
-    const maintenant = new Date();
-    const heureActuelle = maintenant.getHours();
-    const indexJour = Math.floor(maintenant / (1000 * 60 * 60 * 24));
-    
-    // Calcul Barre
-    const pourcent = Math.min(100, Math.max(0, Math.floor(((maintenant - dateDepart) / (dateRetrouvailles - dateDepart)) * 100)));
-    const reste = Math.ceil((dateRetrouvailles - maintenant) / (1000 * 60 * 60 * 24));
-    document.getElementById('myBar').style.width = pourcent + "%";
-    document.getElementById('percent-text').innerText = pourcent + "%";
-    document.getElementById('countdown-text').innerText = "Encore " + reste + " jours avant le bonheur ! 😍";
-
-    // AFFICHAGE DES QUESTIONS À 8H
-    let htmlQuestions = "";
-    if (heureActuelle >= 8 || heureActuelle < 1) { // À partir de 8h (et jusqu'à 1h du mat pour les couche-tard)
-        const q1 = qMatin[indexJour % qMatin.length];
-        const q2 = qSoir[indexJour % qSoir.length];
-        htmlQuestions = `
-            <div class="question-block">☀️ <b>Question du Matin :</b><br>${q1}<textarea id="r1" placeholder="Ta réponse..."></textarea></div>
-            <div class="question-block block-soir">🌙 <b>Question du Soir :</b><br>${q2}<textarea id="r2" placeholder="Ta réponse..."></textarea></div>
-        `;
-    } else {
-        htmlQuestions = `<div class="waiting-msg">✨ Les questions du jour arrivent à 8h00... Patience ❤️</div>`;
-    }
-    document.getElementById('questions-zone').innerHTML = htmlQuestions;
-
-    // --- 5. JOURNAL DES RÊVES ---
-    function partagerReve() {
-        const nom = document.getElementById('mon-prenom').value;
-        const reve = document.getElementById('my-dream').value;
-        if(!nom || !reve) return alert("Nom + Ton rêve ! ✨");
-        db.ref('reves/' + indexJour).push({ auteur: nom, texte: reve });
-        document.getElementById('my-dream').value = "";
-    }
-    db.ref('reves/' + indexJour).on('value', (snap) => {
-        const data = snap.val();
-        let listHtml = "";
-        for(let id in data) { listHtml += `<div class="dream-bubble"><b>${data[id].auteur} :</b> ${data[id].texte}</div>`; }
-        document.getElementById('dream-list').innerHTML = listHtml || "<p style='font-size:0.7rem;'>Raconte-moi ton rêve de cette nuit...</p>";
-    });
-
-    // --- 6. BISOU & RÉPONSES ---
-    function envoyerBisou() { db.ref('bisous').transaction(c => (c || 0) + 1); }
-    db.ref('bisous').on('value', snap => {
-        document.getElementById('kiss-count').innerText = `💋 ${snap.val() || 0} bisous`;
-        const h = document.createElement('div'); h.classList.add('heart'); h.innerText = '💋';
-        h.style.left = Math.random()*100+"vw"; document.body.appendChild(h);
-        setTimeout(() => h.remove(), 3000);
-    });
-
-    function envoyerReponse() {
-        const nom = document.getElementById('mon-prenom').value;
-        const r1 = document.getElementById('r1') ? document.getElementById('r1').value : "";
-        const r2 = document.getElementById('r2') ? document.getElementById('r2').value : "";
-        if(!nom) return alert("N'oublie pas ton prénom !");
-        if(!r1 && !r2) return alert("Réponds au moins à une question ❤️");
-        db.ref('reponses').push({ auteur: nom, matin: r1, soir: r2, date: maintenant.toLocaleString() });
-        alert("Réponses envoyées ! ❤️");
-        location.reload();
-    }
-
-    db.ref('reponses').limitToLast(3).on('value', snap => {
-        const data = snap.val(); let flux = "";
-        for(let id in data) { flux = `<div class="res"><b>${data[id].auteur}</b> :<br>${data[id].matin ? '☀️ '+data[id].matin : ''}<br>${data[id].soir ? '🌙 '+data[id].soir : ''}</div>` + flux; }
-        document.getElementById('reponses-flux').innerHTML = flux;
-    });
-</script>
-</body>
-</html>
+    <div class="timer-zone">
+        <div style="font-size: 0.9rem; margin-bottom: 5px; opacity: 0.9;">🌴 Retrouvailles dans...</div>
+        <div id="countdown">--:--:--</div>
+        <div style="font-size: 0.7rem; margin
