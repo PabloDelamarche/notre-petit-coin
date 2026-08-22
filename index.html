@@ -3,121 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compte à Rebours Final ❤️</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <title>Une petite question...</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
-        body { font-family: 'Poppins', sans-serif; background: #fff0f3; text-align: center; padding: 15px; color: #444; margin: 0; }
-        .card { background: white; max-width: 450px; margin: 10px auto; padding: 25px; border-radius: 30px; box-shadow: 0 10px 25px rgba(255,182,193,0.4); }
-        .timer-zone { background: linear-gradient(135deg, #ff4d6d, #ff758c); color: white; padding: 20px; border-radius: 25px; margin-bottom: 20px; }
-        #countdown { font-size: 2.8rem; font-weight: bold; font-family: 'Courier New', Courier, monospace; letter-spacing: 2px; }
-        .question-block { background: #fdf2f4; margin: 15px 0; padding: 15px; border-radius: 20px; border-left: 6px solid #ff4d6d; text-align: left; }
-        textarea { width: 100%; border: 1px solid #ddd; border-radius: 12px; padding: 10px; box-sizing: border-box; resize: none; margin-top: 8px; font-family: inherit; }
-        input { width: 100%; max-width: 280px; padding: 12px; border-radius: 50px; border: 1px solid #ddd; margin: 15px 0; text-align: center; font-size: 1rem; }
-        .main-btn { background: #ff4d6d; color: white; border: none; padding: 15px 30px; border-radius: 50px; cursor: pointer; font-weight: bold; width: 100%; max-width: 280px; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(255,77,109,0.3); }
-        .res { font-size: 0.9rem; margin-top: 10px; text-align: left; background: #fff; padding: 15px; border-radius: 15px; border-left: 4px solid #ffccd5; margin-bottom: 10px; }
-        .label-q { font-weight: 600; color: #ff4d6d; font-size: 0.95rem; }
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ff758c, #ff7eb3);
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            position: relative;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        h1 {
+            color: #d63384;
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            position: relative;
+            height: 50px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        #btn-oui {
+            background-color: #28a745;
+            color: white;
+        }
+
+        #btn-oui:hover {
+            transform: scale(1.1);
+        }
+
+        #btn-non {
+            background-color: #dc3545;
+            color: white;
+            position: absolute;
+        }
+
+        /* Style pour l'affichage du cœur */
+        .heart-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .heart {
+            font-size: 80px;
+            color: #ff3366;
+            animation: pulse 0.8s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.2); }
+        }
+
+        .success-text {
+            color: #d63384;
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <div class="timer-zone">
-        <div style="font-size: 1rem; margin-bottom: 8px; font-weight: 300;">❤️ Retrouvailles dans :</div>
-        <div id="countdown">00:00:00</div>
-        <div style="font-size: 0.75rem; margin-top: 8px; opacity: 0.9;">Je vais enfin revoir ta bouille 😁</div>
-    </div>
+    <div class="container" id="main-card">
+        <div id="question-section">
+            <h1>Veux-tu un date le 28 ? </h1>
+            <div class="buttons">
+                <button id="btn-oui" onclick="validerOui()">Oui ❤️</button>
+                <button id="btn-non" onmouseover="deplacerNon()" onclick="deplacerNon()">Non 😢</button>
+            </div>
+        </div>
 
-    <div id="questions-box">
-        <div class="question-block">
-            <span class="label-q">🥞 Ton stress sur une échelle de nombre de pancakes ?</span>
-            <textarea id="r1" placeholder="Ex: Une montagne de 50 pancakes !"></textarea>
-        </div>
-        <div class="question-block" style="border-left-color: #7209b7;">
-            <span class="label-q">😴 La durée de notre sommeil de demain ?</span>
-            <textarea id="r2" placeholder="Ex: 2h max, on a trop à se dire..."></textarea>
-        </div>
-        <div class="question-block" style="border-left-color: #ff9f1c;">
-            <span class="label-q">😈 C'est quoi déjà les gages si on perd... ?</span>
-            <textarea id="r3" placeholder="Rappelle-moi les règles !"></textarea>
+        <div class="heart-container" id="heart-section">
+            <div class="heart">❤️</div>
+            <div class="success-text">Yesss ! Rendez-vous le 28 ! 🥰</div>
         </div>
     </div>
-    
-    <input type="text" id="mon-prenom" placeholder="Ton petit nom...">
-    <button class="main-btn" onclick="envoyer()">Envoyer nos réponses ❤️</button>
-    
-    <h3 style="margin-top:30px; font-size: 1rem; color: #888;">Derniers échanges</h3>
-    <div id="reponses-flux"></div>
-</div>
 
-<script>
-    // --- 1. CONFIGURATION FIREBASE ---
-    const CONFIG = { databaseURL: "https://notre-petit-coin-default-rtdb.europe-west1.firebasedatabase.app" };
-    firebase.initializeApp(CONFIG);
-    const db = firebase.database();
+    <script>
+        function deplacerNon() {
+            const btnNon = document.getElementById('btn-non');
+            
+            // Récupère les dimensions de la fenêtre ou de la carte
+            const maxX = window.innerWidth - btnNon.offsetWidth - 50;
+            const maxY = window.innerHeight - btnNon.offsetHeight - 50;
 
-    // --- 2. LOGIQUE MINUTEUR (DEMAIN 23H PARIS) ---
-    function updateTimer() {
-        const maintenant = new Date();
-        // Cible fixe : 12 Mars 2026 à 23:00 (Heure de Paris)
-        const cible = new Date("March 12, 2026 23:00:00");
-        
-        const diff = cible - maintenant;
+            // Génère des coordonnées aléatoires
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
 
-        if (diff <= 0) {
-            document.getElementById('countdown').innerText = "C'EST L'HEURE ! ❤️";
-            return;
+            // Applique les nouvelles coordonnées en position fixe pour qu'il puisse s'envoler partout
+            btnNon.style.position = 'fixed';
+            btnNon.style.left = randomX + 'px';
+            btnNon.style.top = randomY + 'px';
         }
 
-        const h = Math.floor(diff / (1000 * 60 * 60));
-        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const s = Math.floor((diff % (1000 * 60)) / 1000);
-
-        document.getElementById('countdown').innerText = 
-            (h < 10 ? "0" + h : h) + ":" + (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
-    }
-    setInterval(updateTimer, 1000);
-    updateTimer();
-
-    // --- 3. ENVOI ET AFFICHAGE ---
-    function envoyer() {
-        const nom = document.getElementById('mon-prenom').value;
-        const res1 = document.getElementById('r1').value;
-        const res2 = document.getElementById('r2').value;
-        const res3 = document.getElementById('r3').value;
-        
-        if(!nom) return alert("Ton prénom ! ❤️");
-        
-        db.ref('reponses').push({
-            auteur: nom, 
-            pancakes: res1, 
-            sommeil: res2, 
-            gages: res3,
-            heure: new Date().toLocaleTimeString()
-        });
-        
-        alert("C'est envoyé ! ❤️");
-        document.getElementById('r1').value = "";
-        document.getElementById('r2').value = "";
-        document.getElementById('r3').value = "";
-    }
-
-    db.ref('reponses').limitToLast(5).on('value', snap => {
-        const data = snap.val(); 
-        let flux = "";
-        for(let id in data) {
-            flux = `
-                <div class="res">
-                    <b>✨ ${data[id].auteur}</b> <small style="color:#bbb">(${data[id].heure})</small><br>
-                    ${data[id].pancakes ? '🥞 : ' + data[id].pancakes + '<br>' : ''}
-                    ${data[id].sommeil ? '😴 : ' + data[id].sommeil + '<br>' : ''}
-                    ${data[id].gages ? '😈 : ' + data[id].gages : ''}
-                </div>
-            ` + flux;
+        function validerOui() {
+            // Cache la question et affiche le cœur
+            document.getElementById('question-section').style.display = 'none';
+            document.getElementById('heart-section').style.display = 'flex';
         }
-        document.getElementById('reponses-flux').innerHTML = flux;
-    });
-</script>
+    </script>
+
 </body>
 </html>
