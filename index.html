@@ -61,11 +61,12 @@
         }
 
         #btn-oui {
-            background: #cccccc; /* Grisé au début */
-            border-color: #cccccc;
+            background: #332d2d; /* Garde sa vraie couleur chic dès le début */
             color: #ffffff;
-            cursor: not-allowed;
-            opacity: 0.6;
+        }
+
+        #btn-oui:hover {
+            background: #504848;
         }
 
         #btn-non {
@@ -88,40 +89,35 @@
 
     <div class="card" id="card">
         <div id="content">
-            <h1>Veux-tu partager ce moment avec moi le 28 ?</h1>
+            <h1>Veux-tu partager un moment avec moi le 28 ?</h1>
             <div class="buttons-container" id="btn-wrapper">
-                <button id="btn-oui" disabled onclick="showLove()">Oui</button>
+                <button id="btn-oui" onclick="showLove()">Oui</button>
                 <button id="btn-non" onmouseover="moveNon()" ontouchstart="moveNon(); event.preventDefault();">Non</button>
             </div>
             <p id="message-triste" style="margin-top: 20px; color: #8b7355; opacity: 0; transition: 0.5s; font-size: 15px;"></p>
         </div>
 
         <div id="message-final">
-            Le 28 est déjà réservé dans mon cœur. ✨
+            Le 28 est déjà réservé dans mon cœur mon p'tit coeur. ✨
         </div>
     </div>
 
     <script>
         let counter = 0;
+        let canClickOui = false; // Le bouton Oui est bloqué par défaut en JS
 
         function moveNon() {
             counter++;
             const btnNon = document.getElementById('btn-non');
-            const btnOui = document.getElementById('btn-oui');
             const msgTriste = document.getElementById('message-triste');
 
-            // 3ème appui : Affichage du premier message et activation du bouton Oui
+            // 3ème appui : Affichage du message et déblocage du Oui
             if (counter === 3) {
                 msgTriste.innerText = "Beh tu ne m'aimes plus ? 🥺";
                 msgTriste.style.opacity = "1";
-
-                btnOui.removeAttribute('disabled');
-                btnOui.style.background = '#332d2d';
-                btnOui.style.borderColor = '#332d2d';
-                btnOui.style.cursor = 'pointer';
-                btnOui.style.opacity = '1';
+                canClickOui = true; // On autorise le clic sur Oui
             } 
-            // 4ème appui : Changement du texte pour insister
+            // 4ème appui : Modification du texte
             else if (counter === 4) {
                 msgTriste.innerText = "mais accepte !!";
             }
@@ -140,8 +136,8 @@
         }
 
         function showLove() {
-            const btnOui = document.getElementById('btn-oui');
-            if (btnOui.hasAttribute('disabled')) return;
+            // Si le 3ème appui n'a pas encore été fait, on bloque l'action du bouton Oui
+            if (!canClickOui) return;
 
             document.getElementById('content').style.display = 'none';
             document.getElementById('message-final').style.display = 'block';
