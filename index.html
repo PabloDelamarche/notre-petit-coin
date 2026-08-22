@@ -2,139 +2,130 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Une petite question...</title>
+    <title>Invitation</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Raleway:wght@300;400&display=swap');
+
         body {
             margin: 0;
-            padding: 0;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #ff758c, #ff7eb3);
-            font-family: 'Arial', sans-serif;
+            background-color: #fcfaf8; /* Blanc cassé très doux */
+            font-family: 'Raleway', sans-serif;
             overflow: hidden;
-            text-align: center;
         }
 
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            position: relative;
-            max-width: 400px;
+        .card {
+            text-align: center;
+            padding: 60px;
+            background: #ffffff;
+            border: 1px solid #e8e4e1;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            max-width: 500px;
             width: 90%;
         }
 
         h1 {
-            color: #d63384;
-            font-size: 24px;
-            margin-bottom: 30px;
+            font-family: 'Playfair Display', serif;
+            color: #332d2d;
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            margin-bottom: 40px;
         }
 
-        .buttons {
+        .buttons-container {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            position: relative;
-            height: 50px;
+            align-items: center;
+            gap: 30px;
+            min-height: 60px;
         }
 
         button {
-            padding: 12px 25px;
-            font-size: 16px;
-            font-weight: bold;
-            border: none;
-            border-radius: 50px;
+            padding: 12px 30px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             cursor: pointer;
-            transition: transform 0.2s;
+            border: 1px solid #332d2d;
+            background: transparent;
+            transition: all 0.4s ease;
         }
 
         #btn-oui {
-            background-color: #28a745;
-            color: white;
+            background: #332d2d;
+            color: #ffffff;
         }
 
         #btn-oui:hover {
-            transform: scale(1.1);
+            background: #504848;
         }
 
         #btn-non {
-            background-color: #dc3545;
-            color: white;
-            position: absolute;
+            background: transparent;
+            color: #332d2d;
         }
 
-        /* Style pour l'affichage du cœur */
-        .heart-container {
+        #btn-non:hover {
+            background: #fcfaf8;
+        }
+
+        #message-final {
             display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .heart {
-            font-size: 80px;
-            color: #ff3366;
-            animation: pulse 0.8s infinite alternate;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.2); }
-        }
-
-        .success-text {
-            color: #d63384;
-            font-size: 22px;
-            font-weight: bold;
-            margin-top: 15px;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: #8b7355;
+            font-size: 24px;
         }
     </style>
 </head>
 <body>
 
-    <div class="container" id="main-card">
-        <div id="question-section">
-            <h1>Veux-tu un date le 28 ? </h1>
-            <div class="buttons">
-                <button id="btn-oui" onclick="validerOui()">Oui ❤️</button>
-                <button id="btn-non" onmouseover="deplacerNon()" onclick="deplacerNon()">Non 😢</button>
+    <div class="card" id="card">
+        <div id="content">
+            <h1>Veux-tu partager ce moment avec moi le 28 ?</h1>
+            <div class="buttons-container" id="btn-wrapper">
+                <button id="btn-oui" onclick="showLove()">Oui</button>
+                <button id="btn-non" onmouseover="moveNon()">Non</button>
             </div>
+            <p id="message-triste" style="margin-top: 20px; color: #8b7355; opacity: 0; transition: 0.5s;"></p>
         </div>
 
-        <div class="heart-container" id="heart-section">
-            <div class="heart">❤️</div>
-            <div class="success-text">Yesss ! Rendez-vous le 28 ! 🥰</div>
+        <div id="message-final">
+            Le 28 est déjà réservé dans mon cœur. ✨
         </div>
     </div>
 
     <script>
-        function deplacerNon() {
+        let counter = 0;
+
+        function moveNon() {
+            counter++;
             const btnNon = document.getElementById('btn-non');
+            const msgTriste = document.getElementById('message-triste');
+
+            if (counter === 3) {
+                msgTriste.innerText = "Beh tu ne m'aimes plus ? 🥺";
+                msgTriste.style.opacity = "1";
+            }
+
+            // Déplacement aléatoire dans la fenêtre
+            const x = Math.random() * (window.innerWidth - 100);
+            const y = Math.random() * (window.innerHeight - 100);
             
-            // Récupère les dimensions de la fenêtre ou de la carte
-            const maxX = window.innerWidth - btnNon.offsetWidth - 50;
-            const maxY = window.innerHeight - btnNon.offsetHeight - 50;
-
-            // Génère des coordonnées aléatoires
-            const randomX = Math.random() * maxX;
-            const randomY = Math.random() * maxY;
-
-            // Applique les nouvelles coordonnées en position fixe pour qu'il puisse s'envoler partout
-            btnNon.style.position = 'fixed';
-            btnNon.style.left = randomX + 'px';
-            btnNon.style.top = randomY + 'px';
+            btnNon.style.position = "fixed";
+            btnNon.style.left = x + "px";
+            btnNon.style.top = y + "px";
         }
 
-        function validerOui() {
-            // Cache la question et affiche le cœur
-            document.getElementById('question-section').style.display = 'none';
-            document.getElementById('heart-section').style.display = 'flex';
+        function showLove() {
+            document.getElementById('content').style.display = 'none';
+            document.getElementById('message-final').style.display = 'block';
         }
     </script>
-
 </body>
 </html>
