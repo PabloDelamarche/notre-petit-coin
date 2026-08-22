@@ -16,7 +16,7 @@
             background-color: #fcfaf8;
             font-family: 'Raleway', sans-serif;
             overflow: hidden;
-            touch-action: manipulation; /* Évite les zooms intempestifs sur mobile */
+            touch-action: manipulation;
         }
 
         .card {
@@ -57,18 +57,20 @@
             cursor: pointer;
             border: 1px solid #332d2d;
             background: transparent;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         #btn-oui {
-            background: #332d2d;
+            background: #cccccc; /* Grisé au début */
+            border-color: #cccccc;
             color: #ffffff;
+            cursor: not-allowed;
+            opacity: 0.6;
         }
 
         #btn-non {
             background: transparent;
             color: #332d2d;
-            /* Empêche le texte de se sélectionner sur mobile lors des appuis rapides */
             user-select: none; 
             -webkit-user-select: none;
         }
@@ -88,8 +90,7 @@
         <div id="content">
             <h1>Veux-tu partager ce moment avec moi le 28 ?</h1>
             <div class="buttons-container" id="btn-wrapper">
-                <button id="btn-oui" onclick="showLove()">Oui</button>
-                <!-- On gère le tactile (ontouchstart) et le survol (onmouseover) -->
+                <button id="btn-oui" disabled onclick="showLove()">Oui</button>
                 <button id="btn-non" onmouseover="moveNon()" ontouchstart="moveNon(); event.preventDefault();">Non</button>
             </div>
             <p id="message-triste" style="margin-top: 20px; color: #8b7355; opacity: 0; transition: 0.5s; font-size: 15px;"></p>
@@ -106,14 +107,26 @@
         function moveNon() {
             counter++;
             const btnNon = document.getElementById('btn-non');
+            const btnOui = document.getElementById('btn-oui');
             const msgTriste = document.getElementById('message-triste');
 
+            // 3ème appui : Affichage du premier message et activation du bouton Oui
             if (counter === 3) {
                 msgTriste.innerText = "Beh tu ne m'aimes plus ? 🥺";
                 msgTriste.style.opacity = "1";
+
+                btnOui.removeAttribute('disabled');
+                btnOui.style.background = '#332d2d';
+                btnOui.style.borderColor = '#332d2d';
+                btnOui.style.cursor = 'pointer';
+                btnOui.style.opacity = '1';
+            } 
+            // 4ème appui : Changement du texte pour insister
+            else if (counter === 4) {
+                msgTriste.innerText = "mais accepte !!";
             }
 
-            // Calcul des limites pour que le bouton ne sorte pas de l'écran sur mobile
+            // Déplacement aléatoire du bouton Non
             const padding = 50;
             const maxX = window.innerWidth - btnNon.offsetWidth - padding;
             const maxY = window.innerHeight - btnNon.offsetHeight - padding;
@@ -127,6 +140,9 @@
         }
 
         function showLove() {
+            const btnOui = document.getElementById('btn-oui');
+            if (btnOui.hasAttribute('disabled')) return;
+
             document.getElementById('content').style.display = 'none';
             document.getElementById('message-final').style.display = 'block';
         }
