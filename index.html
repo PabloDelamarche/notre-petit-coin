@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invitation</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Raleway:wght@300;400&display=swap');
@@ -12,36 +13,39 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #fcfaf8; /* Blanc cassé très doux */
+            background-color: #fcfaf8;
             font-family: 'Raleway', sans-serif;
             overflow: hidden;
+            touch-action: manipulation; /* Évite les zooms intempestifs sur mobile */
         }
 
         .card {
             text-align: center;
-            padding: 60px;
+            padding: 40px 20px;
             background: #ffffff;
             border: 1px solid #e8e4e1;
             box-shadow: 0 20px 40px rgba(0,0,0,0.05);
             max-width: 500px;
-            width: 90%;
+            width: 85%;
+            position: relative;
         }
 
         h1 {
             font-family: 'Playfair Display', serif;
             color: #332d2d;
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 400;
             letter-spacing: 1px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         .buttons-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 30px;
+            gap: 20px;
             min-height: 60px;
+            position: relative;
         }
 
         button {
@@ -53,7 +57,7 @@
             cursor: pointer;
             border: 1px solid #332d2d;
             background: transparent;
-            transition: all 0.4s ease;
+            transition: background 0.3s ease;
         }
 
         #btn-oui {
@@ -61,17 +65,12 @@
             color: #ffffff;
         }
 
-        #btn-oui:hover {
-            background: #504848;
-        }
-
         #btn-non {
             background: transparent;
             color: #332d2d;
-        }
-
-        #btn-non:hover {
-            background: #fcfaf8;
+            /* Empêche le texte de se sélectionner sur mobile lors des appuis rapides */
+            user-select: none; 
+            -webkit-user-select: none;
         }
 
         #message-final {
@@ -79,7 +78,7 @@
             font-family: 'Playfair Display', serif;
             font-style: italic;
             color: #8b7355;
-            font-size: 24px;
+            font-size: 22px;
         }
     </style>
 </head>
@@ -90,9 +89,10 @@
             <h1>Veux-tu partager ce moment avec moi le 28 ?</h1>
             <div class="buttons-container" id="btn-wrapper">
                 <button id="btn-oui" onclick="showLove()">Oui</button>
-                <button id="btn-non" onmouseover="moveNon()">Non</button>
+                <!-- On gère le tactile (ontouchstart) et le survol (onmouseover) -->
+                <button id="btn-non" onmouseover="moveNon()" ontouchstart="moveNon(); event.preventDefault();">Non</button>
             </div>
-            <p id="message-triste" style="margin-top: 20px; color: #8b7355; opacity: 0; transition: 0.5s;"></p>
+            <p id="message-triste" style="margin-top: 20px; color: #8b7355; opacity: 0; transition: 0.5s; font-size: 15px;"></p>
         </div>
 
         <div id="message-final">
@@ -113,13 +113,17 @@
                 msgTriste.style.opacity = "1";
             }
 
-            // Déplacement aléatoire dans la fenêtre
-            const x = Math.random() * (window.innerWidth - 100);
-            const y = Math.random() * (window.innerHeight - 100);
+            // Calcul des limites pour que le bouton ne sorte pas de l'écran sur mobile
+            const padding = 50;
+            const maxX = window.innerWidth - btnNon.offsetWidth - padding;
+            const maxY = window.innerHeight - btnNon.offsetHeight - padding;
+            
+            const randomX = Math.max(padding, Math.random() * maxX);
+            const randomY = Math.max(padding, Math.random() * maxY);
             
             btnNon.style.position = "fixed";
-            btnNon.style.left = x + "px";
-            btnNon.style.top = y + "px";
+            btnNon.style.left = randomX + "px";
+            btnNon.style.top = randomY + "px";
         }
 
         function showLove() {
