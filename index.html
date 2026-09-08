@@ -50,8 +50,10 @@
             justify-content: center;
             position: relative;
             border-radius: 4px;
+            transition: background-color 0.2s;
         }
 
+        /* Case noire / flèche */
         .cell.black {
             background-color: #3b3035;
             font-size: 0.5rem;
@@ -62,10 +64,21 @@
             font-weight: bold;
         }
 
+        /* Cases du mot mystère */
         .cell.mystery {
             background-color: #ffe6ed;
             font-weight: bold;
             color: #d85a7f;
+        }
+
+        /* Surlignage du mot actif (devient blanc ou rose clair) */
+        .cell.highlight {
+            background-color: #ffffff !important;
+            box-shadow: inset 0 0 0 2px #d85a7f;
+        }
+        .cell.mystery.highlight {
+            background-color: #fff0f3 !important;
+            box-shadow: inset 0 0 0 2px #d85a7f;
         }
 
         .cell input {
@@ -83,21 +96,12 @@
 
         .cell input:focus {
             outline: none;
-            background-color: #fff0f3;
-        }
-
-        /* Indicateur visuel de direction (optionnel, s'active en bas de page) */
-        .direction-indicator {
-            margin-top: 15px;
-            font-size: 0.85rem;
-            color: #d85a7f;
-            font-weight: bold;
         }
 
         .clues {
-            margin-top: 20px;
+            margin-top: 25px;
             background: white;
-            padding: 15px 20px;
+            padding: 20px;
             border-radius: 8px;
             max-width: 400px;
             width: 100%;
@@ -108,7 +112,7 @@
         .clues h3 {
             margin-top: 0;
             color: #d85a7f;
-            font-size: 1rem;
+            font-size: 1.1rem;
             border-bottom: 2px solid #ffe6ed;
             padding-bottom: 5px;
         }
@@ -116,148 +120,165 @@
         .clues ul {
             padding-left: 20px;
             margin-bottom: 0;
-            font-size: 0.85rem;
-            line-height: 1.5;
+            font-size: 0.9rem;
+            line-height: 1.6;
         }
     </style>
 </head>
 <body>
 
     <h1>💖 Mots Doux Fléchés 💖</h1>
-    <p class="subtitle">Clique une fois (Ligne) ou deux fois (Colonne) pour changer de sens !</p>
+    <p class="subtitle">Clique une fois pour horizontal, une deuxième fois pour vertical !</p>
 
-    <!-- Grille 5x5 avec des coordonnées (row, col de 0 à 4) -->
-    <div class="grid-container" id="grid">
+    <!-- Grille 5x5 avec un index [ligne][colonne] de 0 à 4 -->
+    <div class="grid-container" id="crossword-grid">
         <!-- Ligne 0 -->
-        <div class="cell black">Mois ?</div>
-        <div class="cell"><input type="text" maxlength="1" data-row="0" data-col="1"></div>
-        <div class="cell"><input type="text" maxlength="1" data-row="0" data-col="2"></div>
-        <div class="cell"><input type="text" maxlength="1" data-row="0" data-col="3"></div>
-        <div class="cell black"></div>
+        <div class="cell black" data-row="0" data-col="0">Mois</div>
+        <div class="cell" data-row="0" data-col="1"><input type="text" maxlength="1"></div>
+        <div class="cell" data-row="0" data-col="2"><input type="text" maxlength="1"></div>
+        <div class="cell" data-row="0" data-col="3"><input type="text" maxlength="1"></div>
+        <div class="cell black" data-row="0" data-col="4"></div>
 
         <!-- Ligne 1 -->
-        <div class="cell"><input type="text" maxlength="1" data-row="1" data-col="0"></div>
-        <div class="cell mystery"><input type="text" maxlength="1" data-row="1" data-col="1"></div>
-        <div class="cell"><input type="text" maxlength="1" data-row="1" data-col="2"></div>
-        <div class="cell"><input type="text" maxlength="1" data-row="1" data-col="3"></div>
-        <div class="cell black"></div>
+        <div class="cell" data-row="1" data-col="0"><input type="text" maxlength="1"></div>
+        <div class="cell mystery" data-row="1" data-col="1"><input type="text" maxlength="1"></div>
+        <div class="cell" data-row="1" data-col="2"><input type="text" maxlength="1"></div>
+        <div class="cell" data-row="1" data-col="3"><input type="text" maxlength="1"></div>
+        <div class="cell black" data-row="1" data-col="4"></div>
 
         <!-- Ligne 2 -->
-        <div class="cell mystery"><input type="text" maxlength="1" data-row="2" data-col="0"></div>
-        <div class="cell"><input type="text" maxlength="1" data-row="2" data-col="1"></div>
-        <div class="cell"><input type="text" maxlength="1" data-row="2" data-col="2"></div>
-        <div class="cell"><input type="text" maxlength="1" data-row="2" data-col="3"></div>
-        <div class="cell mystery"><input type="text" maxlength="1" data-row="2" data-col="4"></div>
+        <div class="cell mystery" data-row="2" data-col="0"><input type="text" maxlength="1"></div>
+        <div class="cell" data-row="2" data-col="1"><input type="text" maxlength="1"></div>
+        <div class="cell" data-row="2" data-col="2"><input type="text" maxlength="1"></div>
+        <div class="cell" data-row="2" data-col="3"><input type="text" maxlength="1"></div>
+        <div class="cell mystery" data-row="2" data-col="4"><input type="text" maxlength="1"></div>
 
         <!-- Ligne 3 -->
-        <div class="cell mystery"><input type="text" maxlength="1" data-row="3" data-col="0"></div>
-        <div class="cell black">Plat ?</div>
-        <div class="cell"><input type="text" maxlength="1" data-row="3" data-col="2"></div>
-        <div class="cell"><input type="text" maxlength="1" data-row="3" data-col="3"></div>
-        <div class="cell mystery"><input type="text" maxlength="1" data-row="3" data-col="4"></div>
+        <div class="cell mystery" data-row="3" data-col="0"><input type="text" maxlength="1"></div>
+        <div class="cell black" data-row="3" data-col="1">Plat</div>
+        <div class="cell" data-row="3" data-col="2"><input type="text" maxlength="1"></div>
+        <div class="cell" data-row="3" data-col="3"><input type="text" maxlength="1"></div>
+        <div class="cell mystery" data-row="3" data-col="4"><input type="text" maxlength="1"></div>
 
         <!-- Ligne 4 -->
-        <div class="cell mystery"><input type="text" maxlength="1" data-row="4" data-col="0"></div>
-        <div class="cell black"></div>
-        <div class="cell black"></div>
-        <div class="cell black"></div>
-        <div class="cell mystery"><input type="text" maxlength="1" data-row="4" data-col="4"></div>
+        <div class="cell mystery" data-row="4" data-col="0"><input type="text" maxlength="1"></div>
+        <div class="cell black" data-row="4" data-col="1"></div>
+        <div class="cell black" data-row="4" data-col="2"></div>
+        <div class="cell black" data-row="4" data-col="3"></div>
+        <div class="cell mystery" data-row="4" data-col="4"><input type="text" maxlength="1"></div>
     </div>
-
-    <div class="direction-indicator" id="directionIndicator">Sens actuel : ➡️ Ligne</div>
 
     <div class="clues">
         <h3>Indices :</h3>
         <ul>
-            <li><strong>Ligne 1 :</strong> Notre mois de rencontre</li>
-            <li><strong>Ligne 4 :</strong> Ton plat préféré</li>
-            <li>💡 <em>Astuce :</em> Remplis la grille pour découvrir le mot mystère rose !</li>
+            <li><strong>Ligne 0 :</strong> Notre mois de rencontre</li>
+            <li><strong>Ligne 3 :</strong> Ton plat préféré</li>
+            <li><strong>💡 Mot mystère :</strong> Les cases spéciales forment le secret final !</li>
         </ul>
     </div>
 
     <script>
-        const inputs = document.querySelectorAll('.grid-container input');
-        let currentDirection = 'horizontal'; // 'horizontal' par défaut, 'vertical' si double clic
-        let lastFocusedInput = null;
-        let clickCount = 0;
-        let clickTimer = null;
+        const inputs = document.querySelectorAll('.grid-container .cell input');
+        let currentDirection = 'H'; // 'H' pour Horizontal, 'V' pour Vertical
+        let activeCell = null;
 
         inputs.forEach(input => {
-            // Gestion du clic et du double-clic subtil
+            const cell = input.parentElement;
+            const row = parseInt(cell.dataset.row);
+            const col = parseInt(cell.dataset.col);
+
+            // Gestion du clic pour basculer la direction
             input.addEventListener('click', (e) => {
-                if (lastFocusedInput === e.target) {
-                    clickCount++;
-                    if (clickCount === 2) {
-                        // Double clic sur la même case -> Inverser la direction
-                        currentDirection = (currentDirection === 'horizontal') ? 'vertical' : 'horizontal';
-                        updateIndicator();
-                        clickCount = 0;
-                    }
+                if (activeCell === cell) {
+                    // Si on clique une 2ème fois sur la même case, on inverse la direction
+                    currentDirection = currentDirection === 'H' ? 'V' : 'H';
                 } else {
-                    lastFocusedInput = e.target;
-                    clickCount = 1;
-                    currentDirection = 'horizontal'; // Priorité ligne par défaut sur un nouveau clic
-                    updateIndicator();
+                    activeCell = cell;
+                    currentDirection = 'H'; // Par défaut, priorité horizontale au premier clic
                 }
+                updateHighlight();
             });
 
-            // Quand on tape une lettre
+            // Gestion de la saisie et du saut automatique
             input.addEventListener('input', (e) => {
-                const value = e.target.value;
-                if (value.length === 1) {
-                    moveToNext(e.target);
+                const val = input.value.toUpperCase();
+                input.value = val; // Force les majuscules
+
+                if (val.length === 1) {
+                    moveToNext(row, col, 1);
                 }
             });
 
             // Gestion de la touche Retour Arrière (Backspace) pour reculer
             input.addEventListener('keydown', (e) => {
-                if (e.key === 'Backspace' && e.target.value === '') {
-                    moveToPrev(e.target);
+                if (e.key === 'Backspace' && input.value === '') {
+                    moveToNext(row, col, -1);
                 }
             });
         });
 
-        function moveToNext(currentInput) {
-            let row = parseInt(currentInput.dataset.row);
-            let col = parseInt(currentInput.dataset.col);
+        // Fonction pour trouver et focus la case suivante/précédente selon la direction
+        function moveToNext(row, col, step) {
+            let nextRow = row;
+            let nextCol = col;
 
-            if (currentDirection === 'horizontal') {
-                col += 1;
+            if (currentDirection === 'H') {
+                nextCol += step;
             } else {
-                row += 1;
+                nextRow += step;
             }
 
-            const nextInput = document.querySelector(`input[data-row="${row}"][data-col="${col}"]`);
-            if (nextInput) {
-                nextInput.focus();
-                lastFocusedInput = nextInput;
+            // Recherche de la case correspondante dans la grille
+            const nextCell = document.querySelector(`.cell[data-row="${nextRow}"][data-col="${nextCol}"]`);
+            if (nextCell) {
+                const nextInput = nextCell.querySelector('input');
+                if (nextInput) {
+                    nextInput.focus();
+                    activeCell = nextCell;
+                    updateHighlight();
+                }
             }
         }
 
-        function moveToPrev(currentInput) {
-            let row = parseInt(currentInput.dataset.row);
-            let col = parseInt(currentInput.dataset.col);
+        // Met en surbrillance le mot en cours (ligne ou colonne)
+        function updateHighlight() {
+            // Nettoyer tous les surlignages
+            document.querySelectorAll('.cell').forEach(c => c.classList.remove('highlight'));
 
-            if (currentDirection === 'horizontal') {
-                col -= 1;
+            if (!activeCell) return;
+
+            const row = parseInt(activeCell.dataset.row);
+            const col = parseInt(activeCell.dataset.col);
+
+            if (currentDirection === 'H') {
+                // Surligner toute la ligne de mots adjacents
+                let c = col;
+                while (c >= 0 && getCell(row, c) && !getCell(row, c).classList.contains('black')) {
+                    getCell(row, c).classList.add('highlight');
+                    c--;
+                }
+                c = col + 1;
+                while (c < 5 && getCell(row, c) && !getCell(row, c).classList.contains('black')) {
+                    getCell(row, c).classList.add('highlight');
+                    c++;
+                }
             } else {
-                row -= 1;
-            }
-
-            const prevInput = document.querySelector(`input[data-row="${row}"][data-col="${col}"]`);
-            if (prevInput) {
-                prevInput.focus();
-                lastFocusedInput = prevInput;
+                // Surligner toute la colonne de mots adjacents
+                let r = row;
+                while (r >= 0 && getCell(r, col) && !getCell(r, col).classList.contains('black')) {
+                    getCell(r, col).classList.add('highlight');
+                    r--;
+                }
+                r = row + 1;
+                while (r < 5 && getCell(r, col) && !getCell(r, col).classList.contains('black')) {
+                    getCell(r, col).classList.add('highlight');
+                    r++;
+                }
             }
         }
 
-        function updateIndicator() {
-            const indicator = document.getElementById('directionIndicator');
-            if (currentDirection === 'horizontal') {
-                indicator.innerText = "Sens actuel : ➡️ Ligne (Clique 2 fois sur la case pour passer en Colonne ⬇️)";
-            } else {
-                indicator.innerText = "Sens actuel : ⬇️ Colonne (Clique 2 fois sur la case pour passer en Ligne ➡️)";
-            }
+        function getCell(r, c) {
+            return document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
         }
     </script>
 </body>
