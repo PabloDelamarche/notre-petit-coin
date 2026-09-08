@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mots Fléchés pour ma chérie</title>
+    <title>Mots Fléchés Romantiques</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -52,10 +52,9 @@
             border-radius: 4px;
         }
 
-        /* Case noire / flèche */
         .cell.black {
             background-color: #3b3035;
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             color: white;
             text-align: center;
             padding: 2px;
@@ -63,7 +62,6 @@
             font-weight: bold;
         }
 
-        /* Cases du mot mystère (à la fin) */
         .cell.mystery {
             background-color: #ffe6ed;
             font-weight: bold;
@@ -80,6 +78,7 @@
             text-transform: uppercase;
             background: transparent;
             color: #3b3035;
+            cursor: pointer;
         }
 
         .cell input:focus {
@@ -87,10 +86,18 @@
             background-color: #fff0f3;
         }
 
+        /* Indicateur visuel de direction (optionnel, s'active en bas de page) */
+        .direction-indicator {
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: #d85a7f;
+            font-weight: bold;
+        }
+
         .clues {
-            margin-top: 25px;
+            margin-top: 20px;
             background: white;
-            padding: 20px;
+            padding: 15px 20px;
             border-radius: 8px;
             max-width: 400px;
             width: 100%;
@@ -101,7 +108,7 @@
         .clues h3 {
             margin-top: 0;
             color: #d85a7f;
-            font-size: 1.1rem;
+            font-size: 1rem;
             border-bottom: 2px solid #ffe6ed;
             padding-bottom: 5px;
         }
@@ -109,88 +116,149 @@
         .clues ul {
             padding-left: 20px;
             margin-bottom: 0;
-            font-size: 0.9rem;
-            line-height: 1.6;
+            font-size: 0.85rem;
+            line-height: 1.5;
         }
     </style>
 </head>
 <body>
 
     <h1>💖 Mots Doux Fléchés 💖</h1>
-    <p class="subtitle">Résous les définitions pour découvrir le mot secret...</p>
+    <p class="subtitle">Clique une fois (Ligne) ou deux fois (Colonne) pour changer de sens !</p>
 
-    <!-- Grille 5x5 -->
-    <div class="grid-container" id="crossword-grid">
+    <!-- Grille 5x5 avec des coordonnées (row, col de 0 à 4) -->
+    <div class="grid-container" id="grid">
+        <!-- Ligne 0 -->
+        <div class="cell black">Mois ?</div>
+        <div class="cell"><input type="text" maxlength="1" data-row="0" data-col="1"></div>
+        <div class="cell"><input type="text" maxlength="1" data-row="0" data-col="2"></div>
+        <div class="cell"><input type="text" maxlength="1" data-row="0" data-col="3"></div>
+        <div class="cell black"></div>
+
         <!-- Ligne 1 -->
-        <div class="cell black">1. Mois de notre rencontre</div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1" data-row="1" data-col="0"></div>
+        <div class="cell mystery"><input type="text" maxlength="1" data-row="1" data-col="1"></div>
+        <div class="cell"><input type="text" maxlength="1" data-row="1" data-col="2"></div>
+        <div class="cell"><input type="text" maxlength="1" data-row="1" data-col="3"></div>
         <div class="cell black"></div>
 
         <!-- Ligne 2 -->
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell mystery"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell black"></div>
+        <div class="cell mystery"><input type="text" maxlength="1" data-row="2" data-col="0"></div>
+        <div class="cell"><input type="text" maxlength="1" data-row="2" data-col="1"></div>
+        <div class="cell"><input type="text" maxlength="1" data-row="2" data-col="2"></div>
+        <div class="cell"><input type="text" maxlength="1" data-row="2" data-col="3"></div>
+        <div class="cell mystery"><input type="text" maxlength="1" data-row="2" data-col="4"></div>
 
         <!-- Ligne 3 -->
-        <div class="cell mystery"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell mystery"><input type="text" maxlength="1"></div>
+        <div class="cell mystery"><input type="text" maxlength="1" data-row="3" data-col="0"></div>
+        <div class="cell black">Plat ?</div>
+        <div class="cell"><input type="text" maxlength="1" data-row="3" data-col="2"></div>
+        <div class="cell"><input type="text" maxlength="1" data-row="3" data-col="3"></div>
+        <div class="cell mystery"><input type="text" maxlength="1" data-row="3" data-col="4"></div>
 
         <!-- Ligne 4 -->
-        <div class="cell mystery"><input type="text" maxlength="1"></div>
-        <div class="cell black">2. Ton plat préféré</div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell mystery"><input type="text" maxlength="1"></div>
-
-        <!-- Ligne 5 -->
-        <div class="cell mystery"><input type="text" maxlength="1"></div>
+        <div class="cell mystery"><input type="text" maxlength="1" data-row="4" data-col="0"></div>
         <div class="cell black"></div>
         <div class="cell black"></div>
         <div class="cell black"></div>
-        <div class="cell mystery"><input type="text" maxlength="1"></div>
+        <div class="cell mystery"><input type="text" maxlength="1" data-row="4" data-col="4"></div>
     </div>
 
-    <!-- Définitions / Indices -->
+    <div class="direction-indicator" id="directionIndicator">Sens actuel : ➡️ Ligne</div>
+
     <div class="clues">
-        <h3>Indices & Définitions :</h3>
+        <h3>Indices :</h3>
         <ul>
-            <li><strong>1. (Ligne 1) :</strong> Notre mois de rencontre (3 lettres)</li>
-            <li><strong>2. (Ligne 4) :</strong> Ce qu'on adore commander au restaurant (3 lettres)</li>
-            <li><strong>💡 Le mot mystère :</strong> Les cases roses forment le mot caché !</li>
+            <li><strong>Ligne 1 :</strong> Notre mois de rencontre</li>
+            <li><strong>Ligne 4 :</strong> Ton plat préféré</li>
+            <li>💡 <em>Astuce :</em> Remplis la grille pour découvrir le mot mystère rose !</li>
         </ul>
     </div>
 
-    <!-- Le code JavaScript pour la navigation automatique -->
     <script>
-        // Récupère tous les inputs de la grille
-        const inputs = document.querySelectorAll('#crossword-grid input');
+        const inputs = document.querySelectorAll('.grid-container input');
+        let currentDirection = 'horizontal'; // 'horizontal' par défaut, 'vertical' si double clic
+        let lastFocusedInput = null;
+        let clickCount = 0;
+        let clickTimer = null;
 
-        inputs.forEach((input, index) => {
+        inputs.forEach(input => {
+            // Gestion du clic et du double-clic subtil
+            input.addEventListener('click', (e) => {
+                if (lastFocusedInput === e.target) {
+                    clickCount++;
+                    if (clickCount === 2) {
+                        // Double clic sur la même case -> Inverser la direction
+                        currentDirection = (currentDirection === 'horizontal') ? 'vertical' : 'horizontal';
+                        updateIndicator();
+                        clickCount = 0;
+                    }
+                } else {
+                    lastFocusedInput = e.target;
+                    clickCount = 1;
+                    currentDirection = 'horizontal'; // Priorité ligne par défaut sur un nouveau clic
+                    updateIndicator();
+                }
+            });
+
             // Quand on tape une lettre
             input.addEventListener('input', (e) => {
                 const value = e.target.value;
-                // Si une lettre est entrée et qu'il y a une case suivante, on y va
-                if (value.length === 1 && index < inputs.length - 1) {
-                    inputs[index + 1].focus();
+                if (value.length === 1) {
+                    moveToNext(e.target);
                 }
             });
 
-            // Quand on appuie sur une touche (gestion du retour en arrière)
+            // Gestion de la touche Retour Arrière (Backspace) pour reculer
             input.addEventListener('keydown', (e) => {
-                if (e.key === 'Backspace' && input.value === '' && index > 0) {
-                    // Si la case est déjà vide et qu'on appuie sur Backspace, on recule
-                    inputs[index - 1].focus();
+                if (e.key === 'Backspace' && e.target.value === '') {
+                    moveToPrev(e.target);
                 }
             });
         });
-    </script>
 
+        function moveToNext(currentInput) {
+            let row = parseInt(currentInput.dataset.row);
+            let col = parseInt(currentInput.dataset.col);
+
+            if (currentDirection === 'horizontal') {
+                col += 1;
+            } else {
+                row += 1;
+            }
+
+            const nextInput = document.querySelector(`input[data-row="${row}"][data-col="${col}"]`);
+            if (nextInput) {
+                nextInput.focus();
+                lastFocusedInput = nextInput;
+            }
+        }
+
+        function moveToPrev(currentInput) {
+            let row = parseInt(currentInput.dataset.row);
+            let col = parseInt(currentInput.dataset.col);
+
+            if (currentDirection === 'horizontal') {
+                col -= 1;
+            } else {
+                row -= 1;
+            }
+
+            const prevInput = document.querySelector(`input[data-row="${row}"][data-col="${col}"]`);
+            if (prevInput) {
+                prevInput.focus();
+                lastFocusedInput = prevInput;
+            }
+        }
+
+        function updateIndicator() {
+            const indicator = document.getElementById('directionIndicator');
+            if (currentDirection === 'horizontal') {
+                indicator.innerText = "Sens actuel : ➡️ Ligne (Clique 2 fois sur la case pour passer en Colonne ⬇️)";
+            } else {
+                indicator.innerText = "Sens actuel : ⬇️ Colonne (Clique 2 fois sur la case pour passer en Ligne ➡️)";
+            }
+        }
+    </script>
 </body>
 </html>
