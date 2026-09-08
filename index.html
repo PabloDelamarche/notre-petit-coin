@@ -15,19 +15,20 @@
             justify-content: center;
             min-height: 100vh;
             margin: 0;
+            padding: 20px;
         }
 
         h1 {
             color: #d85a7f;
             font-size: 1.8rem;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             text-align: center;
         }
 
         p.subtitle {
             font-size: 0.95rem;
             color: #8c7b80;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             text-align: center;
         }
 
@@ -51,14 +52,15 @@
             border-radius: 4px;
         }
 
-        /* Case noire (flèche ou vide) */
+        /* Case noire / flèche */
         .cell.black {
             background-color: #3b3035;
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             color: white;
             text-align: center;
             padding: 2px;
             line-height: 1.1;
+            font-weight: bold;
         }
 
         /* Cases du mot mystère (à la fin) */
@@ -86,19 +88,22 @@
         }
 
         .clues {
-            margin-top: 30px;
+            margin-top: 25px;
             background: white;
             padding: 20px;
             border-radius: 8px;
             max-width: 400px;
-            width: 90%;
+            width: 100%;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-sizing: border-box;
         }
 
         .clues h3 {
             margin-top: 0;
             color: #d85a7f;
             font-size: 1.1rem;
+            border-bottom: 2px solid #ffe6ed;
+            padding-bottom: 5px;
         }
 
         .clues ul {
@@ -106,14 +111,6 @@
             margin-bottom: 0;
             font-size: 0.9rem;
             line-height: 1.6;
-        }
-
-        .win-message {
-            margin-top: 20px;
-            font-size: 1.2rem;
-            color: #2e7d32;
-            font-weight: bold;
-            display: none;
         }
     </style>
 </head>
@@ -125,52 +122,50 @@
     <!-- Grille 5x5 -->
     <div class="grid-container">
         <!-- Ligne 1 -->
-        <div class="cell black">Notre mois de rencontre</div>
-        <div class="cell"><input type="text" maxlength="1" data-answer="M"></div>
-        <div class="cell"><input type="text" maxlength="1" data-answer="A"></div>
-        <div class="cell"><input type="text" maxlength="1" data-answer="I"></div>
+        <div class="cell black">1. Mois de notre rencontre</div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
         <div class="cell black"></div>
 
         <!-- Ligne 2 -->
-        <div class="cell"><input type="text" maxlength="1" data-answer="O"></div>
-        <div class="cell mystery"><input type="text" maxlength="1" data-answer="A"></div>
-        <div class="cell"><input type="text" maxlength="1" data-answer="T"></div>
-        <div class="cell"><input type="text" maxlength="1" data-answer="S"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell mystery"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
         <div class="cell black"></div>
 
         <!-- Ligne 3 -->
-        <div class="cell mystery"><input type="text" maxlength="1" data-answer="M"></div>
-        <div class="cell"><input type="text" maxlength="1" data-answer="E"></div>
-        <div class="cell"><input type="text" maxlength="1" data-answer="R"></div>
-        <div class="cell"><input type="text" maxlength="1" data-answer="CI"></div> <!-- Simplifié pour l'exemple -->
-        <div class="cell mystery"><input type="text" maxlength="1" data-answer="O"></div>
+        <div class="cell mystery"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell mystery"><input type="text" maxlength="1"></div>
 
         <!-- Ligne 4 -->
-        <div class="cell mystery"><input type="text" maxlength="1" data-answer="U"></div>
-        <div class="cell black"></div>
-        <div class="cell"><input type="text" maxlength="1" data-answer="E"></div>
-        <div class="cell"><input type="text" maxlength="1" data-answer="U"></div>
-        <div class="cell mystery"><input type="text" maxlength="1" data-answer="U"></div>
+        <div class="cell mystery"><input type="text" maxlength="1"></div>
+        <div class="cell black">2. Ton plat préféré</div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell mystery"><input type="text" maxlength="1"></div>
 
         <!-- Ligne 5 -->
-        <div class="cell mystery"><input type="text" maxlength="1" data-answer="R"></div>
+        <div class="cell mystery"><input type="text" maxlength="1"></div>
         <div class="cell black"></div>
         <div class="cell black"></div>
         <div class="cell black"></div>
-        <div class="cell mystery"><input type="text" maxlength="1" data-answer="R"></div>
+        <div class="cell mystery"><input type="text" maxlength="1"></div>
     </div>
 
     <!-- Définitions / Indices -->
     <div class="clues">
-        <h3>Définitions :</h3>
+        <h3>Indices & Définitions :</h3>
         <ul>
-            <li><strong>1.</strong> Notre mois de rencontre (ou un mot doux)</li>
-            <li><strong>2.</strong> Ton plat préféré qu'on mange en date</li>
-            <li><strong>3.</strong> L'endroit de notre premier voyage</li>
+            <li><strong>1. (Ligne 1) :</strong> Notre mois de rencontre (3 lettres)</li>
+            <li><strong>2. (Ligne 4) :</strong> Ce qu'on adore commander au restaurant (3 lettres)</li>
+            <li><strong>💡 Le mot mystère :</strong> Les cases roses forment le mot caché !</li>
         </ul>
     </div>
-
-    <div id="win" class="win-message">✨ Bravo mon amour, tu as trouvé le mot secret ! ✨</div>
 
 </body>
 </html>
