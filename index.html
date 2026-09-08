@@ -3,145 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invitation</title>
+    <title>Mots Fléchés pour ma chérie</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Raleway:wght@300;400&display=swap');
-
         body {
-            margin: 0;
-            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fdf2f4;
+            color: #4a4a4a;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            background-color: #fcfaf8;
-            font-family: 'Raleway', sans-serif;
-            overflow: hidden;
-            touch-action: manipulation;
-        }
-
-        .card {
-            text-align: center;
-            padding: 40px 20px;
-            background: #ffffff;
-            border: 1px solid #e8e4e1;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
-            max-width: 500px;
-            width: 85%;
-            position: relative;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
         }
 
         h1 {
-            font-family: 'Playfair Display', serif;
-            color: #332d2d;
-            font-size: 24px;
-            font-weight: 400;
-            letter-spacing: 1px;
-            margin-bottom: 30px;
+            color: #d85a7f;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            text-align: center;
         }
 
-        .buttons-container {
+        p.subtitle {
+            font-size: 0.95rem;
+            color: #8c7b80;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(5, 45px);
+            grid-template-rows: repeat(5, 45px);
+            gap: 3px;
+            background-color: #d85a7f;
+            padding: 5px;
+            border-radius: 8px;
+            box-shadow: 0 8px 20px rgba(216, 90, 127, 0.2);
+        }
+
+        .cell {
+            background-color: #ffffff;
             display: flex;
-            justify-content: center;
             align-items: center;
-            gap: 20px;
-            min-height: 60px;
+            justify-content: center;
             position: relative;
+            border-radius: 4px;
         }
 
-        button {
-            padding: 12px 30px;
-            font-family: 'Raleway', sans-serif;
-            font-size: 14px;
+        /* Case noire (flèche ou vide) */
+        .cell.black {
+            background-color: #3b3035;
+            font-size: 0.6rem;
+            color: white;
+            text-align: center;
+            padding: 2px;
+            line-height: 1.1;
+        }
+
+        /* Cases du mot mystère (à la fin) */
+        .cell.mystery {
+            background-color: #ffe6ed;
+            font-weight: bold;
+            color: #d85a7f;
+        }
+
+        .cell input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-            border: 1px solid #332d2d;
             background: transparent;
-            transition: all 0.3s ease;
+            color: #3b3035;
         }
 
-        #btn-oui {
-            background: #332d2d; /* Garde sa vraie couleur chic dès le début */
-            color: #ffffff;
+        .cell input:focus {
+            outline: none;
+            background-color: #fff0f3;
         }
 
-        #btn-oui:hover {
-            background: #504848;
+        .clues {
+            margin-top: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
-        #btn-non {
-            background: transparent;
-            color: #332d2d;
-            user-select: none; 
-            -webkit-user-select: none;
+        .clues h3 {
+            margin-top: 0;
+            color: #d85a7f;
+            font-size: 1.1rem;
         }
 
-        #message-final {
+        .clues ul {
+            padding-left: 20px;
+            margin-bottom: 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .win-message {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #2e7d32;
+            font-weight: bold;
             display: none;
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            color: #8b7355;
-            font-size: 22px;
         }
     </style>
 </head>
 <body>
 
-    <div class="card" id="card">
-        <div id="content">
-            <h1>Veux-tu partager un moment avec moi le 28 ?</h1>
-            <div class="buttons-container" id="btn-wrapper">
-                <button id="btn-oui" onclick="showLove()">Oui</button>
-                <button id="btn-non" onmouseover="moveNon()" ontouchstart="moveNon(); event.preventDefault();">Non</button>
-            </div>
-            <p id="message-triste" style="margin-top: 20px; color: #8b7355; opacity: 0; transition: 0.5s; font-size: 15px;"></p>
-        </div>
+    <h1>💖 Mots Doux Fléchés 💖</h1>
+    <p class="subtitle">Résous les définitions pour découvrir le mot secret...</p>
 
-        <div id="message-final">
-            Le 28 est déjà réservé dans mon cœur mon p'tit coeur. ✨
-        </div>
+    <!-- Grille 5x5 -->
+    <div class="grid-container">
+        <!-- Ligne 1 -->
+        <div class="cell black">Notre mois de rencontre</div>
+        <div class="cell"><input type="text" maxlength="1" data-answer="M"></div>
+        <div class="cell"><input type="text" maxlength="1" data-answer="A"></div>
+        <div class="cell"><input type="text" maxlength="1" data-answer="I"></div>
+        <div class="cell black"></div>
+
+        <!-- Ligne 2 -->
+        <div class="cell"><input type="text" maxlength="1" data-answer="O"></div>
+        <div class="cell mystery"><input type="text" maxlength="1" data-answer="A"></div>
+        <div class="cell"><input type="text" maxlength="1" data-answer="T"></div>
+        <div class="cell"><input type="text" maxlength="1" data-answer="S"></div>
+        <div class="cell black"></div>
+
+        <!-- Ligne 3 -->
+        <div class="cell mystery"><input type="text" maxlength="1" data-answer="M"></div>
+        <div class="cell"><input type="text" maxlength="1" data-answer="E"></div>
+        <div class="cell"><input type="text" maxlength="1" data-answer="R"></div>
+        <div class="cell"><input type="text" maxlength="1" data-answer="CI"></div> <!-- Simplifié pour l'exemple -->
+        <div class="cell mystery"><input type="text" maxlength="1" data-answer="O"></div>
+
+        <!-- Ligne 4 -->
+        <div class="cell mystery"><input type="text" maxlength="1" data-answer="U"></div>
+        <div class="cell black"></div>
+        <div class="cell"><input type="text" maxlength="1" data-answer="E"></div>
+        <div class="cell"><input type="text" maxlength="1" data-answer="U"></div>
+        <div class="cell mystery"><input type="text" maxlength="1" data-answer="U"></div>
+
+        <!-- Ligne 5 -->
+        <div class="cell mystery"><input type="text" maxlength="1" data-answer="R"></div>
+        <div class="cell black"></div>
+        <div class="cell black"></div>
+        <div class="cell black"></div>
+        <div class="cell mystery"><input type="text" maxlength="1" data-answer="R"></div>
     </div>
 
-    <script>
-        let counter = 0;
-        let canClickOui = false; // Le bouton Oui est bloqué par défaut en JS
+    <!-- Définitions / Indices -->
+    <div class="clues">
+        <h3>Définitions :</h3>
+        <ul>
+            <li><strong>1.</strong> Notre mois de rencontre (ou un mot doux)</li>
+            <li><strong>2.</strong> Ton plat préféré qu'on mange en date</li>
+            <li><strong>3.</strong> L'endroit de notre premier voyage</li>
+        </ul>
+    </div>
 
-        function moveNon() {
-            counter++;
-            const btnNon = document.getElementById('btn-non');
-            const msgTriste = document.getElementById('message-triste');
+    <div id="win" class="win-message">✨ Bravo mon amour, tu as trouvé le mot secret ! ✨</div>
 
-            // 3ème appui : Affichage du message et déblocage du Oui
-            if (counter === 3) {
-                msgTriste.innerText = "Beh tu ne m'aimes plus ? 🥺";
-                msgTriste.style.opacity = "1";
-                canClickOui = true; // On autorise le clic sur Oui
-            } 
-            // 4ème appui : Modification du texte
-            else if (counter === 4) {
-                msgTriste.innerText = "mais accepte !!";
-            }
-
-            // Déplacement aléatoire du bouton Non
-            const padding = 50;
-            const maxX = window.innerWidth - btnNon.offsetWidth - padding;
-            const maxY = window.innerHeight - btnNon.offsetHeight - padding;
-            
-            const randomX = Math.max(padding, Math.random() * maxX);
-            const randomY = Math.max(padding, Math.random() * maxY);
-            
-            btnNon.style.position = "fixed";
-            btnNon.style.left = randomX + "px";
-            btnNon.style.top = randomY + "px";
-        }
-
-        function showLove() {
-            // Si le 3ème appui n'a pas encore été fait, on bloque l'action du bouton Oui
-            if (!canClickOui) return;
-
-            document.getElementById('content').style.display = 'none';
-            document.getElementById('message-final').style.display = 'block';
-        }
-    </script>
 </body>
 </html>
