@@ -120,7 +120,7 @@
     <p class="subtitle">Résous les définitions pour découvrir le mot secret...</p>
 
     <!-- Grille 5x5 -->
-    <div class="grid-container">
+    <div class="grid-container" id="crossword-grid">
         <!-- Ligne 1 -->
         <div class="cell black">1. Mois de notre rencontre</div>
         <div class="cell"><input type="text" maxlength="1"></div>
@@ -166,6 +166,31 @@
             <li><strong>💡 Le mot mystère :</strong> Les cases roses forment le mot caché !</li>
         </ul>
     </div>
+
+    <!-- Le code JavaScript pour la navigation automatique -->
+    <script>
+        // Récupère tous les inputs de la grille
+        const inputs = document.querySelectorAll('#crossword-grid input');
+
+        inputs.forEach((input, index) => {
+            // Quand on tape une lettre
+            input.addEventListener('input', (e) => {
+                const value = e.target.value;
+                // Si une lettre est entrée et qu'il y a une case suivante, on y va
+                if (value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            });
+
+            // Quand on appuie sur une touche (gestion du retour en arrière)
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && input.value === '' && index > 0) {
+                    // Si la case est déjà vide et qu'on appuie sur Backspace, on recule
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>
