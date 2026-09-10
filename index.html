@@ -30,25 +30,20 @@
             color: #8c7b80;
             margin-bottom: 20px;
             text-align: center;
-            padding: 0 10px;
         }
 
-        /* Gestion des niveaux (par défaut seul le niveau 1 est affiché) */
         .level-section {
-            display: none;
+            display: flex;
             flex-direction: column;
             align-items: center;
             width: 100%;
         }
-        .level-section.active {
-            display: flex;
-        }
 
-        /* Grilles fluides adaptées mobile */
+        /* Grille 7x7 bien espacée */
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(7, min(11vw, 42px));
-            grid-template-rows: repeat(7, min(11vw, 42px));
+            grid-template-columns: repeat(7, 42px);
+            grid-template-rows: repeat(7, 42px);
             gap: 2px;
             background-color: #d85a7f;
             padding: 4px;
@@ -70,10 +65,10 @@
         /* Case noire : définition + flèche */
         .cell.black {
             background-color: #3b3035;
-            font-size: min(2.2vw, 8.5px);
+            font-size: 0.55rem;
             color: #ffffff;
             text-align: center;
-            padding: 1px;
+            padding: 2px;
             line-height: 1.1;
             font-weight: bold;
             display: flex;
@@ -81,10 +76,9 @@
             align-items: center;
             justify-content: center;
             word-break: break-word;
-            overflow: hidden;
         }
 
-        /* Cases des mots mystères (pour les mots de passe) */
+        /* Cases du mot mystère (en rose) */
         .cell.mystery {
             background-color: #ffe6ed;
             font-weight: bold;
@@ -106,20 +100,18 @@
             height: 100%;
             border: none;
             text-align: center;
-            font-size: min(4.5vw, 1.2rem);
+            font-size: 1.2rem;
             font-weight: bold;
             text-transform: uppercase;
             background: transparent;
             color: #3b3035;
             cursor: pointer;
-            -webkit-appearance: none;
         }
 
         .cell input:focus {
             outline: none;
         }
 
-        /* Boîte de validation du mot de passe de niveau */
         .password-box {
             background: white;
             padding: 15px 20px;
@@ -128,7 +120,6 @@
             text-align: center;
             max-width: 320px;
             width: 90%;
-            margin-top: 10px;
         }
 
         .password-box input[type="text"] {
@@ -158,315 +149,133 @@
             margin-top: 5px;
             display: none;
         }
-
-        .success-final {
-            text-align: center;
-            color: #2e7d32;
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin-top: 20px;
-            display: none;
-            padding: 0 15px;
-        }
     </style>
 </head>
 <body>
 
     <h1>💖 Mots Doux Fléchés 💖</h1>
-    <p class="subtitle">Touche une case pour l'horizontal, deux fois pour le vertical.</p>
+    <p class="subtitle">Remplis les mots. La colonne rose t'aidera à trouver le mot mystère !</p>
 
-    <!-- ================= NIVEAU 1 ================= -->
-    <div id="level-1" class="level-section active">
+    <div class="level-section">
         <p style="color: #d85a7f; font-weight: bold; margin-bottom: 10px;">Niveau 1 / 3</p>
         
-        <!-- Grille 7x7 Niveau 1 -->
+        <!-- Grille 7x7 Niveau 1 Corrigée -->
         <div class="grid-container" data-level="1">
             <!-- Ligne 0 -->
             <div class="cell black" data-row="0" data-col="0">Pas mon<br>sport ➡</div>
             <div class="cell" data-row="0" data-col="1"><input type="text" maxlength="1" data-answer="S"></div>
             <div class="cell" data-row="0" data-col="2"><input type="text" maxlength="1" data-answer="K"></div>
-            <div class="cell mystery" data-row="0" data-col="3"><input type="text" maxlength="1" data-answer="M"></div>
-            <div class="cell black" data-row="0" data-col="4"></div>
-            <div class="cell black" data-row="0" data-col="5">Un<br>plat ➡</div>
-            <div class="cell" data-row="0" data-col="6"><input type="text" maxlength="1" data-answer="S"></div>
+            <div class="cell" data-row="0" data-col="3"><input type="text" maxlength="1" data-answer="I"></div>
+            <div class="cell black" data-row="0" data-col="4">Chez<br>nous ➡</div>
+            <div class="cell" data-row="0" data-col="5"><input type="text" maxlength="1" data-answer="G"></div>
+            <div class="cell" data-row="0" data-col="6"><input type="text" maxlength="1" data-answer="U"></div>
 
             <!-- Ligne 1 -->
-            <div class="cell mystery" data-row="1" data-col="0"><input type="text" maxlength="1" data-answer="O"></div>
-            <div class="cell black" data-row="1" data-col="1"></div>
-            <div class="cell black" data-row="1" data-col="2"></div>
-            <div class="cell mystery" data-row="1" data-col="3"><input type="text" maxlength="1" data-answer="O"></div>
-            <div class="cell black" data-row="1" data-col="4"></div>
-            <div class="cell black" data-row="1" data-col="5"></div>
-            <div class="cell" data-row="1" data-col="6"><input type="text" maxlength="1" data-answer="U"></div>
+            <div class="cell black" data-row="1" data-col="0">Un plat<br>➡</div>
+            <div class="cell" data-row="1" data-col="1"><input type="text" maxlength="1" data-answer="S"></div>
+            <div class="cell" data-row="1" data-col="2"><input type="text" maxlength="1" data-answer="U"></div>
+            <div class="cell" data-row="1" data-col="3"><input type="text" maxlength="1" data-answer="S"></div>
+            <div class="cell" data-row="1" data-col="4"><input type="text" maxlength="1" data-answer="H"></div>
+            <div class="cell" data-row="1" data-col="5"><input type="text" maxlength="1" data-answer="I"></div>
+            <div class="cell" data-row="1" data-col="6"><input type="text" maxlength="1" data-answer="S"></div>
 
             <!-- Ligne 2 -->
-            <div class="cell mystery" data-row="2" data-col="0"><input type="text" maxlength="1" data-answer="N"></div>
-            <div class="cell black" data-row="2" data-col="1">Autre<br>pays ➡</div>
-            <div class="cell" data-row="2" data-col="2"><input type="text" maxlength="1" data-answer="I"></div>
-            <div class="cell mystery" data-row="2" data-col="3"><input type="text" maxlength="1" data-answer="N"></div>
-            <div class="cell" data-row="2" data-col="4"><input type="text" maxlength="1" data-answer="T"></div>
-            <div class="cell black" data-row="2" data-col="5"></div>
-            <div class="cell" data-row="2" data-col="6"><input type="text" maxlength="1" data-answer="S"></div>
+            <div class="cell black" data-row="2" data-col="0">Autre<br>pays ➡</div>
+            <div class="cell" data-row="2" data-col="1"><input type="text" maxlength="1" data-answer="I"></div>
+            <div class="cell" data-row="2" data-col="2"><input type="text" maxlength="1" data-answer="T"></div>
+            <div class="cell" data-row="2" data-col="3"><input type="text" maxlength="1" data-answer="A"></div>
+            <div class="cell" data-row="2" data-col="4"><input type="text" maxlength="1" data-answer="L"></div>
+            <div class="cell" data-row="2" data-col="5"><input type="text" maxlength="1" data-answer="I"></div>
+            <div class="cell" data-row="2" data-col="6"><input type="text" maxlength="1" data-answer="E"></div>
 
             <!-- Ligne 3 -->
-            <div class="cell mystery" data-row="3" data-col="0"><input type="text" maxlength="1" data-answer="A"></div>
-            <div class="cell black" data-row="3" data-col="1"></div>
-            <div class="cell black" data-row="3" data-col="2"></div>
-            <div class="cell mystery" data-row="3" data-col="3"><input type="text" maxlength="1" data-answer="A"></div>
-            <div class="cell black" data-row="3" data-col="4"></div>
-            <div class="cell black" data-row="3" data-col="5"></div>
-            <div class="cell" data-row="3" data-col="6"><input type="text" maxlength="1" data-answer="H"></div>
+            <div class="cell black" data-row="3" data-col="0">Un sport<br>➡</div>
+            <div class="cell" data-row="3" data-col="1"><input type="text" maxlength="1" data-answer="V"></div>
+            <div class="cell" data-row="3" data-col="2"><input type="text" maxlength="1" data-answer="O"></div>
+            <div class="cell" data-row="3" data-col="3"><input type="text" maxlength="1" data-answer="L"></div>
+            <div class="cell" data-row="3" data-col="4"><input type="text" maxlength="1" data-answer="L"></div>
+            <div class="cell" data-row="3" data-col="5"><input type="text" maxlength="1" data-answer="E"></div>
+            <div class="cell" data-row="3" data-col="6"><input type="text" maxlength="1" data-answer="Y"></div>
 
             <!-- Ligne 4 -->
-            <div class="cell mystery" data-row="4" data-col="0"><input type="text" maxlength="1" data-answer="M"></div>
-            <div class="cell black" data-row="4" data-col="1">Chez<br>nous ➡</div>
-            <div class="cell" data-row="4" data-col="2"><input type="text" maxlength="1" data-answer="G"></div>
-            <div class="cell mystery" data-row="4" data-col="3"><input type="text" maxlength="1" data-answer="M"></div>
-            <div class="cell" data-row="4" data-col="4"><input type="text" maxlength="1" data-answer="U"></div>
-            <div class="cell black" data-row="4" data-col="5"></div>
-            <div class="cell" data-row="4" data-col="6"><input type="text" maxlength="1" data-answer="I"></div>
+            <div class="cell black" data-row="4" data-col="0">Sans mod.<br>➡</div>
+            <div class="cell" data-row="4" data-col="1"><input type="text" maxlength="1" data-answer="B"></div>
+            <div class="cell" data-row="4" data-col="2"><input type="text" maxlength="1" data-answer="I"></div>
+            <div class="cell" data-row="4" data-col="3"><input type="text" maxlength="1" data-answer="S"></div>
+            <div class="cell" data-row="4" data-col="4"><input type="text" maxlength="1" data-answer="O"></div>
+            <div class="cell" data-row="4" data-col="5"><input type="text" maxlength="1" data-answer="U"></div>
+            <div class="cell black" data-row="4" data-col="6"></div>
 
             <!-- Ligne 5 -->
-            <div class="cell mystery" data-row="5" data-col="0"><input type="text" maxlength="1" data-answer="O"></div>
-            <div class="cell black" data-row="5" data-col="1"></div>
-            <div class="cell black" data-row="5" data-col="2"></div>
-            <div class="cell mystery" data-row="5" data-col="3"><input type="text" maxlength="1" data-answer="O"></div>
-            <div class="cell black" data-row="5" data-col="4"></div>
-            <div class="cell black" data-row="5" data-col="5"></div>
-            <div class="cell" data-row="5" data-col="6"><input type="text" maxlength="1" data-answer="S"></div>
+            <div class="cell black" data-row="5" data-col="0">Le mot<br>mystère ⬇</div>
+            <!-- Colonne 1 en rose (contient les lettres de M-O-N A-M-O-U-R) -->
+            <div class="cell mystery" data-row="5" data-col="1"><input type="text" maxlength="1" data-answer="M"></div>
+            <div class="cell mystery" data-row="5" data-col="2"><input type="text" maxlength="1" data-answer="O"></div>
+            <div class="cell mystery" data-row="5" data-col="3"><input type="text" maxlength="1" data-answer="N"></div>
+            <div class="cell mystery" data-row="5" data-col="4"><input type="text" maxlength="1" data-answer="A"></div>
+            <div class="cell mystery" data-row="5" data-col="5"><input type="text" maxlength="1" data-answer="M"></div>
+            <div class="cell mystery" data-row="5" data-col="6"><input type="text" maxlength="1" data-answer="O"></div>
 
             <!-- Ligne 6 -->
-            <div class="cell mystery" data-row="6" data-col="0"><input type="text" maxlength="1" data-answer="U"></div>
-            <div class="cell black" data-row="6" data-col="1"></div>
-            <div class="cell black" data-row="6" data-col="2"></div>
-            <div class="cell mystery" data-row="6" data-col="3"><input type="text" maxlength="1" data-answer="R"></div>
+            <div class="cell black" data-row="6" data-col="0"></div>
+            <div class="cell mystery" data-row="6" data-col="1"><input type="text" maxlength="1" data-answer="U"></div>
+            <div class="cell mystery" data-row="6" data-col="2"><input type="text" maxlength="1" data-answer="R"></div>
+            <div class="cell black" data-row="6" data-col="3"></div>
             <div class="cell black" data-row="6" data-col="4"></div>
             <div class="cell black" data-row="6" data-col="5"></div>
             <div class="cell black" data-row="6" data-col="6"></div>
         </div>
 
         <div class="password-box">
-            <p style="font-size:0.9rem; margin-top:0;">Entre le mot mystère roses pour débloquer le niveau 2 :</p>
+            <p style="font-size:0.9rem; margin-top:0;">Entre le mot des cases roses pour débloquer la suite :</p>
             <input type="text" id="pwd-1" placeholder="Mot de passe">
             <br>
-            <button onclick="checkPassword(1, 'MON AMOUR')">Valider 🔓</button>
+            <button onclick="checkPassword()">Valider 🔓</button>
             <div id="error-1" class="error-msg">Oups, ce n'est pas le bon mot secret !</div>
         </div>
     </div>
 
-    <!-- ================= NIVEAU 2 ================= -->
-    <div id="level-2" class="level-section">
-        <p style="color: #d85a7f; font-weight: bold; margin-bottom: 10px;">Niveau 2 / 3</p>
-        
-        <!-- Grille 7x7 Niveau 2 -->
-        <div class="grid-container" data-level="2">
-            <!-- Ligne 0 -->
-            <div class="cell black" data-row="0" data-col="0">1er mois<br>➡</div>
-            <div class="cell" data-row="0" data-col="1"><input type="text" maxlength="1" data-answer="J"></div>
-            <div class="cell" data-row="0" data-col="2"><input type="text" maxlength="1" data-answer="A"></div>
-            <div class="cell mystery" data-row="0" data-col="3"><input type="text" maxlength="1" data-answer="D"></div>
-            <div class="cell black" data-row="0" data-col="4"></div>
-            <div class="cell black" data-row="0" data-col="5">Dernière<br>vacances ➡</div>
-            <div class="cell" data-row="0" data-col="6"><input type="text" maxlength="1" data-answer="R"></div>
-
-            <!-- Ligne 1 -->
-            <div class="cell mystery" data-row="1" data-col="0"><input type="text" maxlength="1" data-answer="E"></div>
-            <div class="cell black" data-row="1" data-col="1"></div>
-            <div class="cell black" data-row="1" data-col="2"></div>
-            <div class="cell mystery" data-row="1" data-col="3"><input type="text" maxlength="1" data-answer="E"></div>
-            <div class="cell black" data-row="1" data-col="4"></div>
-            <div class="cell black" data-row="1" data-col="5"></div>
-            <div class="cell" data-row="1" data-col="6"><input type="text" maxlength="1" data-answer="O"></div>
-
-            <!-- Ligne 2 -->
-            <div class="cell mystery" data-row="2" data-col="0"><input type="text" maxlength="1" data-answer="T"></div>
-            <div class="cell black" data-row="2" data-col="1">Rando<br>d'hiver ➡</div>
-            <div class="cell" data-row="2" data-col="2"><input type="text" maxlength="1" data-answer="P"></div>
-            <div class="cell mystery" data-row="2" data-col="3"><input type="text" maxlength="1"></div> <!-- Espace géré automatiquement ou lettre -->
-            <div class="cell" data-row="2" data-col="4"><input type="text" maxlength="1" data-answer="R"></div>
-            <div class="cell black" data-row="2" data-col="5"></div>
-            <div class="cell" data-row="2" data-col="6"><input type="text" maxlength="1" data-answer="A"></div>
-
-            <!-- Ligne 3 -->
-            <div class="cell mystery" data-row="3" data-col="0"><input type="text" maxlength="1" data-answer="O"></div>
-            <div class="cell black" data-row="3" data-col="1"></div>
-            <div class="cell black" data-row="3" data-col="2"></div>
-            <div class="cell mystery" data-row="3" data-col="3"><input type="text" maxlength="1" data-answer="T"></div>
-            <div class="cell black" data-row="3" data-col="4"></div>
-            <div class="cell black" data-row="3" data-col="5"></div>
-            <div class="cell" data-row="3" data-col="6"><input type="text" maxlength="1" data-answer="D"></div>
-
-            <!-- Ligne 4 -->
-            <div class="cell mystery" data-row="4" data-col="0"><input type="text" maxlength="1" data-answer="U"></div>
-            <div class="cell black" data-row="4" data-col="1">Nombre<br>enfants ➡</div>
-            <div class="cell" data-row="4" data-col="2"><input type="text" maxlength="1" data-answer="D"></div>
-            <div class="cell mystery" data-row="4" data-col="3"><input type="text" maxlength="1" data-answer="O"></div>
-            <div class="cell" data-row="4" data-col="4"><input type="text" maxlength="1" data-answer="X"></div>
-            <div class="cell black" data-row="4" data-col="5"></div>
-            <div class="cell" data-row="4" data-col="6"><input type="text" maxlength="1" data-answer="T"></div>
-
-            <!-- Ligne 5 -->
-            <div class="cell mystery" data-row="5" data-col="0"><input type="text" maxlength="1" data-answer="S"></div>
-            <div class="cell black" data-row="5" data-col="1"></div>
-            <div class="cell black" data-row="5" data-col="2"></div>
-            <div class="cell mystery" data-row="5" data-col="3"><input type="text" maxlength="1" data-answer="U"></div>
-            <div class="cell black" data-row="5" data-col="4"></div>
-            <div class="cell black" data-row="5" data-col="5"></div>
-            <div class="cell" data-row="5" data-col="6"><input type="text" maxlength="1" data-answer="I"></div>
-
-            <!-- Ligne 6 -->
-            <div class="cell black" data-row="6" data-col="0"></div>
-            <div class="cell black" data-row="6" data-col="1"></div>
-            <div class="cell black" data-row="6" data-col="2"></div>
-            <div class="cell mystery" data-row="6" data-col="3"><input type="text" maxlength="1" data-answer="S"></div>
-            <div class="cell black" data-row="6" data-col="4"></div>
-            <div class="cell black" data-row="6" data-col="5"></div>
-            <div class="cell" data-row="6" data-col="6"><input type="text" maxlength="1" data-answer="P"></div>
-        </div>
-
-        <div class="password-box">
-            <p style="font-size:0.9rem; margin-top:0;">Entre le mot mystère roses pour débloquer le niveau 3 :</p>
-            <input type="text" id="pwd-2" placeholder="Mot de passe">
-            <br>
-            <button onclick="checkPassword(2, 'DE TOUS')">Valider 🔓</button>
-            <div id="error-2" class="error-msg">Oups, ce n'est pas le bon mot secret !</div>
-        </div>
-    </div>
-
-    <!-- ================= NIVEAU 3 ================= -->
-    <div id="level-3" class="level-section">
-        <p style="color: #d85a7f; font-weight: bold; margin-bottom: 10px;">Niveau 3 / 3 - Le Grand Final</p>
-        
-        <!-- Grille 7x7 Niveau 3 -->
-        <div class="grid-container" data-level="3">
-            <!-- Ligne 0 -->
-            <div class="cell black" data-row="0" data-col="0">Pierre<br>bague ➡</div>
-            <div class="cell" data-row="0" data-col="1"><input type="text" maxlength="1" data-answer="T"></div>
-            <div class="cell" data-row="0" data-col="2"><input type="text" maxlength="1" data-answer="O"></div>
-            <div class="cell mystery" data-row="0" data-col="3"><input type="text" maxlength="1" data-answer="L"></div>
-            <div class="cell black" data-row="0" data-col="4"></div>
-            <div class="cell black" data-row="0" data-col="5">Ce qu'on<br>améliore ➡</div>
-            <div class="cell" data-row="0" data-col="6"><input type="text" maxlength="1" data-answer="C"></div>
-
-            <!-- Ligne 1 -->
-            <div class="cell mystery" data-row="1" data-col="0"><input type="text" maxlength="1" data-answer="E"></div>
-            <div class="cell black" data-row="1" data-col="1"></div>
-            <div class="cell black" data-row="1" data-col="2"></div>
-            <div class="cell mystery" data-row="1" data-col="3"><input type="text" maxlength="1" data-answer="E"></div>
-            <div class="cell black" data-row="1" data-col="4"></div>
-            <div class="cell black" data-row="1" data-col="5"></div>
-            <div class="cell" data-row="1" data-col="6"><input type="text" maxlength="1" data-answer="O"></div>
-
-            <!-- Ligne 2 -->
-            <div class="cell mystery" data-row="2" data-col="0"><input type="text" maxlength="1" data-answer="S"></div>
-            <div class="cell black" data-row="2" data-col="1">Série pas<br>fini ➡</div>
-            <div class="cell" data-row="2" data-col="2"><input type="text" maxlength="1" data-answer="R"></div>
-            <div class="cell mystery" data-row="2" data-col="3"><input type="text" maxlength="1"></div>
-            <div class="cell" data-row="2" data-col="4"><input type="text" maxlength="1" data-answer="C"></div>
-            <div class="cell black" data-row="2" data-col="5"></div>
-            <div class="cell" data-row="2" data-col="6"><input type="text" maxlength="1" data-answer="M"></div>
-
-            <!-- Ligne 3 -->
-            <div class="cell mystery" data-row="3" data-col="0"><input type="text" maxlength="1" data-answer="J"></div>
-            <div class="cell black" data-row="3" data-col="1"></div>
-            <div class="cell black" data-row="3" data-col="2"></div>
-            <div class="cell mystery" data-row="3" data-col="3"><input type="text" maxlength="1" data-answer="J"></div>
-            <div class="cell black" data-row="3" data-col="4"></div>
-            <div class="cell black" data-row="3" data-col="5"></div>
-            <div class="cell" data-row="3" data-col="6"><input type="text" maxlength="1" data-answer="M"></div>
-
-            <!-- Ligne 4 -->
-            <div class="cell mystery" data-row="4" data-col="0"><input type="text" maxlength="1" data-answer="O"></div>
-            <div class="cell black" data-row="4" data-col="1">Offrir<br>plus ➡</div>
-            <div class="cell" data-row="4" data-col="2"><input type="text" maxlength="1" data-answer="F"></div>
-            <div class="cell mystery" data-row="4" data-col="3"><input type="text" maxlength="1" data-answer="O"></div>
-            <div class="cell" data-row="4" data-col="4"><input type="text" maxlength="1" data-answer="U"></div>
-            <div class="cell black" data-row="4" data-col="5"></div>
-            <div class="cell" data-row="4" data-col="6"><input type="text" maxlength="1" data-answer="U"></div>
-
-            <!-- Ligne 5 -->
-            <div class="cell mystery" data-row="5" data-col="0"><input type="text" maxlength="1" data-answer="U"></div>
-            <div class="cell black" data-row="5" data-col="1"></div>
-            <div class="cell black" data-row="5" data-col="2"></div>
-            <div class="cell mystery" data-row="5" data-col="3"><input type="text" maxlength="1" data-answer="U"></div>
-            <div class="cell black" data-row="5" data-col="4"></div>
-            <div class="cell black" data-row="5" data-col="5"></div>
-            <div class="cell" data-row="5" data-col="6"><input type="text" maxlength="1" data-answer="N"></div>
-
-            <!-- Ligne 6 -->
-            <div class="cell mystery" data-row="6" data-col="0"><input type="text" maxlength="1" data-answer="R"></div>
-            <div class="cell black" data-row="6" data-col="1"></div>
-            <div class="cell black" data-row="6" data-col="2"></div>
-            <div class="cell mystery" data-row="6" data-col="3"><input type="text" maxlength="1" data-answer="R"></div>
-            <div class="cell black" data-row="6" data-col="4"></div>
-            <div class="cell black" data-row="6" data-col="5"></div>
-            <div class="cell black" data-row="6" data-col="6"></div>
-        </div>
-
-        <div class="password-box">
-            <p style="font-size:0.9rem; margin-top:0;">Entre le mot mystère final des cases roses :</p>
-            <input type="text" id="pwd-3" placeholder="Mot final">
-            <br>
-            <button onclick="checkPassword(3, 'LES JOURS')">Valider ✨</button>
-            <div id="error-3" class="error-msg">Ce n'est pas le mot final !</div>
-        </div>
-    </div>
-
-    <div id="final-victory" class="success-final">
-        🎉 Félicitations mon amour ! Tu as découvert la phrase secrète :<br>
-        <span style="font-size: 1.5rem; color: #d85a7f;">"MON AMOUR DE TOUS LES JOURS"</span> 💖
-    </div>
-
     <script>
-        // Logique de navigation et interactions pour chaque grille active
-        function initGrid(levelNum) {
-            const container = document.querySelector(`.grid-container[data-level="${levelNum}"]`);
-            if (!container) return;
+        const container = document.querySelector('.grid-container');
+        const inputs = container.querySelectorAll('.cell input');
+        let currentDirection = 'H';
+        let activeCell = null;
 
-            const inputs = container.querySelectorAll('.cell input');
-            let currentDirection = 'H';
-            let activeCell = null;
+        inputs.forEach(input => {
+            const cell = input.parentElement;
+            const row = parseInt(cell.dataset.row);
+            const col = parseInt(cell.dataset.col);
 
-            inputs.forEach(input => {
-                const cell = input.parentElement;
-                const row = parseInt(cell.dataset.row);
-                const col = parseInt(cell.dataset.col);
-
-                input.addEventListener('click', () => {
-                    if (activeCell === cell) {
-                        currentDirection = currentDirection === 'H' ? 'V' : 'H';
-                    } else {
-                        activeCell = cell;
-                        currentDirection = 'H';
-                    }
-                    updateHighlight(container, activeCell, currentDirection);
-                });
-
-                input.addEventListener('input', () => {
-                    const val = input.value.toUpperCase();
-                    input.value = val;
-                    if (val.length === 1) {
-                        moveToNext(container, row, col, 1, currentDirection);
-                    }
-                });
-
-                input.addEventListener('keydown', (e) => {
-                    if (e.key === 'Backspace' && input.value === '') {
-                        moveToNext(container, row, col, -1, currentDirection);
-                    }
-                });
+            input.addEventListener('click', () => {
+                if (activeCell === cell) {
+                    currentDirection = currentDirection === 'H' ? 'V' : 'H';
+                } else {
+                    activeCell = cell;
+                    currentDirection = 'H';
+                }
+                updateHighlight(container, activeCell, currentDirection);
             });
-        }
+
+            input.addEventListener('input', () => {
+                const val = input.value.toUpperCase();
+                input.value = val;
+                if (val.length === 1) {
+                    moveToNext(container, row, col, 1, currentDirection);
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && input.value === '') {
+                    moveToNext(container, row, col, -1, currentDirection);
+                }
+            });
+        });
 
         function moveToNext(container, row, col, step, direction) {
             let nextRow = row;
             let nextCol = col;
-
-            if (direction === 'H') {
-                nextCol += step;
-            } else {
-                nextRow += step;
-            }
+            if (direction === 'H') nextCol += step;
+            else nextRow += step;
 
             const nextCell = container.querySelector(`.cell[data-row="${nextRow}"][data-col="${nextCol}"]`);
             if (nextCell) {
@@ -481,64 +290,41 @@
         function updateHighlight(container, activeCell, direction) {
             container.querySelectorAll('.cell').forEach(c => c.classList.remove('highlight'));
             if (!activeCell) return;
-
             const row = parseInt(activeCell.dataset.row);
             const col = parseInt(activeCell.dataset.col);
 
             if (direction === 'H') {
                 let c = col;
                 while (c >= 0 && getCell(container, row, c) && !getCell(container, row, c).classList.contains('black')) {
-                    getCell(container, row, c).classList.add('highlight');
-                    c--;
+                    getCell(container, row, c).classList.add('highlight'); c--;
                 }
                 c = col + 1;
                 while (c < 7 && getCell(container, row, c) && !getCell(container, row, c).classList.contains('black')) {
-                    getCell(container, row, c).classList.add('highlight');
-                    c++;
+                    getCell(container, row, c).classList.add('highlight'); c++;
                 }
             } else {
                 let r = row;
                 while (r >= 0 && getCell(container, r, col) && !getCell(container, r, col).classList.contains('black')) {
-                    getCell(container, r, col).classList.add('highlight');
-                    r--;
+                    getCell(container, r, col).classList.add('highlight'); r--;
                 }
                 r = row + 1;
                 while (r < 7 && getCell(container, r, col) && !getCell(container, r, col).classList.contains('black')) {
-                    getCell(container, r, col).classList.add('highlight');
-                    r++;
+                    getCell(container, r, col).classList.add('highlight'); r++;
                 }
             }
         }
 
-        function getCell(container, r, c) {
-            return container.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
-        }
+        function getCell(r, c) { return container.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`); }
 
-        // Vérification des mots de passe pour changer de niveau
-        function checkPassword(level, expectedPwd) {
-            const inputField = document.getElementById(`pwd-${level}`);
-            const errorMsg = document.getElementById(`error-${level}`);
-            const userVal = inputField.value.trim().toUpperCase();
-
-            // Supprimer les espaces pour comparer plus facilement (ex: "MONAMOUR" ou "MON AMOUR")
-            if (userVal.replace(/\s+/g, '') === expectedPwd.replace(/\s+/g, '')) {
-                errorMsg.style.display = 'none';
-                document.getElementById(`level-${level}`).classList.remove('active');
-
-                if (level < 3) {
-                    const nextLevel = level + 1;
-                    document.getElementById(`level-${nextLevel}`).classList.add('active');
-                    initGrid(nextLevel); // Initialiser le niveau suivant
-                } else {
-                    document.getElementById('final-victory').style.display = 'block';
-                }
+        function checkPassword() {
+            const inputField = document.getElementById('pwd-1');
+            const errorMsg = document.getElementById('error-1');
+            if (inputField.value.trim().toUpperCase().replace(/\s+/g, '') === 'MONAMOUR') {
+                alert('Bravo ! Le niveau 1 est validé ! 🎉');
             } else {
                 errorMsg.style.display = 'block';
             }
         }
-
-        // Lancer la grille du niveau 1 au démarrage
-        initGrid(1);
     </script>
 </body>
 </html>
