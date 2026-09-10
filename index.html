@@ -31,7 +31,24 @@
             padding: 0 10px;
         }
 
-        /* Conteneur avec scroll horizontal pour les mobiles */
+        /* --- GESTION DES NIVEAUX --- */
+        .level-section {
+            display: none; /* Caché par défaut */
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .level-section.active {
+            display: flex; /* Affiché si actif */
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- DESIGN GRILLES --- */
         .grid-wrapper {
             width: 100%;
             max-width: 700px;
@@ -41,16 +58,14 @@
             justify-content: center;
         }
 
-        /* La grille (16 colonnes, 10 lignes) */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(16, 32px);
             grid-template-rows: repeat(10, 32px);
             gap: 3px;
-            min-width: 560px; /* Assure que les cases ne s'écrasent pas */
+            min-width: 560px;
         }
 
-        /* Cases de définitions */
         .def-cell {
             background-color: #3b3035;
             color: #ffffff;
@@ -63,10 +78,8 @@
             justify-content: center;
             text-align: center;
             line-height: 1.15;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        /* Case blanche standard pour une lettre */
         .cell {
             background-color: #ffffff;
             border: 1px solid #e0c3cc;
@@ -77,306 +90,301 @@
             position: relative;
         }
 
-        /* Case du mot mystère (Rose) */
-        .cell.mystery {
-            background-color: #ffe6ed;
-            border: 2px solid #d85a7f;
-        }
-
-        /* Effet visuel du mot actif */
-        .cell.highlight {
-            background-color: #ffffff !important;
-            box-shadow: inset 0 0 0 2px #d85a7f;
-            border-color: #d85a7f;
-        }
-        .cell.mystery.highlight {
-            background-color: #fff0f3 !important;
-        }
+        .cell.mystery { background-color: #ffe6ed; border: 2px solid #d85a7f; }
+        .cell.highlight { background-color: #ffffff !important; box-shadow: inset 0 0 0 2px #d85a7f; border-color: #d85a7f; }
+        .cell.mystery.highlight { background-color: #fff0f3 !important; }
 
         .cell input {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: transparent;
-            text-align: center;
-            font-size: 1.1rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            color: #3b3035;
-            padding: 0;
-            cursor: pointer;
-            -webkit-appearance: none;
+            width: 100%; height: 100%; border: none; background: transparent;
+            text-align: center; font-size: 1.1rem; font-weight: bold;
+            text-transform: uppercase; color: #3b3035; cursor: pointer; -webkit-appearance: none;
         }
+        .cell input:focus { outline: none; }
 
-        .cell input:focus {
-            outline: none;
-        }
-
-        /* Boîte pour valider l'anagramme */
+        /* --- ZONE VALIDER --- */
         .password-box {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            text-align: center;
-            width: 90%;
-            max-width: 400px;
-            margin-top: 10px;
+            background: white; padding: 20px; border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center;
+            width: 90%; max-width: 400px; margin-top: 10px;
         }
-
         .password-box input[type="text"] {
-            padding: 10px;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            border: 2px solid #ffe6ed;
-            border-radius: 6px;
-            width: 80%;
-            text-align: center;
-            margin-bottom: 15px;
-            letter-spacing: 2px;
+            padding: 10px; font-size: 1.1rem; text-transform: uppercase;
+            border: 2px solid #ffe6ed; border-radius: 6px; width: 80%;
+            text-align: center; margin-bottom: 15px; letter-spacing: 2px;
         }
-
         .password-box button {
-            background-color: #d85a7f;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.2s;
+            background-color: #d85a7f; color: white; border: none;
+            padding: 10px 20px; border-radius: 6px; font-weight: bold;
+            font-size: 1rem; cursor: pointer;
         }
+        .error-msg { color: #d9534f; font-size: 0.85rem; margin-top: 10px; display: none; }
+        
+        .hint { display: block; font-size: 0.8rem; color: #d85a7f; margin-bottom: 10px; }
 
-        .password-box button:active {
-            background-color: #b54767;
-        }
-
-        .error-msg {
-            color: #d9534f;
-            font-size: 0.85rem;
-            margin-top: 10px;
+        .final-success {
             display: none;
-        }
-
-        .success-msg {
-            color: #2e7d32;
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin-top: 10px;
-            display: none;
-        }
-
-        .hint {
-            display: block;
-            font-size: 0.8rem;
+            text-align: center;
             color: #d85a7f;
-            margin-bottom: 10px;
+            padding: 30px 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(216,90,127,0.2);
+            margin-top: 20px;
+            max-width: 500px;
         }
     </style>
 </head>
 <body>
 
     <h1>💖 Mots Doux Fléchés 💖</h1>
-    <p class="subtitle">
-        Niveau 1 : Les mots se croisent ! <br> 
-        Touche une case 1 fois pour un mot horizontal, 2 fois pour vertical.<br>
-        <span style="font-size: 0.75rem; display: block; margin-top: 5px;">👉 Sur mobile, glisse la grille avec ton doigt.</span>
-    </p>
 
-    <div class="grid-wrapper">
-        <div class="grid-container" id="grid">
-            
-            <!-- ====== DÉFINITIONS (Cases noires) ====== -->
-            <div class="def-cell" style="grid-row: 6; grid-column: 1 / 3;">Ce qu'on a amélioré ➡</div>
-            <div class="def-cell" style="grid-row: 3; grid-column: 3 / 5;">Un autre pays ➡</div>
-            <div class="def-cell" style="grid-row: 7; grid-column: 2 / 4;">Série pas finie ➡</div>
-            <div class="def-cell" style="grid-row: 5; grid-column: 2 / 4;">Tu me gagnes ➡</div>
-            <div class="def-cell" style="grid-row: 9; grid-column: 11 / 13;">Nombre d'enfants ➡</div>
+    <!-- ================= NIVEAU 1 ================= -->
+    <div id="level-1" class="level-section active">
+        <p class="subtitle">Niveau 1/3 : Les mots se croisent ! <br> <span style="font-size: 0.75rem;">👉 Sur mobile, glisse la grille avec ton doigt.</span></p>
 
-            <div class="def-cell" style="grid-row: 1 / 3; grid-column: 5;">Pour plus tard ⬇</div>
-            <div class="def-cell" style="grid-row: 1; grid-column: 9;">Notre 1er mois ⬇</div>
-            <div class="def-cell" style="grid-row: 3 / 5; grid-column: 14;">Un sport ⬇</div>
+        <div class="grid-wrapper">
+            <div class="grid-container" id="grid-1">
+                
+                <!-- DÉFINITIONS NIVEAU 1 -->
+                <div class="def-cell" style="grid-row: 6; grid-column: 1 / 3;">Ce qu'on a amélioré ➡</div>
+                <div class="def-cell" style="grid-row: 3; grid-column: 3 / 5;">Un autre pays ➡</div>
+                <div class="def-cell" style="grid-row: 7; grid-column: 2 / 4;">Série pas finie ➡</div>
+                <div class="def-cell" style="grid-row: 5; grid-column: 2 / 4;">Tu me gagnes ➡</div>
+                <div class="def-cell" style="grid-row: 9; grid-column: 11 / 13;">Nombre d'enfants ➡</div>
+                <div class="def-cell" style="grid-row: 1 / 3; grid-column: 5;">Pour plus tard ⬇</div>
+                <div class="def-cell" style="grid-row: 1; grid-column: 9;">Notre 1er mois ⬇</div>
+                <div class="def-cell" style="grid-row: 3 / 5; grid-column: 14;">Un sport ⬇</div>
 
-            <!-- ====== LETTRES DE LA GRILLE ====== -->
-            <!-- Ligne 2 -->
-            <div class="cell" data-row="2" data-col="9" style="grid-row: 2; grid-column: 9;"><input type="text" maxlength="1"></div>
+                <!-- LETTRES NIVEAU 1 -->
+                <div class="cell" data-row="2" data-col="9" style="grid-row: 2; grid-column: 9;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="3" data-col="5" style="grid-row: 3; grid-column: 5;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="3" data-col="7" style="grid-row: 3; grid-column: 7;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="3" data-col="8" style="grid-row: 3; grid-column: 8;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="3" data-col="9" style="grid-row: 3; grid-column: 9;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="3" data-col="10" style="grid-row: 3; grid-column: 10;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="3" data-col="11" style="grid-row: 3; grid-column: 11;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="3" data-col="12" style="grid-row: 3; grid-column: 12;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="4" data-col="5" style="grid-row: 4; grid-column: 5;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="4" data-col="9" style="grid-row: 4; grid-column: 9;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="5" data-col="4" style="grid-row: 5; grid-column: 4;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="5" data-col="5" style="grid-row: 5; grid-column: 5;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="5" data-col="6" style="grid-row: 5; grid-column: 6;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="5" data-col="7" style="grid-row: 5; grid-column: 7;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="5" data-col="9" style="grid-row: 5; grid-column: 9;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="5" data-col="14" style="grid-row: 5; grid-column: 14;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="6" data-col="3" style="grid-row: 6; grid-column: 3;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="6" data-col="4" style="grid-row: 6; grid-column: 4;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="6" data-col="5" style="grid-row: 6; grid-column: 5;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="6" data-col="6" style="grid-row: 6; grid-column: 6;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="6" data-col="7" style="grid-row: 6; grid-column: 7;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="6" data-col="8" style="grid-row: 6; grid-column: 8;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="6" data-col="9" style="grid-row: 6; grid-column: 9;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="6" data-col="10" style="grid-row: 6; grid-column: 10;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="6" data-col="11" style="grid-row: 6; grid-column: 11;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="6" data-col="12" style="grid-row: 6; grid-column: 12;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="6" data-col="13" style="grid-row: 6; grid-column: 13;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="6" data-col="14" style="grid-row: 6; grid-column: 14;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="6" data-col="15" style="grid-row: 6; grid-column: 15;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="7" data-col="4" style="grid-row: 7; grid-column: 4;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="7" data-col="5" style="grid-row: 7; grid-column: 5;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="7" data-col="6" style="grid-row: 7; grid-column: 6;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="7" data-col="7" style="grid-row: 7; grid-column: 7;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="7" data-col="8" style="grid-row: 7; grid-column: 8;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="7" data-col="9" style="grid-row: 7; grid-column: 9;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="7" data-col="10" style="grid-row: 7; grid-column: 10;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="7" data-col="14" style="grid-row: 7; grid-column: 14;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="8" data-col="5" style="grid-row: 8; grid-column: 5;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="8" data-col="9" style="grid-row: 8; grid-column: 9;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="8" data-col="14" style="grid-row: 8; grid-column: 14;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="9" data-col="5" style="grid-row: 9; grid-column: 5;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="9" data-col="13" style="grid-row: 9; grid-column: 13;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="9" data-col="14" style="grid-row: 9; grid-column: 14;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="9" data-col="15" style="grid-row: 9; grid-column: 15;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="9" data-col="16" style="grid-row: 9; grid-column: 16;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="10" data-col="5" style="grid-row: 10; grid-column: 5;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="10" data-col="14" style="grid-row: 10; grid-column: 14;"><input type="text" maxlength="1"></div>
+            </div>
+        </div>
 
-            <!-- Ligne 3 -->
-            <div class="cell" data-row="3" data-col="5" style="grid-row: 3; grid-column: 5;"><input type="text" maxlength="1"></div>
-            <div class="cell" data-row="3" data-col="7" style="grid-row: 3; grid-column: 7;"><input type="text" maxlength="1"></div>
-            <div class="cell" data-row="3" data-col="8" style="grid-row: 3; grid-column: 8;"><input type="text" maxlength="1"></div>
-            <div class="cell mystery" data-row="3" data-col="9" style="grid-row: 3; grid-column: 9;"><input type="text" maxlength="1"></div> <!-- Mystère (A) -->
-            <div class="cell" data-row="3" data-col="10" style="grid-row: 3; grid-column: 10;"><input type="text" maxlength="1"></div>
-            <div class="cell" data-row="3" data-col="11" style="grid-row: 3; grid-column: 11;"><input type="text" maxlength="1"></div>
-            <div class="cell" data-row="3" data-col="12" style="grid-row: 3; grid-column: 12;"><input type="text" maxlength="1"></div>
-
-            <!-- Ligne 4 -->
-            <div class="cell" data-row="4" data-col="5" style="grid-row: 4; grid-column: 5;"><input type="text" maxlength="1"></div>
-            <div class="cell mystery" data-row="4" data-col="9" style="grid-row: 4; grid-column: 9;"><input type="text" maxlength="1"></div> <!-- Mystère (N) -->
-
-            <!-- Ligne 5 -->
-            <div class="cell" data-row="5" data-col="4" style="grid-row: 5; grid-column: 4;"><input type="text" maxlength="1"></div>
-            <div class="cell" data-row="5" data-col="5" style="grid-row: 5; grid-column: 5;"><input type="text" maxlength="1"></div>
-            <div class="cell" data-row="5" data-col="6" style="grid-row: 5; grid-column: 6;"><input type="text" maxlength="1"></div>
-            <div class="cell mystery" data-row="5" data-col="7" style="grid-row: 5; grid-column: 7;"><input type="text" maxlength="1"></div> <!-- Mystère (O) -->
-            <div class="cell" data-row="5" data-col="9" style="grid-row: 5; grid-column: 9;"><input type="text" maxlength="1"></div>
-            <div class="cell" data-row="5" data-col="14" style="grid-row: 5; grid-column: 14;"><input type="text" maxlength="1"></div>
-
-            <!-- Ligne 6 -->
-            <div class="cell" data-row="6" data-col="3" style="grid-row: 6; grid-column: 3;"><input type="text" maxlength="1"></div>
-            <div class="cell" data-row="6" data-col="4" style="grid-row: 6; grid-column: 4;"><input type="text" maxlength="1"></div>
-            <div class="cell mystery" data-row="6" data-col="5" style="grid-row: 6; grid-column: 5;"><input type="text" maxlength="1"></div> <!-- Mystère (M) -->
-            <div class="cell mystery" data-row="6" data-col="6" style="grid-row: 6; grid-column: 6;"><input type="text" maxlength="1"></div> <!-- Mystère (M) -->
-            <div class="cell" data-row="6" data-col="7" style="grid-row: 6; grid-column: 7;"><input type="text" maxlength="1"></div>
-            <div class="cell" data-row="6" data-col="8" style="grid-row: 6; grid-column: 8;"><input type="text" maxlength="1"></div>
-            <div class="cell" data-row="6" data-col="9" style="grid-row: 6; grid-column: 9;"><input type="text" maxlength="1"></div>
-            <div class="cell" data-row="6" data-col="10" style="grid-row: 6; grid-column: 10;"><input type="text" maxlength="1"></div>
-            <div class="cell" data-row="6" data-col="11" style="grid-row: 6; grid-column: 11;"><input type="text" maxlength="1"></div>
-            <div class="cell" data-row="6" data-col="12" style="grid-row: 6; grid-column: 12;"><input type="text" maxlength="1"></div>
-            <div class="cell" data-row="6" data-col="13" style="grid-row: 6; grid-column: 13;"><input type="text" maxlength="1"></div>
-            <div class="cell mystery" data-row="6" data-col="14" style="grid-row: 6; grid-column: 14;"><input type="text" maxlength="1"></div> <!-- Mystère (O) -->
-            <div class="cell" data-row="6" data-col="15" style="grid-row: 6; grid-column: 15;"><input type="text" maxlength="1"></div>
-
-            <!-- Ligne 7 -->
-            <div class="cell" data-row="7" data-col="4" style="grid-row: 7; grid-column: 4;"><input type="text" maxlength="1"></div>
-            <div class="cell" data-row="7" data-col="5" style="grid-row: 7; grid-column: 5;"><input type="text" maxlength="1"></div>
-            <div class="cell" data-row="7" data-col="6" style="grid-row: 7; grid-column: 6;"><input type="text" maxlength="1"></div>
-            <div class="cell" data-row="7" data-col="7" style="grid-row: 7; grid-column: 7;"><input type="text" maxlength="1"></div>
-            <div class="cell" data-row="7" data-col="8" style="grid-row: 7; grid-column: 8;"><input type="text" maxlength="1"></div>
-            <div class="cell" data-row="7" data-col="9" style="grid-row: 7; grid-column: 9;"><input type="text" maxlength="1"></div>
-            <div class="cell mystery" data-row="7" data-col="10" style="grid-row: 7; grid-column: 10;"><input type="text" maxlength="1"></div> <!-- Mystère (R) -->
-            <div class="cell" data-row="7" data-col="14" style="grid-row: 7; grid-column: 14;"><input type="text" maxlength="1"></div>
-
-            <!-- Ligne 8 -->
-            <div class="cell" data-row="8" data-col="5" style="grid-row: 8; grid-column: 5;"><input type="text" maxlength="1"></div>
-            <div class="cell" data-row="8" data-col="9" style="grid-row: 8; grid-column: 9;"><input type="text" maxlength="1"></div>
-            <div class="cell" data-row="8" data-col="14" style="grid-row: 8; grid-column: 14;"><input type="text" maxlength="1"></div>
-
-            <!-- Ligne 9 -->
-            <div class="cell" data-row="9" data-col="5" style="grid-row: 9; grid-column: 5;"><input type="text" maxlength="1"></div>
-            <div class="cell" data-row="9" data-col="13" style="grid-row: 9; grid-column: 13;"><input type="text" maxlength="1"></div>
-            <div class="cell" data-row="9" data-col="14" style="grid-row: 9; grid-column: 14;"><input type="text" maxlength="1"></div>
-            <div class="cell mystery" data-row="9" data-col="15" style="grid-row: 9; grid-column: 15;"><input type="text" maxlength="1"></div> <!-- Mystère (U) -->
-            <div class="cell" data-row="9" data-col="16" style="grid-row: 9; grid-column: 16;"><input type="text" maxlength="1"></div>
-
-            <!-- Ligne 10 -->
-            <div class="cell" data-row="10" data-col="5" style="grid-row: 10; grid-column: 5;"><input type="text" maxlength="1"></div>
-            <div class="cell" data-row="10" data-col="14" style="grid-row: 10; grid-column: 14;"><input type="text" maxlength="1"></div>
-
+        <div class="password-box">
+            <span class="hint">🧠 Prends les 8 lettres des cases roses et remets-les dans le bon ordre !</span>
+            <input type="text" id="pwd-1" placeholder="MOT SECRET N°1">
+            <br>
+            <button onclick="checkPassword(1, 'MONAMOUR')">Valider pour débloquer la suite 🔓</button>
+            <div id="error-msg-1" class="error-msg">Oups, ce n'est pas ça ! Réessaie...</div>
         </div>
     </div>
 
-    <!-- ZONE DE VALIDATION ANAGRAMME -->
-    <div class="password-box">
-        <span class="hint">🧠 Prends les 8 lettres des cases roses et remets-les dans le bon ordre !</span>
-        <input type="text" id="pwd" placeholder="MOT SECRET">
-        <br>
-        <button onclick="checkPassword()">Valider 🔓</button>
-        <div id="error-msg" class="error-msg">Oups, ce n'est pas ça ! Réessaie...</div>
-        <div id="success-msg" class="success-msg">🎉 Incroyable ! Niveau 1 réussi ! 🎉</div>
+    <!-- ================= NIVEAU 2 ================= -->
+    <div id="level-2" class="level-section">
+        <p class="subtitle">Niveau 2/3 : C'est reparti pour un tour !</p>
+        
+        <!-- Placeholder pour ta grille 2, tu pourras y mettre tes autres mots ! -->
+        <div class="grid-wrapper">
+            <div class="grid-container" id="grid-2" style="grid-template-columns: repeat(10, 32px); grid-template-rows: repeat(5, 32px); min-width: 320px;">
+                <!-- Petit exemple de mots croisés Niveau 2 (Sushis / Ski) -->
+                <div class="def-cell" style="grid-row: 2; grid-column: 1 / 3;">Un plat ➡</div>
+                <div class="cell" data-row="2" data-col="3" style="grid-row: 2; grid-column: 3;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="2" data-col="4" style="grid-row: 2; grid-column: 4;"><input type="text" maxlength="1"></div> <!-- U -->
+                <div class="cell" data-row="2" data-col="5" style="grid-row: 2; grid-column: 5;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="2" data-col="6" style="grid-row: 2; grid-column: 6;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="2" data-col="7" style="grid-row: 2; grid-column: 7;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="2" data-col="8" style="grid-row: 2; grid-column: 8;"><input type="text" maxlength="1"></div> <!-- S -->
+            </div>
+        </div>
+
+        <div class="password-box">
+            <span class="hint">🧠 Même principe, remets les lettres roses dans l'ordre !</span>
+            <input type="text" id="pwd-2" placeholder="MOT SECRET N°2">
+            <br>
+            <button onclick="checkPassword(2, 'DETOUS')">Débloquer l'ultime niveau 🔓</button>
+            <div id="error-msg-2" class="error-msg">Oups, ce n'est pas ça ! Réessaie...</div>
+        </div>
+    </div>
+
+    <!-- ================= NIVEAU 3 ================= -->
+    <div id="level-3" class="level-section">
+        <p class="subtitle">Niveau 3/3 : La dernière étape...</p>
+        
+        <div class="grid-wrapper">
+            <div class="grid-container" id="grid-3" style="grid-template-columns: repeat(10, 32px); grid-template-rows: repeat(5, 32px); min-width: 320px;">
+                <!-- Petit exemple de mots croisés Niveau 3 (Bisou) -->
+                <div class="def-cell" style="grid-row: 2; grid-column: 1 / 3;">Sans mod. ➡</div>
+                <div class="cell" data-row="2" data-col="3" style="grid-row: 2; grid-column: 3;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="2" data-col="4" style="grid-row: 2; grid-column: 4;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="2" data-col="5" style="grid-row: 2; grid-column: 5;"><input type="text" maxlength="1"></div> <!-- S -->
+                <div class="cell" data-row="2" data-col="6" style="grid-row: 2; grid-column: 6;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="2" data-col="7" style="grid-row: 2; grid-column: 7;"><input type="text" maxlength="1"></div>
+            </div>
+        </div>
+
+        <div class="password-box">
+            <span class="hint">🧠 L'ultime bout de phrase...</span>
+            <input type="text" id="pwd-3" placeholder="MOT SECRET N°3">
+            <br>
+            <button onclick="checkPassword(3, 'LESJOURS')">Terminer le jeu ✨</button>
+            <div id="error-msg-3" class="error-msg">Presque ! Réessaie...</div>
+        </div>
+    </div>
+
+    <!-- ================= VICTOIRE FINALE ================= -->
+    <div id="final-success" class="final-success">
+        <h2 style="font-size: 2rem; margin-top:0;">Félicitations mon amour ! 🎉</h2>
+        <p style="font-size: 1.1rem; color: #4a4a4a;">Tu as résolu toutes les énigmes et découvert mon message :</p>
+        <p style="font-size: 1.8rem; font-weight: bold; background: #ffe6ed; padding: 15px; border-radius: 8px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);">
+            "MON AMOUR DE TOUS LES JOURS"
+        </p>
     </div>
 
     <script>
-        const inputs = document.querySelectorAll('.cell input');
-        let currentDirection = 'H';
-        let activeCell = null;
+        // Logique pour l'interface de Mots Croisés
+        function initGrid(gridId) {
+            const container = document.getElementById(gridId);
+            if (!container) return;
+            const inputs = container.querySelectorAll('.cell input');
+            let currentDirection = 'H';
+            let activeCell = null;
 
-        // Fonction pour récupérer une cellule spécifique par ses coordonnées
-        function getCell(r, c) {
-            return document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
-        }
-
-        // Met en surbrillance le mot en cours selon la direction
-        function updateHighlight() {
-            document.querySelectorAll('.cell').forEach(c => c.classList.remove('highlight'));
-            if (!activeCell) return;
-
-            const row = parseInt(activeCell.dataset.row);
-            const col = parseInt(activeCell.dataset.col);
-
-            if (currentDirection === 'H') {
-                let c = col;
-                while (c >= 1 && getCell(row, c)) { getCell(row, c).classList.add('highlight'); c--; }
-                c = col + 1;
-                while (c <= 16 && getCell(row, c)) { getCell(row, c).classList.add('highlight'); c++; }
-            } else {
-                let r = row;
-                while (r >= 1 && getCell(r, col)) { getCell(r, col).classList.add('highlight'); r--; }
-                r = row + 1;
-                while (r <= 10 && getCell(r, col)) { getCell(r, col).classList.add('highlight'); r++; }
+            function getCellLocal(r, c) {
+                return container.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
             }
+
+            function updateHighlightLocal() {
+                container.querySelectorAll('.cell').forEach(c => c.classList.remove('highlight'));
+                if (!activeCell) return;
+                const row = parseInt(activeCell.dataset.row);
+                const col = parseInt(activeCell.dataset.col);
+
+                if (currentDirection === 'H') {
+                    let c = col;
+                    while (c >= 1 && getCellLocal(row, c)) { getCellLocal(row, c).classList.add('highlight'); c--; }
+                    c = col + 1;
+                    while (c <= 16 && getCellLocal(row, c)) { getCellLocal(row, c).classList.add('highlight'); c++; }
+                } else {
+                    let r = row;
+                    while (r >= 1 && getCellLocal(r, col)) { getCellLocal(r, col).classList.add('highlight'); r--; }
+                    r = row + 1;
+                    while (r <= 16 && getCellLocal(r, col)) { getCellLocal(r, col).classList.add('highlight'); r++; }
+                }
+            }
+
+            inputs.forEach(input => {
+                const cell = input.parentElement;
+                const row = parseInt(cell.dataset.row);
+                const col = parseInt(cell.dataset.col);
+
+                input.addEventListener('click', () => {
+                    if (activeCell === cell) {
+                        currentDirection = currentDirection === 'H' ? 'V' : 'H';
+                    } else {
+                        activeCell = cell;
+                        currentDirection = 'H';
+                        if (!getCellLocal(row, col+1) && !getCellLocal(row, col-1) && (getCellLocal(row+1, col) || getCellLocal(row-1, col))) {
+                            currentDirection = 'V';
+                        }
+                    }
+                    updateHighlightLocal();
+                });
+
+                input.addEventListener('input', () => {
+                    input.value = input.value.toUpperCase();
+                    if (input.value.length === 1) {
+                        let nextRow = row; let nextCol = col;
+                        if (currentDirection === 'H') nextCol++; else nextRow++;
+                        const nextCell = getCellLocal(nextRow, nextCol);
+                        if (nextCell) {
+                            nextCell.querySelector('input').focus();
+                            activeCell = nextCell;
+                            updateHighlightLocal();
+                        }
+                    }
+                });
+
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && input.value === '') {
+                        let prevRow = row; let prevCol = col;
+                        if (currentDirection === 'H') prevCol--; else prevRow--;
+                        const prevCell = getCellLocal(prevRow, prevCol);
+                        if (prevCell) {
+                            prevCell.querySelector('input').focus();
+                            activeCell = prevCell;
+                            updateHighlightLocal();
+                        }
+                    }
+                });
+            });
         }
 
-        inputs.forEach(input => {
-            const cell = input.parentElement;
-            const row = parseInt(cell.dataset.row);
-            const col = parseInt(cell.dataset.col);
+        // Initialisation de toutes les grilles
+        initGrid('grid-1');
+        initGrid('grid-2');
+        initGrid('grid-3');
 
-            // Gestion du clic intelligent
-            input.addEventListener('click', () => {
-                if (activeCell === cell) {
-                    currentDirection = currentDirection === 'H' ? 'V' : 'H';
-                } else {
-                    activeCell = cell;
-                    currentDirection = 'H'; // Test d'abord l'horizontal
-                    // Si on ne peut pas écrire en horizontal mais qu'on peut en vertical, on s'adapte auto
-                    if (!getCell(row, col+1) && !getCell(row, col-1) && (getCell(row+1, col) || getCell(row-1, col))) {
-                        currentDirection = 'V';
-                    }
-                }
-                updateHighlight();
-            });
-
-            // Saut de case automatique à la saisie
-            input.addEventListener('input', () => {
-                const val = input.value.toUpperCase();
-                input.value = val;
-                if (val.length === 1) {
-                    let nextRow = row;
-                    let nextCol = col;
-                    if (currentDirection === 'H') nextCol++; else nextRow++;
-                    
-                    const nextCell = getCell(nextRow, nextCol);
-                    if (nextCell) {
-                        nextCell.querySelector('input').focus();
-                        activeCell = nextCell;
-                        updateHighlight();
-                    }
-                }
-            });
-
-            // Recul automatique avec effacer
-            input.addEventListener('keydown', (e) => {
-                if (e.key === 'Backspace' && input.value === '') {
-                    let prevRow = row;
-                    let prevCol = col;
-                    if (currentDirection === 'H') prevCol--; else prevRow--;
-                    
-                    const prevCell = getCell(prevRow, prevCol);
-                    if (prevCell) {
-                        prevCell.querySelector('input').focus();
-                        activeCell = prevCell;
-                        updateHighlight();
-                    }
-                }
-            });
-        });
-
-        // Validation du mot magique (anagramme)
-        function checkPassword() {
-            const inputField = document.getElementById('pwd');
-            const errorMsg = document.getElementById('error-msg');
-            const successMsg = document.getElementById('success-msg');
+        // GESTION DU CHANGEMENT DE NIVEAU
+        function checkPassword(level, expectedPassword) {
+            const inputField = document.getElementById('pwd-' + level);
+            const errorMsg = document.getElementById('error-msg-' + level);
             
+            // Nettoyer la saisie (retirer les espaces et mettre en majuscule)
             const answer = inputField.value.trim().toUpperCase().replace(/\s+/g, '');
 
-            if (answer === 'MONAMOUR') {
+            if (answer === expectedPassword) {
+                // Si la réponse est bonne, on cache l'erreur
                 errorMsg.style.display = 'none';
-                successMsg.style.display = 'block';
+                
+                // On cache le niveau actuel
+                document.getElementById('level-' + level).classList.remove('active');
+                
+                // On passe au niveau suivant (ou victoire finale)
+                if (level < 3) {
+                    const nextLevel = level + 1;
+                    document.getElementById('level-' + nextLevel).classList.add('active');
+                } else {
+                    document.getElementById('final-success').style.display = 'block';
+                }
             } else {
+                // Si c'est faux, on affiche le message d'erreur
                 errorMsg.style.display = 'block';
-                successMsg.style.display = 'none';
             }
         }
     </script>
