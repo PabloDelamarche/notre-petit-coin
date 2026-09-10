@@ -2,8 +2,8 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mots Fléchés Romantiques pour toi 💖</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mots Fléchés Romantiques 💖</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -12,36 +12,39 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             min-height: 100vh;
             margin: 0;
-            padding: 20px;
+            padding: 10px;
         }
 
         h1 {
             color: #d85a7f;
-            font-size: 1.8rem;
-            margin-bottom: 5px;
+            font-size: 1.5rem;
+            margin: 5px 0;
             text-align: center;
         }
 
         p.subtitle {
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             color: #8c7b80;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-align: center;
+            padding: 0 10px;
         }
 
-        /* Grille 9x9 */
+        /* Conteneur adapté pour mobile (grille 9x9 fluide) */
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(9, 38px);
-            grid-template-rows: repeat(9, 38px);
+            grid-template-columns: repeat(9, min(9.5vw, 38px));
+            grid-template-rows: repeat(9, min(9.5vw, 38px));
             gap: 2px;
             background-color: #d85a7f;
             padding: 4px;
             border-radius: 8px;
-            box-shadow: 0 8px 20px rgba(216, 90, 127, 0.2);
+            box-shadow: 0 4px 15px rgba(216, 90, 127, 0.2);
+            max-width: 100%;
+            overflow-x: auto;
         }
 
         .cell {
@@ -50,23 +53,25 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            border-radius: 3px;
+            border-radius: 2px;
             transition: background-color 0.2s;
         }
 
-        /* Case noire / flèche / indice */
+        /* Case noire : uniquement la définition en tout petit avec une flèche */
         .cell.black {
             background-color: #3b3035;
-            font-size: 0.45rem;
-            color: white;
+            font-size: min(2vw, 8px); /* Très petit pour tenir sur mobile */
+            color: #ffffff;
             text-align: center;
             padding: 1px;
-            line-height: 1;
+            line-height: 1.1;
             font-weight: bold;
-            overflow: hidden;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            word-break: break-word;
+            overflow: hidden;
         }
 
         /* Cases du mot mystère (JE TIENS A TOI) */
@@ -91,103 +96,88 @@
             height: 100%;
             border: none;
             text-align: center;
-            font-size: 1.1rem;
+            font-size: min(4vw, 1.1rem);
             font-weight: bold;
             text-transform: uppercase;
             background: transparent;
             color: #3b3035;
             cursor: pointer;
+            -webkit-appearance: none; /* Supprime le style natif mobile */
         }
 
         .cell input:focus {
             outline: none;
         }
 
-        .clues {
-            margin-top: 25px;
-            background: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            max-width: 500px;
-            width: 100%;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            box-sizing: border-box;
-        }
-
-        .clues h3 {
-            margin-top: 0;
-            color: #d85a7f;
+        /* Message de victoire discret en bas */
+        #win-message {
+            margin-top: 15px;
             font-size: 1rem;
-            border-bottom: 2px solid #ffe6ed;
-            padding-bottom: 5px;
-        }
-
-        .clues ul {
-            padding-left: 20px;
-            margin-bottom: 0;
-            font-size: 0.85rem;
-            line-height: 1.5;
+            color: #2e7d32;
+            font-weight: bold;
+            text-align: center;
+            display: none;
         }
     </style>
 </head>
 <body>
 
     <h1>💖 Mots Doux Fléchés 💖</h1>
-    <p class="subtitle">Clique une fois pour horizontal, deux fois pour vertical !</p>
+    <p class="subtitle">Touche une case pour l'horizontal, deux fois pour le vertical.</p>
 
-    <!-- Grille 9x9 -->
+    <!-- Grille 9x9 propre -->
     <div class="grid-container" id="crossword-grid">
         <!-- Ligne 0 -->
-        <div class="cell black" data-row="0" data-col="0">Ski</div>
-        <div class="cell" data-row="0" data-col="1"><input type="text" maxlength="1"></div>
-        <div class="cell" data-row="0" data-col="2"><input type="text" maxlength="1"></div>
-        <div class="cell mystery" data-row="0" data-col="3"><input type="text" maxlength="1"></div>
+        <div class="cell black" data-row="0" data-col="0">Pas mon<br>sport ➡</div>
+        <div class="cell" data-row="0" data-col="1"><input type="text" maxlength="1" data-answer="S"></div>
+        <div class="cell" data-row="0" data-col="2"><input type="text" maxlength="1" data-answer="K"></div>
+        <div class="cell mystery" data-row="0" data-col="3"><input type="text" maxlength="1" data-answer="I"></div>
         <div class="cell black" data-row="0" data-col="4"></div>
-        <div class="cell black" data-row="0" data-col="5">Janv.</div>
-        <div class="cell" data-row="0" data-col="6"><input type="text" maxlength="1"></div>
-        <div class="cell" data-row="0" data-col="7"><input type="text" maxlength="1"></div>
-        <div class="cell" data-row="0" data-col="8"><input type="text" maxlength="1"></div>
+        <div class="cell black" data-row="0" data-col="5">Notre<br>1er mois ➡</div>
+        <div class="cell" data-row="0" data-col="6"><input type="text" maxlength="1" data-answer="J"></div>
+        <div class="cell" data-row="0" data-col="7"><input type="text" maxlength="1" data-answer="A"></div>
+        <div class="cell" data-row="0" data-col="8"><input type="text" maxlength="1" data-answer="V"></div>
 
         <!-- Ligne 1 -->
-        <div class="cell mystery" data-row="1" data-col="0"><input type="text" maxlength="1"></div>
+        <div class="cell mystery" data-row="1" data-col="0"><input type="text" maxlength="1" data-answer="J"></div>
         <div class="cell black" data-row="1" data-col="1"></div>
         <div class="cell black" data-row="1" data-col="2"></div>
-        <div class="cell mystery" data-row="1" data-col="3"><input type="text" maxlength="1"></div>
+        <div class="cell mystery" data-row="1" data-col="3"><input type="text" maxlength="1" data-answer="E"></div>
         <div class="cell black" data-row="1" data-col="4"></div>
-        <div class="cell mystery" data-row="1" data-col="5"><input type="text" maxlength="1"></div>
+        <div class="cell mystery" data-row="1" data-col="5"><input type="text" maxlength="1" data-answer="N"></div>
         <div class="cell black" data-row="1" data-col="6"></div>
         <div class="cell black" data-row="1" data-col="7"></div>
         <div class="cell black" data-row="1" data-col="8"></div>
 
         <!-- Ligne 2 -->
-        <div class="cell mystery" data-row="2" data-col="0"><input type="text" maxlength="1"></div>
-        <div class="cell black" data-row="2" data-col="1">Italie</div>
-        <div class="cell" data-row="2" data-col="2"><input type="text" maxlength="1"></div>
-        <div class="cell mystery" data-row="2" data-col="3"><input type="text" maxlength="1"></div>
-        <div class="cell" data-row="2" data-col="4"><input type="text" maxlength="1"></div>
-        <div class="cell mystery" data-row="2" data-col="5"><input type="text" maxlength="1"></div>
-        <div class="cell" data-row="2" data-col="6"><input type="text" maxlength="1"></div>
-        <div class="cell" data-row="2" data-col="7"><input type="text" maxlength="1"></div>
+        <div class="cell mystery" data-row="2" data-col="0"><input type="text" maxlength="1" data-answer="T"></div>
+        <div class="cell black" data-row="2" data-col="1">Autre<br>pays ➡</div>
+        <div class="cell" data-row="2" data-col="2"><input type="text" maxlength="1" data-answer="T"></div>
+        <div class="cell mystery" data-row="2" data-col="3"><input type="text" maxlength="1" data-answer="A"></div>
+        <div class="cell" data-row="2" data-col="4"><input type="text" maxlength="1" data-answer="L"></div>
+        <div class="cell mystery" data-row="2" data-col="5"><input type="text" maxlength="1" data-answer="I"></div>
+        <div class="cell" data-row="2" data-col="6"><input type="text" maxlength="1" data-answer="E"></div>
+        <div class="cell black" data-row="2" data-col="7"></div>
         <div class="cell black" data-row="2" data-col="8"></div>
 
         <!-- Ligne 3 -->
-        <div class="cell mystery" data-row="3" data-col="0"><input type="text" maxlength="1"></div>
+        <div class="cell mystery" data-row="3" data-col="0"><input type="text" maxlength="1" data-answer="I"></div>
         <div class="cell black" data-row="3" data-col="1"></div>
         <div class="cell black" data-row="3" data-col="2"></div>
-        <div class="cell mystery" data-row="3" data-col="3"><input type="text" maxlength="1"></div>
+        <div class="cell mystery" data-row="3" data-col="3"><input type="text" maxlength="1" data-answer="N"></div>
         <div class="cell black" data-row="3" data-col="4"></div>
-        <div class="cell mystery" data-row="3" data-col="5"><input type="text" maxlength="1"></div>
+        <div class="cell mystery" data-row="3" data-col="5"><input type="text" maxlength="1" data-answer="I"></div>
         <div class="cell black" data-row="3" data-col="6"></div>
         <div class="cell black" data-row="3" data-col="7"></div>
         <div class="cell black" data-row="3" data-col="8"></div>
 
         <!-- Ligne 4 -->
-        <div class="cell mystery" data-row="4" data-col="0"><input type="text" maxlength="1"></div>
-        <div class="cell black" data-row="4" data-col="1">Deux</div>
-        <div class="cell mystery" data-row="4" data-col="2"><input type="text" maxlength="1"></div>
-        <div class="cell mystery" data-row="4" data-col="3"><input type="text" maxlength="1"></div>
+        <div class="cell mystery" data-row="4" data-col="0"><input type="text" maxlength="1" data-answer="E"></div>
+        <div class="cell black" data-row="4" data-col="1">Nombre<br>enfants ➡</div>
+        <div class="cell mystery" data-row="4" data-col="2"><input type="text" maxlength="1" data-answer="E"></div>
+        <div class="cell mystery" data-row="4" data-col="3"><input type="text" maxlength="1" data-answer="S"></div>
         <div class="cell black" data-row="4" data-col="4"></div>
-        <div class="cell mystery" data-row="4" data-col="5"><input type="text" maxlength="1"></div>
+        <div class="cell mystery" data-row="4" data-col="5"><input type="text" maxlength="1" data-answer="E"></div>
         <div class="cell black" data-row="4" data-col="6"></div>
         <div class="cell black" data-row="4" data-col="7"></div>
         <div class="cell black" data-row="4" data-col="8"></div>
@@ -196,21 +186,21 @@
         <div class="cell black" data-row="5" data-col="0"></div>
         <div class="cell black" data-row="5" data-col="1"></div>
         <div class="cell black" data-row="5" data-col="2"></div>
-        <div class="cell mystery" data-row="5" data-col="3"><input type="text" maxlength="1"></div>
+        <div class="cell mystery" data-row="5" data-col="3"><input type="text" maxlength="1" data-answer="A"></div>
         <div class="cell black" data-row="5" data-col="4"></div>
-        <div class="cell mystery" data-row="5" data-col="5"><input type="text" maxlength="1"></div>
+        <div class="cell mystery" data-row="5" data-col="5"><input type="text" maxlength="1" data-answer="R"></div>
         <div class="cell black" data-row="5" data-col="6"></div>
         <div class="cell black" data-row="5" data-col="7"></div>
         <div class="cell black" data-row="5" data-col="8"></div>
 
         <!-- Ligne 6 -->
-        <div class="cell black" data-row="6" data-col="0">Topaze</div>
-        <div class="cell" data-row="6" data-col="1"><input type="text" maxlength="1"></div>
-        <div class="cell" data-row="6" data-col="2"><input type="text" maxlength="1"></div>
-        <div class="cell mystery" data-row="6" data-col="3"><input type="text" maxlength="1"></div>
-        <div class="cell" data-row="6" data-col="4"><input type="text" maxlength="1"></div>
-        <div class="cell mystery" data-row="6" data-col="5"><input type="text" maxlength="1"></div>
-        <div class="cell" data-row="6" data-col="6"><input type="text" maxlength="1"></div>
+        <div class="cell black" data-row="6" data-col="0">Pierre<br>bague ➡</div>
+        <div class="cell" data-row="6" data-col="1"><input type="text" maxlength="1" data-answer="O"></div>
+        <div class="cell" data-row="6" data-col="2"><input type="text" maxlength="1" data-answer="P"></div>
+        <div class="cell mystery" data-row="6" data-col="3"><input type="text" maxlength="1" data-answer="A"></div>
+        <div class="cell" data-row="6" data-col="4"><input type="text" maxlength="1" data-answer="Z"></div>
+        <div class="cell mystery" data-row="6" data-col="5"><input type="text" maxlength="1" data-answer="E"></div>
+        <div class="cell black" data-row="6" data-col="6"></div>
         <div class="cell black" data-row="6" data-col="7"></div>
         <div class="cell black" data-row="6" data-col="8"></div>
 
@@ -218,9 +208,9 @@
         <div class="cell black" data-row="7" data-col="0"></div>
         <div class="cell black" data-row="7" data-col="1"></div>
         <div class="cell black" data-row="7" data-col="2"></div>
-        <div class="cell mystery" data-row="7" data-col="3"><input type="text" maxlength="1"></div>
+        <div class="cell mystery" data-row="7" data-col="3"><input type="text" maxlength="1" data-answer="T"></div>
         <div class="cell black" data-row="7" data-col="4"></div>
-        <div class="cell mystery" data-row="7" data-col="5"><input type="text" maxlength="1"></div>
+        <div class="cell black" data-row="7" data-col="5"></div>
         <div class="cell black" data-row="7" data-col="6"></div>
         <div class="cell black" data-row="7" data-col="7"></div>
         <div class="cell black" data-row="7" data-col="8"></div>
@@ -229,30 +219,19 @@
         <div class="cell black" data-row="8" data-col="0"></div>
         <div class="cell black" data-row="8" data-col="1"></div>
         <div class="cell black" data-row="8" data-col="2"></div>
-        <div class="cell mystery" data-row="8" data-col="3"><input type="text" maxlength="1"></div>
+        <div class="cell mystery" data-row="8" data-col="3"><input type="text" maxlength="1" data-answer="O"></div>
         <div class="cell black" data-row="8" data-col="4"></div>
-        <div class="cell mystery" data-row="8" data-col="5"><input type="text" maxlength="1"></div>
+        <div class="cell black" data-row="8" data-col="5"></div>
         <div class="cell black" data-row="8" data-col="6"></div>
         <div class="cell black" data-row="8" data-col="7"></div>
         <div class="cell black" data-row="8" data-col="8"></div>
     </div>
 
-    <!-- Indices personnalisés basés sur ton brouillon -->
-    <div class="clues">
-        <h3>Indices & Souvenirs :</h3>
-        <ul>
-            <li><strong>Ligne 0 (gauche) :</strong> Pas ton sport (3 lettres)</li>
-            <li><strong>Ligne 0 (droite) :</strong> Notre premier mois (7 lettres : J-A-N-V-I-E-R)</li>
-            <li><strong>Ligne 2 :</strong> Un autre pays visité (6 lettres : I-T-A-L-I-E)</li>
-            <li><strong>Ligne 4 :</strong> Nombre d'enfants (ou futur projet) (4 lettres : D-E-U-X)</li>
-            <li><strong>Ligne 6 :</strong> Pierre de la bague (6 lettres : T-O-P-A-Z-E)</li>
-            <li><strong>💡 Mot mystère final :</strong> Les cases roses forment la phrase secrète : <em>JE TIENS A TOI</em></li>
-        </ul>
-    </div>
+    <div id="win-message">✨ Bravo mon amour, tu as découvert le message secret ! ✨</div>
 
     <script>
         const inputs = document.querySelectorAll('.grid-container .cell input');
-        let currentDirection = 'H'; // 'H' pour Horizontal, 'V' pour Vertical
+        let currentDirection = 'H'; 
         let activeCell = null;
 
         inputs.forEach(input => {
@@ -276,6 +255,7 @@
                 if (val.length === 1) {
                     moveToNext(row, col, 1);
                 }
+                checkVictory();
             });
 
             input.addEventListener('keydown', (e) => {
@@ -340,6 +320,17 @@
 
         function getCell(r, c) {
             return document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
+        }
+
+        // Petite vérification automatique pour afficher un message mignon si tout est rempli
+        function checkVictory() {
+            let allFilled = true;
+            inputs.forEach(input => {
+                if (input.value === '') allFilled = false;
+            });
+            if (allFilled) {
+                document.getElementById('win-message').style.display = 'block';
+            }
         }
     </script>
 </body>
