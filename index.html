@@ -31,7 +31,6 @@
             padding: 0 10px;
         }
 
-        /* --- GESTION DES NIVEAUX --- */
         .level-section {
             display: none;
             flex-direction: column;
@@ -46,7 +45,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- DESIGN GRILLES --- */
         .grid-wrapper {
             width: 100%;
             max-width: 700px;
@@ -63,23 +61,22 @@
             min-width: 560px;
         }
 
-        /* Cases des définitions mises à jour pour contenir plus de texte */
+        /* Définitions avec gestion auto du texte long */
         .def-cell {
             background-color: #3b3035;
             color: #ffffff;
-            font-size: 0.45rem; /* Texte beaucoup plus petit pour tout faire rentrer */
+            font-size: 0.55rem;
             font-weight: bold;
-            padding: 2px;
+            padding: 3px;
             border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            line-height: 1.1;
+            line-height: 1.15;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            word-break: break-word; /* Permet le retour à la ligne automatique */
+            word-break: break-word;
             overflow: hidden;
-            letter-spacing: 0.2px;
         }
 
         .cell {
@@ -103,7 +100,6 @@
         }
         .cell input:focus { outline: none; }
 
-        /* --- ZONE VALIDER --- */
         .password-box {
             background: white; padding: 20px; border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center;
@@ -144,18 +140,17 @@
         <p class="subtitle">Niveau 1/3 <br> <span style="font-size: 0.75rem;">👉 Sur mobile, glisse la grille avec ton doigt.</span></p>
 
         <div class="grid-wrapper">
-            <div class="grid-container" id="grid-1" style="grid-template-rows: repeat(10, 32px);">
-                <!-- DÉFINITIONS COMPLETES -->
+            <div class="grid-container" id="grid-1" style="grid-template-rows: repeat(11, 32px);">
+                
                 <div class="def-cell" style="grid-row: 6; grid-column: 1 / 3;">Ce qu'on a amélioré ➡</div>
-                <div class="def-cell" style="grid-row: 3; grid-column: 3 / 5;">Un autre pays ➡</div>
-                <div class="def-cell" style="grid-row: 7; grid-column: 2 / 4;">Une série pas finie ➡</div>
-                <div class="def-cell" style="grid-row: 5; grid-column: 2 / 4;">Tu me gagnes ➡</div>
-                <div class="def-cell" style="grid-row: 9; grid-column: 11 / 13;">Nombre d'enfants ➡</div>
+                <div class="def-cell" style="grid-row: 3; grid-column: 4 / 7;">Un autre pays ➡</div>
+                <div class="def-cell" style="grid-row: 7; grid-column: 1 / 4;">Une série pas finie ➡</div>
+                <div class="def-cell" style="grid-row: 5; grid-column: 1 / 4;">Tu me gagnes ➡</div>
+                <div class="def-cell" style="grid-row: 9; grid-column: 9 / 13;">Nombre d'enfants ➡</div>
                 <div class="def-cell" style="grid-row: 1 / 3; grid-column: 5;">Pour plus tard ⬇</div>
-                <div class="def-cell" style="grid-row: 1; grid-column: 9;">Notre premier mois ⬇</div>
+                <div class="def-cell" style="grid-row: 1; grid-column: 9;">Notre 1er mois ⬇</div>
                 <div class="def-cell" style="grid-row: 3 / 5; grid-column: 14;">Un sport ⬇</div>
 
-                <!-- LETTRES (MONAMOUR) -->
                 <div class="cell" data-row="2" data-col="9" style="grid-row: 2; grid-column: 9;"><input type="text" maxlength="1"></div>
                 <div class="cell" data-row="3" data-col="5" style="grid-row: 3; grid-column: 5;"><input type="text" maxlength="1"></div>
                 <div class="cell" data-row="3" data-col="7" style="grid-row: 3; grid-column: 7;"><input type="text" maxlength="1"></div>
@@ -192,7 +187,6 @@
                 <div class="cell" data-row="7" data-col="8" style="grid-row: 7; grid-column: 8;"><input type="text" maxlength="1"></div>
                 <div class="cell" data-row="7" data-col="9" style="grid-row: 7; grid-column: 9;"><input type="text" maxlength="1"></div>
                 <div class="cell mystery" data-row="7" data-col="10" style="grid-row: 7; grid-column: 10;"><input type="text" maxlength="1"></div>
-                <div class="cell" data-row="7" data-col="14" style="grid-row: 7; grid-column: 14;"><input type="text" maxlength="1"></div>
                 <div class="cell" data-row="8" data-col="5" style="grid-row: 8; grid-column: 5;"><input type="text" maxlength="1"></div>
                 <div class="cell" data-row="8" data-col="9" style="grid-row: 8; grid-column: 9;"><input type="text" maxlength="1"></div>
                 <div class="cell" data-row="8" data-col="14" style="grid-row: 8; grid-column: 14;"><input type="text" maxlength="1"></div>
@@ -205,7 +199,6 @@
                 <div class="cell" data-row="10" data-col="14" style="grid-row: 10; grid-column: 14;"><input type="text" maxlength="1"></div>
             </div>
         </div>
-
         <div class="password-box">
             <span class="hint">🧠 Prends les 8 lettres des cases roses et remets-les dans le bon ordre !</span>
             <input type="text" id="pwd-1" placeholder="MOT SECRET N°1">
@@ -221,44 +214,43 @@
         
         <div class="grid-wrapper">
             <div class="grid-container" id="grid-2" style="grid-template-rows: repeat(12, 32px);">
-                <!-- DÉFINITIONS COMPLETES NIVEAU 2 -->
+                
                 <div class="def-cell" style="grid-row: 6; grid-column: 1 / 4;">Tes fesses bougent ➡</div>
-                <div class="def-cell" style="grid-row: 4; grid-column: 4 / 6;">Pas mon sport ➡</div>
-                <div class="def-cell" style="grid-row: 2 / 4; grid-column: 3;">Pierre de la bague ⬇</div>
-                <div class="def-cell" style="grid-row: 1; grid-column: 6;">Un plat ⬇</div>
-                <div class="def-cell" style="grid-row: 2 / 5; grid-column: 12;">Dernières vacances ⬇</div>
+                <div class="def-cell" style="grid-row: 2; grid-column: 4 / 7;">Pas mon sport ➡</div>
+                <div class="def-cell" style="grid-row: 1; grid-column: 7;">Un plat ⬇</div>
+                <div class="def-cell" style="grid-row: 1 / 3; grid-column: 10;">Pierre de la bague ⬇</div>
+                <div class="def-cell" style="grid-row: 2 / 4; grid-column: 5;">Dernières vacances ⬇</div>
 
-                <!-- LETTRES (DETOUS) -->
-                <div class="cell" data-row="2" data-col="6" style="grid-row: 2; grid-column: 6;"><input type="text" maxlength="1"></div>
-                <div class="cell mystery" data-row="3" data-col="6" style="grid-row: 3; grid-column: 6;"><input type="text" maxlength="1"></div> <!-- U -->
-                <div class="cell" data-row="4" data-col="6" style="grid-row: 4; grid-column: 6;"><input type="text" maxlength="1"></div>
-                <div class="cell" data-row="5" data-col="6" style="grid-row: 5; grid-column: 6;"><input type="text" maxlength="1"></div>
-                <div class="cell" data-row="6" data-col="6" style="grid-row: 6; grid-column: 6;"><input type="text" maxlength="1"></div>
-                <div class="cell mystery" data-row="7" data-col="6" style="grid-row: 7; grid-column: 6;"><input type="text" maxlength="1"></div> <!-- S -->
-                <div class="cell" data-row="4" data-col="3" style="grid-row: 4; grid-column: 3;"><input type="text" maxlength="1"></div>
-                <div class="cell mystery" data-row="5" data-col="3" style="grid-row: 5; grid-column: 3;"><input type="text" maxlength="1"></div> <!-- O -->
-                <div class="cell" data-row="6" data-col="3" style="grid-row: 6; grid-column: 3;"><input type="text" maxlength="1"></div>
-                <div class="cell" data-row="7" data-col="3" style="grid-row: 7; grid-column: 3;"><input type="text" maxlength="1"></div>
-                <div class="cell" data-row="8" data-col="3" style="grid-row: 8; grid-column: 3;"><input type="text" maxlength="1"></div>
-                <div class="cell mystery" data-row="9" data-col="3" style="grid-row: 9; grid-column: 3;"><input type="text" maxlength="1"></div> <!-- E -->
+                <div class="cell" data-row="2" data-col="7" style="grid-row: 2; grid-column: 7;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="2" data-col="8" style="grid-row: 2; grid-column: 8;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="2" data-col="9" style="grid-row: 2; grid-column: 9;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="3" data-col="7" style="grid-row: 3; grid-column: 7;"><input type="text" maxlength="1"></div> <!-- U -->
+                <div class="cell" data-row="3" data-col="10" style="grid-row: 3; grid-column: 10;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="4" data-col="5" style="grid-row: 4; grid-column: 5;"><input type="text" maxlength="1"></div>
                 <div class="cell" data-row="4" data-col="7" style="grid-row: 4; grid-column: 7;"><input type="text" maxlength="1"></div>
-                <div class="cell" data-row="4" data-col="8" style="grid-row: 4; grid-column: 8;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="4" data-col="10" style="grid-row: 4; grid-column: 10;"><input type="text" maxlength="1"></div> <!-- O -->
+                <div class="cell" data-row="5" data-col="5" style="grid-row: 5; grid-column: 5;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="5" data-col="7" style="grid-row: 5; grid-column: 7;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="5" data-col="10" style="grid-row: 5; grid-column: 10;"><input type="text" maxlength="1"></div>
                 <div class="cell" data-row="6" data-col="4" style="grid-row: 6; grid-column: 4;"><input type="text" maxlength="1"></div>
                 <div class="cell" data-row="6" data-col="5" style="grid-row: 6; grid-column: 5;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="6" data-col="6" style="grid-row: 6; grid-column: 6;"><input type="text" maxlength="1"></div>
                 <div class="cell" data-row="6" data-col="7" style="grid-row: 6; grid-column: 7;"><input type="text" maxlength="1"></div>
                 <div class="cell" data-row="6" data-col="8" style="grid-row: 6; grid-column: 8;"><input type="text" maxlength="1"></div>
                 <div class="cell" data-row="6" data-col="9" style="grid-row: 6; grid-column: 9;"><input type="text" maxlength="1"></div>
                 <div class="cell" data-row="6" data-col="10" style="grid-row: 6; grid-column: 10;"><input type="text" maxlength="1"></div>
                 <div class="cell" data-row="6" data-col="11" style="grid-row: 6; grid-column: 11;"><input type="text" maxlength="1"></div>
                 <div class="cell" data-row="6" data-col="12" style="grid-row: 6; grid-column: 12;"><input type="text" maxlength="1"></div>
-                <div class="cell mystery" data-row="6" data-col="13" style="grid-row: 6; grid-column: 13;"><input type="text" maxlength="1"></div> <!-- D -->
-                <div class="cell" data-row="5" data-col="12" style="grid-row: 5; grid-column: 12;"><input type="text" maxlength="1"></div>
-                <div class="cell" data-row="7" data-col="12" style="grid-row: 7; grid-column: 12;"><input type="text" maxlength="1"></div>
-                <div class="cell mystery" data-row="8" data-col="12" style="grid-row: 8; grid-column: 12;"><input type="text" maxlength="1"></div> <!-- T -->
-                <div class="cell" data-row="9" data-col="12" style="grid-row: 9; grid-column: 12;"><input type="text" maxlength="1"></div>
-                <div class="cell" data-row="10" data-col="12" style="grid-row: 10; grid-column: 12;"><input type="text" maxlength="1"></div>
-                <div class="cell" data-row="11" data-col="12" style="grid-row: 11; grid-column: 12;"><input type="text" maxlength="1"></div>
-                <div class="cell" data-row="12" data-col="12" style="grid-row: 12; grid-column: 12;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="6" data-col="13" style="grid-row: 6; grid-column: 13;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="6" data-col="14" style="grid-row: 6; grid-column: 14;"><input type="text" maxlength="1"></div> <!-- D -->
+                <div class="cell mystery" data-row="7" data-col="5" style="grid-row: 7; grid-column: 5;"><input type="text" maxlength="1"></div> <!-- T -->
+                <div class="cell mystery" data-row="7" data-col="7" style="grid-row: 7; grid-column: 7;"><input type="text" maxlength="1"></div> <!-- S -->
+                <div class="cell" data-row="7" data-col="10" style="grid-row: 7; grid-column: 10;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="8" data-col="5" style="grid-row: 8; grid-column: 5;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="8" data-col="10" style="grid-row: 8; grid-column: 10;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="9" data-col="5" style="grid-row: 9; grid-column: 5;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="10" data-col="5" style="grid-row: 10; grid-column: 5;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="11" data-col="5" style="grid-row: 11; grid-column: 5;"><input type="text" maxlength="1"></div> <!-- E -->
             </div>
         </div>
 
@@ -276,50 +268,62 @@
         <p class="subtitle">Niveau 3/3 : L'ultime épreuve...</p>
         
         <div class="grid-wrapper">
-            <div class="grid-container" id="grid-3" style="grid-template-rows: repeat(13, 32px);">
-                <!-- DÉFINITIONS COMPLETES NIVEAU 3 -->
+            <div class="grid-container" id="grid-3" style="grid-template-rows: repeat(14, 32px);">
+                
+                <!-- DÉFINITIONS CORRIGÉES -->
                 <div class="def-cell" style="grid-row: 6; grid-column: 1 / 3;">Chez nous ➡</div>
-                <div class="def-cell" style="grid-row: 9; grid-column: 5 / 9;">Ce que je devrais t'offrir plus souvent ➡</div>
+                
+                <!-- On libère toute la colonne de "Fleurs" pour éviter la superposition avec REGARD -->
+                <div class="def-cell" style="grid-row: 9; grid-column: 3 / 9; font-size: 0.5rem;">Ce que je devrais t'offrir plus souvent ➡</div>
+                
                 <div class="def-cell" style="grid-row: 1; grid-column: 10;">Sans modération ⬇</div>
-                <div class="def-cell" style="grid-row: 3 / 5; grid-column: 7;">Ce qui fait tout basculer ⬇</div>
-                <div class="def-cell" style="grid-row: 4 / 7; grid-column: 11;">Une rando d'hiver ⬇</div>
+                <div class="def-cell" style="grid-row: 1 / 3; grid-column: 5;">Ce qui fait tout basculer ⬇</div>
+                <div class="def-cell" style="grid-row: 4 / 6; grid-column: 11;">Une rando d'hiver ⬇</div>
                 <div class="def-cell" style="grid-row: 4 / 6; grid-column: 13;">24 heures ⬇</div>
 
                 <!-- LETTRES (LESJOURS) -->
                 <div class="cell" data-row="2" data-col="10" style="grid-row: 2; grid-column: 10;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="3" data-col="5" style="grid-row: 3; grid-column: 5;"><input type="text" maxlength="1"></div>
                 <div class="cell" data-row="3" data-col="10" style="grid-row: 3; grid-column: 10;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="4" data-col="5" style="grid-row: 4; grid-column: 5;"><input type="text" maxlength="1"></div>
                 <div class="cell mystery" data-row="4" data-col="10" style="grid-row: 4; grid-column: 10;"><input type="text" maxlength="1"></div> <!-- S -->
+                <div class="cell" data-row="5" data-col="5" style="grid-row: 5; grid-column: 5;"><input type="text" maxlength="1"></div>
                 <div class="cell" data-row="5" data-col="10" style="grid-row: 5; grid-column: 10;"><input type="text" maxlength="1"></div>
-                <div class="cell" data-row="5" data-col="7" style="grid-row: 5; grid-column: 7;"><input type="text" maxlength="1"></div>
-                <div class="cell" data-row="6" data-col="7" style="grid-row: 6; grid-column: 7;"><input type="text" maxlength="1"></div>
-                <div class="cell" data-row="7" data-col="7" style="grid-row: 7; grid-column: 7;"><input type="text" maxlength="1"></div>
-                <div class="cell" data-row="8" data-col="7" style="grid-row: 8; grid-column: 7;"><input type="text" maxlength="1"></div>
-                <div class="cell mystery" data-row="9" data-col="7" style="grid-row: 9; grid-column: 7;"><input type="text" maxlength="1"></div> <!-- R -->
-                <div class="cell" data-row="10" data-col="7" style="grid-row: 10; grid-column: 7;"><input type="text" maxlength="1"></div>
+                
+                <!-- Ligne 6 : GUADELOUPE -->
                 <div class="cell" data-row="6" data-col="3" style="grid-row: 6; grid-column: 3;"><input type="text" maxlength="1"></div>
                 <div class="cell" data-row="6" data-col="4" style="grid-row: 6; grid-column: 4;"><input type="text" maxlength="1"></div>
-                <div class="cell" data-row="6" data-col="5" style="grid-row: 6; grid-column: 5;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="6" data-col="5" style="grid-row: 6; grid-column: 5;"><input type="text" maxlength="1"></div> <!-- A -->
                 <div class="cell" data-row="6" data-col="6" style="grid-row: 6; grid-column: 6;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="6" data-col="7" style="grid-row: 6; grid-column: 7;"><input type="text" maxlength="1"></div>
                 <div class="cell mystery" data-row="6" data-col="8" style="grid-row: 6; grid-column: 8;"><input type="text" maxlength="1"></div> <!-- L -->
                 <div class="cell mystery" data-row="6" data-col="9" style="grid-row: 6; grid-column: 9;"><input type="text" maxlength="1"></div> <!-- O -->
-                <div class="cell" data-row="6" data-col="10" style="grid-row: 6; grid-column: 10;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="6" data-col="10" style="grid-row: 6; grid-column: 10;"><input type="text" maxlength="1"></div> <!-- U -->
                 <div class="cell" data-row="6" data-col="11" style="grid-row: 6; grid-column: 11;"><input type="text" maxlength="1"></div>
                 <div class="cell" data-row="6" data-col="12" style="grid-row: 6; grid-column: 12;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="6" data-col="13" style="grid-row: 6; grid-column: 13;"><input type="text" maxlength="1"></div> <!-- J -->
+                
+                <div class="cell mystery" data-row="7" data-col="5" style="grid-row: 7; grid-column: 5;"><input type="text" maxlength="1"></div> <!-- R -->
                 <div class="cell" data-row="7" data-col="11" style="grid-row: 7; grid-column: 11;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="7" data-col="13" style="grid-row: 7; grid-column: 13;"><input type="text" maxlength="1"></div>
+                
+                <div class="cell" data-row="8" data-col="5" style="grid-row: 8; grid-column: 5;"><input type="text" maxlength="1"></div>
                 <div class="cell" data-row="8" data-col="11" style="grid-row: 8; grid-column: 11;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="8" data-col="13" style="grid-row: 8; grid-column: 13;"><input type="text" maxlength="1"></div> <!-- U -->
+
+                <!-- Ligne 9 : FLEURS -->
+                <div class="cell" data-row="9" data-col="9" style="grid-row: 9; grid-column: 9;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="9" data-col="10" style="grid-row: 9; grid-column: 10;"><input type="text" maxlength="1"></div>
                 <div class="cell" data-row="9" data-col="11" style="grid-row: 9; grid-column: 11;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="9" data-col="12" style="grid-row: 9; grid-column: 12;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="9" data-col="13" style="grid-row: 9; grid-column: 13;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="9" data-col="14" style="grid-row: 9; grid-column: 14;"><input type="text" maxlength="1"></div> <!-- S -->
+                
+                <!-- Suite verticale PYRENEES -->
                 <div class="cell" data-row="10" data-col="11" style="grid-row: 10; grid-column: 11;"><input type="text" maxlength="1"></div>
                 <div class="cell mystery" data-row="11" data-col="11" style="grid-row: 11; grid-column: 11;"><input type="text" maxlength="1"></div> <!-- E -->
                 <div class="cell" data-row="12" data-col="11" style="grid-row: 12; grid-column: 11;"><input type="text" maxlength="1"></div>
                 <div class="cell" data-row="13" data-col="11" style="grid-row: 13; grid-column: 11;"><input type="text" maxlength="1"></div>
-                <div class="cell" data-row="9" data-col="9" style="grid-row: 9; grid-column: 9;"><input type="text" maxlength="1"></div>
-                <div class="cell" data-row="9" data-col="10" style="grid-row: 9; grid-column: 10;"><input type="text" maxlength="1"></div>
-                <div class="cell" data-row="9" data-col="12" style="grid-row: 9; grid-column: 12;"><input type="text" maxlength="1"></div>
-                <div class="cell" data-row="9" data-col="13" style="grid-row: 9; grid-column: 13;"><input type="text" maxlength="1"></div>
-                <div class="cell mystery" data-row="9" data-col="14" style="grid-row: 9; grid-column: 14;"><input type="text" maxlength="1"></div> <!-- S -->
-                <div class="cell mystery" data-row="6" data-col="13" style="grid-row: 6; grid-column: 13;"><input type="text" maxlength="1"></div> <!-- J -->
-                <div class="cell" data-row="7" data-col="13" style="grid-row: 7; grid-column: 13;"><input type="text" maxlength="1"></div>
-                <div class="cell mystery" data-row="8" data-col="13" style="grid-row: 8; grid-column: 13;"><input type="text" maxlength="1"></div> <!-- U -->
             </div>
         </div>
 
