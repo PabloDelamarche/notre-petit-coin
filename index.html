@@ -33,15 +33,13 @@
 
         /* --- GESTION DES NIVEAUX --- */
         .level-section {
-            display: none; /* Caché par défaut */
+            display: none;
             flex-direction: column;
             align-items: center;
             width: 100%;
             animation: fadeIn 0.5s ease-in-out;
         }
-        .level-section.active {
-            display: flex; /* Affiché si actif */
-        }
+        .level-section.active { display: flex; }
         
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -61,7 +59,7 @@
         .grid-container {
             display: grid;
             grid-template-columns: repeat(16, 32px);
-            grid-template-rows: repeat(10, 32px);
+            grid-template-rows: repeat(14, 32px); /* Adapté pour les grands mots */
             gap: 3px;
             min-width: 560px;
         }
@@ -69,7 +67,7 @@
         .def-cell {
             background-color: #3b3035;
             color: #ffffff;
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             font-weight: bold;
             padding: 2px;
             border-radius: 4px;
@@ -118,7 +116,6 @@
             font-size: 1rem; cursor: pointer;
         }
         .error-msg { color: #d9534f; font-size: 0.85rem; margin-top: 10px; display: none; }
-        
         .hint { display: block; font-size: 0.8rem; color: #d85a7f; margin-bottom: 10px; }
 
         .final-success {
@@ -140,12 +137,11 @@
 
     <!-- ================= NIVEAU 1 ================= -->
     <div id="level-1" class="level-section active">
-        <p class="subtitle">Niveau 1/3 : Les mots se croisent ! <br> <span style="font-size: 0.75rem;">👉 Sur mobile, glisse la grille avec ton doigt.</span></p>
+        <p class="subtitle">Niveau 1/3 <br> <span style="font-size: 0.75rem;">👉 Sur mobile, glisse la grille avec ton doigt.</span></p>
 
         <div class="grid-wrapper">
-            <div class="grid-container" id="grid-1">
-                
-                <!-- DÉFINITIONS NIVEAU 1 -->
+            <div class="grid-container" id="grid-1" style="grid-template-rows: repeat(10, 32px);">
+                <!-- DÉFINITIONS -->
                 <div class="def-cell" style="grid-row: 6; grid-column: 1 / 3;">Ce qu'on a amélioré ➡</div>
                 <div class="def-cell" style="grid-row: 3; grid-column: 3 / 5;">Un autre pays ➡</div>
                 <div class="def-cell" style="grid-row: 7; grid-column: 2 / 4;">Série pas finie ➡</div>
@@ -155,7 +151,7 @@
                 <div class="def-cell" style="grid-row: 1; grid-column: 9;">Notre 1er mois ⬇</div>
                 <div class="def-cell" style="grid-row: 3 / 5; grid-column: 14;">Un sport ⬇</div>
 
-                <!-- LETTRES NIVEAU 1 -->
+                <!-- LETTRES (Mélange : MONAMOUR) -->
                 <div class="cell" data-row="2" data-col="9" style="grid-row: 2; grid-column: 9;"><input type="text" maxlength="1"></div>
                 <div class="cell" data-row="3" data-col="5" style="grid-row: 3; grid-column: 5;"><input type="text" maxlength="1"></div>
                 <div class="cell" data-row="3" data-col="7" style="grid-row: 3; grid-column: 7;"><input type="text" maxlength="1"></div>
@@ -217,24 +213,62 @@
 
     <!-- ================= NIVEAU 2 ================= -->
     <div id="level-2" class="level-section">
-        <p class="subtitle">Niveau 2/3 : C'est reparti pour un tour !</p>
+        <p class="subtitle">Niveau 2/3 : Encore de nos souvenirs !</p>
         
-        <!-- Placeholder pour ta grille 2, tu pourras y mettre tes autres mots ! -->
         <div class="grid-wrapper">
-            <div class="grid-container" id="grid-2" style="grid-template-columns: repeat(10, 32px); grid-template-rows: repeat(5, 32px); min-width: 320px;">
-                <!-- Petit exemple de mots croisés Niveau 2 (Sushis / Ski) -->
-                <div class="def-cell" style="grid-row: 2; grid-column: 1 / 3;">Un plat ➡</div>
-                <div class="cell" data-row="2" data-col="3" style="grid-row: 2; grid-column: 3;"><input type="text" maxlength="1"></div>
-                <div class="cell mystery" data-row="2" data-col="4" style="grid-row: 2; grid-column: 4;"><input type="text" maxlength="1"></div> <!-- U -->
-                <div class="cell" data-row="2" data-col="5" style="grid-row: 2; grid-column: 5;"><input type="text" maxlength="1"></div>
-                <div class="cell" data-row="2" data-col="6" style="grid-row: 2; grid-column: 6;"><input type="text" maxlength="1"></div>
-                <div class="cell" data-row="2" data-col="7" style="grid-row: 2; grid-column: 7;"><input type="text" maxlength="1"></div>
-                <div class="cell mystery" data-row="2" data-col="8" style="grid-row: 2; grid-column: 8;"><input type="text" maxlength="1"></div> <!-- S -->
+            <div class="grid-container" id="grid-2" style="grid-template-rows: repeat(13, 32px);">
+                <!-- DÉFINITIONS NIVEAU 2 -->
+                <div class="def-cell" style="grid-row: 5; grid-column: 1 / 3;">Tes fesses bougent ➡</div>
+                <div class="def-cell" style="grid-row: 3; grid-column: 4 / 6;">Pas mon sport ➡</div>
+                <div class="def-cell" style="grid-row: 2; grid-column: 3;">Pierre bague ⬇</div>
+                <div class="def-cell" style="grid-row: 0; grid-column: 6;">Un plat ⬇</div>
+                <div class="def-cell" style="grid-row: 4; grid-column: 11 / 13;">Dernière vacances ⬇</div>
+
+                <!-- LETTRES (Mélange : DETOUS) -->
+                <!-- SUSHIS (Col 6) -->
+                <div class="cell" data-row="1" data-col="6" style="grid-row: 1; grid-column: 6;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="2" data-col="6" style="grid-row: 2; grid-column: 6;"><input type="text" maxlength="1"></div> <!-- U -->
+                <div class="cell" data-row="4" data-col="6" style="grid-row: 4; grid-column: 6;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="6" data-col="6" style="grid-row: 6; grid-column: 6;"><input type="text" maxlength="1"></div> <!-- S -->
+
+                <!-- TOPAZE (Col 3) -->
+                <div class="cell" data-row="3" data-col="3" style="grid-row: 3; grid-column: 3;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="4" data-col="3" style="grid-row: 4; grid-column: 3;"><input type="text" maxlength="1"></div> <!-- O -->
+                <div class="cell" data-row="6" data-col="3" style="grid-row: 6; grid-column: 3;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="7" data-col="3" style="grid-row: 7; grid-column: 3;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="8" data-col="3" style="grid-row: 8; grid-column: 3;"><input type="text" maxlength="1"></div> <!-- E -->
+
+                <!-- SKI (Row 3, Col 6-8) -->
+                <div class="cell" data-row="3" data-col="6" style="grid-row: 3; grid-column: 6;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="3" data-col="7" style="grid-row: 3; grid-column: 7;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="3" data-col="8" style="grid-row: 3; grid-column: 8;"><input type="text" maxlength="1"></div>
+
+                <!-- PETITCANARD (Row 5, Col 3-13) -->
+                <div class="cell" data-row="5" data-col="3" style="grid-row: 5; grid-column: 3;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="5" data-col="4" style="grid-row: 5; grid-column: 4;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="5" data-col="5" style="grid-row: 5; grid-column: 5;"><input type="text" maxlength="1"></div> <!-- T -->
+                <div class="cell" data-row="5" data-col="6" style="grid-row: 5; grid-column: 6;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="5" data-col="7" style="grid-row: 5; grid-column: 7;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="5" data-col="8" style="grid-row: 5; grid-column: 8;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="5" data-col="9" style="grid-row: 5; grid-column: 9;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="5" data-col="10" style="grid-row: 5; grid-column: 10;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="5" data-col="11" style="grid-row: 5; grid-column: 11;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="5" data-col="12" style="grid-row: 5; grid-column: 12;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="5" data-col="13" style="grid-row: 5; grid-column: 13;"><input type="text" maxlength="1"></div> <!-- D -->
+
+                <!-- ROADTRIP (Col 12) -->
+                <div class="cell" data-row="6" data-col="12" style="grid-row: 6; grid-column: 12;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="7" data-col="12" style="grid-row: 7; grid-column: 12;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="8" data-col="12" style="grid-row: 8; grid-column: 12;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="9" data-col="12" style="grid-row: 9; grid-column: 12;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="10" data-col="12" style="grid-row: 10; grid-column: 12;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="11" data-col="12" style="grid-row: 11; grid-column: 12;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="12" data-col="12" style="grid-row: 12; grid-column: 12;"><input type="text" maxlength="1"></div>
             </div>
         </div>
 
         <div class="password-box">
-            <span class="hint">🧠 Même principe, remets les lettres roses dans l'ordre !</span>
+            <span class="hint">🧠 Prends les 6 lettres roses et remets-les dans l'ordre !</span>
             <input type="text" id="pwd-2" placeholder="MOT SECRET N°2">
             <br>
             <button onclick="checkPassword(2, 'DETOUS')">Débloquer l'ultime niveau 🔓</button>
@@ -244,22 +278,69 @@
 
     <!-- ================= NIVEAU 3 ================= -->
     <div id="level-3" class="level-section">
-        <p class="subtitle">Niveau 3/3 : La dernière étape...</p>
+        <p class="subtitle">Niveau 3/3 : L'ultime épreuve...</p>
         
         <div class="grid-wrapper">
-            <div class="grid-container" id="grid-3" style="grid-template-columns: repeat(10, 32px); grid-template-rows: repeat(5, 32px); min-width: 320px;">
-                <!-- Petit exemple de mots croisés Niveau 3 (Bisou) -->
-                <div class="def-cell" style="grid-row: 2; grid-column: 1 / 3;">Sans mod. ➡</div>
-                <div class="cell" data-row="2" data-col="3" style="grid-row: 2; grid-column: 3;"><input type="text" maxlength="1"></div>
-                <div class="cell" data-row="2" data-col="4" style="grid-row: 2; grid-column: 4;"><input type="text" maxlength="1"></div>
-                <div class="cell mystery" data-row="2" data-col="5" style="grid-row: 2; grid-column: 5;"><input type="text" maxlength="1"></div> <!-- S -->
-                <div class="cell" data-row="2" data-col="6" style="grid-row: 2; grid-column: 6;"><input type="text" maxlength="1"></div>
-                <div class="cell" data-row="2" data-col="7" style="grid-row: 2; grid-column: 7;"><input type="text" maxlength="1"></div>
+            <div class="grid-container" id="grid-3" style="grid-template-rows: repeat(13, 32px);">
+                <!-- DÉFINITIONS NIVEAU 3 -->
+                <div class="def-cell" style="grid-row: 5; grid-column: 1 / 3;">Chez nous ➡</div>
+                <div class="def-cell" style="grid-row: 8; grid-column: 8;">Offrir<br>plus ➡</div>
+                <div class="def-cell" style="grid-row: 0; grid-column: 10;">Sans mod. ⬇</div>
+                <div class="def-cell" style="grid-row: 3; grid-column: 7;">Fait basculer ⬇</div>
+                <div class="def-cell" style="grid-row: 4; grid-column: 11;">Rando d'hiver ⬇</div>
+                <div class="def-cell" style="grid-row: 4; grid-column: 13;">24 heures ⬇</div>
+
+                <!-- LETTRES (Mélange : LESJOURS) -->
+                <!-- BISOU (Col 10, Row 1-5) -->
+                <div class="cell" data-row="1" data-col="10" style="grid-row: 1; grid-column: 10;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="2" data-col="10" style="grid-row: 2; grid-column: 10;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="3" data-col="10" style="grid-row: 3; grid-column: 10;"><input type="text" maxlength="1"></div> <!-- S -->
+                <div class="cell" data-row="4" data-col="10" style="grid-row: 4; grid-column: 10;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="5" data-col="10" style="grid-row: 5; grid-column: 10;"><input type="text" maxlength="1"></div>
+
+                <!-- REGARD (Col 7, Row 4-9) -->
+                <div class="cell" data-row="4" data-col="7" style="grid-row: 4; grid-column: 7;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="5" data-col="7" style="grid-row: 5; grid-column: 7;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="6" data-col="7" style="grid-row: 6; grid-column: 7;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="7" data-col="7" style="grid-row: 7; grid-column: 7;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="8" data-col="7" style="grid-row: 8; grid-column: 7;"><input type="text" maxlength="1"></div> <!-- R -->
+                <div class="cell" data-row="9" data-col="7" style="grid-row: 9; grid-column: 7;"><input type="text" maxlength="1"></div>
+
+                <!-- GUADELOUPE (Row 5, Col 3-12) -->
+                <div class="cell" data-row="5" data-col="3" style="grid-row: 5; grid-column: 3;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="5" data-col="4" style="grid-row: 5; grid-column: 4;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="5" data-col="5" style="grid-row: 5; grid-column: 5;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="5" data-col="6" style="grid-row: 5; grid-column: 6;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="5" data-col="8" style="grid-row: 5; grid-column: 8;"><input type="text" maxlength="1"></div> <!-- L -->
+                <div class="cell mystery" data-row="5" data-col="9" style="grid-row: 5; grid-column: 9;"><input type="text" maxlength="1"></div> <!-- O -->
+                <div class="cell" data-row="5" data-col="11" style="grid-row: 5; grid-column: 11;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="5" data-col="12" style="grid-row: 5; grid-column: 12;"><input type="text" maxlength="1"></div>
+
+                <!-- PYRENEES (Col 11, Row 5-12) -->
+                <div class="cell" data-row="6" data-col="11" style="grid-row: 6; grid-column: 11;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="7" data-col="11" style="grid-row: 7; grid-column: 11;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="8" data-col="11" style="grid-row: 8; grid-column: 11;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="9" data-col="11" style="grid-row: 9; grid-column: 11;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="10" data-col="11" style="grid-row: 10; grid-column: 11;"><input type="text" maxlength="1"></div> <!-- E -->
+                <div class="cell" data-row="11" data-col="11" style="grid-row: 11; grid-column: 11;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="12" data-col="11" style="grid-row: 12; grid-column: 11;"><input type="text" maxlength="1"></div>
+
+                <!-- FLEURS (Row 8, Col 9-14) -->
+                <div class="cell" data-row="8" data-col="9" style="grid-row: 8; grid-column: 9;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="8" data-col="10" style="grid-row: 8; grid-column: 10;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="8" data-col="12" style="grid-row: 8; grid-column: 12;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="8" data-col="13" style="grid-row: 8; grid-column: 13;"><input type="text" maxlength="1"></div>
+                <div class="cell mystery" data-row="8" data-col="14" style="grid-row: 8; grid-column: 14;"><input type="text" maxlength="1"></div> <!-- S -->
+
+                <!-- JOUR (Col 13, Row 5-8) -->
+                <div class="cell mystery" data-row="5" data-col="13" style="grid-row: 5; grid-column: 13;"><input type="text" maxlength="1"></div> <!-- J -->
+                <div class="cell" data-row="6" data-col="13" style="grid-row: 6; grid-column: 13;"><input type="text" maxlength="1"></div>
+                <div class="cell" data-row="7" data-col="13" style="grid-row: 7; grid-column: 13;"><input type="text" maxlength="1"></div>
             </div>
         </div>
 
         <div class="password-box">
-            <span class="hint">🧠 L'ultime bout de phrase...</span>
+            <span class="hint">🧠 Prends les 8 lettres et forme le mot final !</span>
             <input type="text" id="pwd-3" placeholder="MOT SECRET N°3">
             <br>
             <button onclick="checkPassword(3, 'LESJOURS')">Terminer le jeu ✨</button>
@@ -364,18 +445,12 @@
         function checkPassword(level, expectedPassword) {
             const inputField = document.getElementById('pwd-' + level);
             const errorMsg = document.getElementById('error-msg-' + level);
-            
-            // Nettoyer la saisie (retirer les espaces et mettre en majuscule)
             const answer = inputField.value.trim().toUpperCase().replace(/\s+/g, '');
 
             if (answer === expectedPassword) {
-                // Si la réponse est bonne, on cache l'erreur
                 errorMsg.style.display = 'none';
-                
-                // On cache le niveau actuel
                 document.getElementById('level-' + level).classList.remove('active');
                 
-                // On passe au niveau suivant (ou victoire finale)
                 if (level < 3) {
                     const nextLevel = level + 1;
                     document.getElementById('level-' + nextLevel).classList.add('active');
@@ -383,7 +458,6 @@
                     document.getElementById('final-success').style.display = 'block';
                 }
             } else {
-                // Si c'est faux, on affiche le message d'erreur
                 errorMsg.style.display = 'block';
             }
         }
